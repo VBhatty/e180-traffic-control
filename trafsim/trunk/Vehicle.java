@@ -250,4 +250,7 @@ public void set_acceleration()
 
 }
 
+public void printSpeed() {
+	System.out.println(this.cur_speed);
+}
 
