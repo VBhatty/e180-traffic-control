@@ -24,6 +24,12 @@ public double getLimit(){
 	return speed_limit;
 }
 
+public double getAvgSpeed(){
+	for ( int i=0; i<vehicles.size(); i++ ){
+		car
+	}
+	return 
+}
 
 }
 
