@@ -1,4 +1,4 @@
-package trafficsim;
+
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -6,11 +6,15 @@ import java.awt.geom.Point2D;
 public class trafSimMain {
 	
 	public static void main(String[] args) {
+		System.out.println("hello");
 		create1Road();
-		Controller myCont = new Controller(100,1);
+		Controller myCont = new Controller(1000,1);
 		myCont.addRoad(r);
-		
-		for (int i = myCont.current_time; i<myCont.getTotalTime(); i++){
+		Vehicle myCar = new Car();
+		myCont.addVehicle(myCar);
+		r.addVehicle(myCar);
+		myCar.setMyRoad(r);
+		for (int i =0; i<myCont.getTotalTime(); i++){
 			myCont.updateRoad(myCont.getStep());
 		}
 
