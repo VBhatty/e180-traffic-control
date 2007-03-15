@@ -1,12 +1,11 @@
 package trafficsim;
 import java.util.ArrayList;
-import trafsim.Node;
 
 public class Road {
 	
 	int id;
 	public String name;
-	public ArrayList vehicles;	//list of current vehicles on the road
+	public ArrayList<Vehicle> vehicles;	//list of current vehicles on the road
 	public double coeff_of_friq;	//the current coefficient of friction of the road
 	public double length;	//the legth of the road
 	public Node start_node; //the node at the start of the road
@@ -31,7 +30,14 @@ public ArrayList get_vehicle_list() {
 }
 
 public void update_vehicles(){
-	
+	for ( int i=0; i < vehicles.size();i++){
+		vehicle = vehicles.get(i);
+		
+		vehicle.findAcceleration();
+		vehicle.updatePosition();
+		vehicle.updateSpeed();
+
+	}
 }
 
 public double getLimit(){
