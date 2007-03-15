@@ -29,6 +29,13 @@ public ArrayList get_vehicle_list() {
 	return this.vehicles;
 }
 
+public void addVehicle(Vehicle vehicle) {
+	vehicles.add(vehicle);
+}
+public void removeVehicle(Vehicle vehicle) {
+	vehicles.remove(vehicle)
+}
+
 public void updateVehicles(){
 	for ( int i=0; i < vehicles.size();i++){
 		vehicle = vehicles.get(i);
