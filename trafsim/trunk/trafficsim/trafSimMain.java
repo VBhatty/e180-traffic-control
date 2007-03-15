@@ -4,11 +4,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 public class trafSimMain {
-
-	static Road r;
-	/**
-	 * @param args
-	 */
+	
 	public static void main(String[] args) {
 		create1Road();
 		Controller myCont = new Controller(100,1);
@@ -19,6 +15,12 @@ public class trafSimMain {
 		}
 
 	}
+	
+	static Road r;
+	/**
+	 * @param args
+	 */
+	
 	public static void create1Road(){
 		Point2D nodeLoc = new Point(0,0);
 		Point2D nodeLoc2 = new Point(100,0);
