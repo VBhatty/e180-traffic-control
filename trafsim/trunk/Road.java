@@ -1,6 +1,7 @@
 package trafficsim;
 import java.util.ArrayList;
 
+
 public class Road {
 	
 	int id;
@@ -33,17 +34,16 @@ public void addVehicle(Vehicle vehicle) {
 	vehicles.add(vehicle);
 }
 public void removeVehicle(Vehicle vehicle) {
-	vehicles.remove(vehicle)
+	vehicles.remove(vehicle);
 }
 
 public void updateVehicles(){
 	for ( int i=0; i < vehicles.size();i++){
-		vehicle = vehicles.get(i);
+		Vehicle vehicle = (Vehicle)vehicles.get(i);
 		
 		vehicle.findAcceleration();
 		vehicle.updatePosition();
 		vehicle.updateSpeed();
-
 	}
 }
 
@@ -55,6 +55,14 @@ public double getLimit(){
 	return speed_limit;
 }
 
+public double getAvgSpeed2(){
+	sum = 0;
+	for (int i=0; i < vehicles.size(); i++) {
+		Vehicle vehicle = vehicles.get(i);
+		sum += vehicle.get_speed();
+	}
+	return sum / totalVehicles();
+}
 
 public double getAvgSpeed(){
 	Vehicle theCar;

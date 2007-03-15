@@ -25,7 +25,7 @@ public class Controller {
 	
 	void updateRoad(){
 		for (int i=0; i < Roads_list.size(); i++) {
-			road = Roads_list.get(i);
+			Road road = Roads_list.get(i);
 			road.updateVehicles();
 		}
 	}
@@ -33,7 +33,7 @@ public class Controller {
 	public int totalVehicles() {
 		total = 0;
 		for (int i=0; i < Roads_list.size(); i++) {
-			road = Roads_list.get(i);
+			Road road = Roads_list.get(i);
 			total += road.totalVehicles();
 		}
 		return total;
