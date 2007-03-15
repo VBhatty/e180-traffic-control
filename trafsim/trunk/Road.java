@@ -82,6 +82,10 @@ public double getAvgSpeed(){
 	return avgSpeed
 }
 
+private void printVehicleList() {
+	System.out.println(vehicle[]);
+}
+
 }
 
 
