@@ -1,4 +1,4 @@
-package trafficsim;
+
 
 
 public class Curve extends Road{

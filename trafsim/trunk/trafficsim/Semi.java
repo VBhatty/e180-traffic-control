@@ -1,4 +1,4 @@
-package trafficsim;
+
 
 public class Semi extends Vehicle {
 

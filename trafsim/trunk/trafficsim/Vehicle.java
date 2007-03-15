@@ -1,4 +1,4 @@
-package trafficsim;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -41,7 +41,9 @@ public abstract class Vehicle {
 		
 		
 	}
-	
+	public void setMyRoad(Road r){
+		myRoad = r;
+	}
 public void generate_mass_and_length()
 {
 	Random U = new Random();
@@ -107,7 +109,7 @@ public void update_position(double dt )
 	//distance travelled at current step
 	double dp = (cur_speed + (cur_speed + cur_accel*dt))*0.5*dt;
 	// adding the distance travelled to the fraction of the current road
-	double fraction = loc_fraction + dp/(route.get(0)).length;
+	double fraction = loc_fraction + dp/myRoad.length;
 	int count;
 	// if the distance travelled is longer than what is left of current road,
 	// the vehicle start on the next road on the route
@@ -116,22 +118,22 @@ public void update_position(double dt )
 		//calculating how much longer than what is left of the road that the vehicle have
 		//travelled in current timestep
 		fraction = fraction - 1;
-		dp = fraction*(route.get(0)).length;
+		dp = fraction*myRoad.length;
 		//finding number of vehicles on current road
-		count = (route.get(0)).totalVehicles()-1;
+		count = myRoad.totalVehicles()-1;
 		//removes the last vehicle, which is this one
-		(route.get(0)).vehicles.remove(count);
+		myRoad.vehicles.remove(count);
 		
 		//some if-sentence here to terminate the car if it has reached the destination
 		
 		//remove completed road from route
-		route.remove(0);
+		//route.remove(0);
 		
 		//add this vehicle to the vehicles-list of the road
-		(route.get(0)).vehicles.add(0,this);
+		//(route.get(0)).vehicles.add(0,this);
 		
 		// calculating fraction completed at next road on route
-		fraction = dp/(route.get(0)).length;
+		fraction = dp/myRoad.length;
 	}
 	// setting loc_fraction equal the fraction completed at current road
 	loc_fraction = fraction;
@@ -244,7 +246,7 @@ public double get_speed()
 //temporary function to find the acceleration for simple model use
 public void set_acceleration()
 {
-	cur_accel = ((route.get(0)).getLimit() - this.cur_speed)/6; 
+	cur_accel =myRoad.getLimit() - this.cur_speed/6; 
 }
 
 

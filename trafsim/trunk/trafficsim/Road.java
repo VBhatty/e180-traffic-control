@@ -1,4 +1,4 @@
-package trafficsim;
+
 import java.util.ArrayList;
 
 
@@ -24,6 +24,7 @@ public Road(int id, String Name, double length, double speed_limit,int width, No
 	this.width = width;
 	this.start_node = start;
 	this.end_node = end;
+	vehicles = new ArrayList<Vehicle>();
 }
 
 public ArrayList get_vehicle_list() {
