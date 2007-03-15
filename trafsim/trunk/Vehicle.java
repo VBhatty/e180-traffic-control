@@ -120,7 +120,7 @@ public void update_position(double dt )
 		//finding number of vehicles on current road
 		count = (route.get(0)).size()-1;
 		//removes the last vehicle, which is this one
-		(route.get(0)).vehicles.remove(count);
+		(route.get(0)).removeVehicle(this);
 		
 		//some if-sentence here to terminate the car if it has reached the destination
 		
@@ -128,7 +128,8 @@ public void update_position(double dt )
 		route.remove(0);
 		
 		//add this vehicle to the vehicles-list of the road
-		(route.get(0)).vehicles.add(0,this);
+		//(route.get(0)).vehicles.add(0,this);
+		(route.get(0)).addVehicle(this);
 		
 		// calculating fraction completed at next road on route
 		fraction = dp/(route.get(0)).length;
