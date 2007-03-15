@@ -1,7 +1,8 @@
 
 public class Car extends Vehicle {
 
-	public Car() {
+	public Car(Road r) {
+		super(r);
 		// TODO Auto-generated constructor stub
 	}
 

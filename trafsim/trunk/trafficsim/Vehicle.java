@@ -27,7 +27,7 @@ public abstract class Vehicle {
 
 	abstract boolean isNull();
 // Constructor	
-	public Vehicle()
+	public Vehicle(Road r)
 	{
 		cur_speed=0;
 		cur_accel=0;
@@ -36,13 +36,14 @@ public abstract class Vehicle {
 		time_since_creation=0;
 		destination=null;
 		route = new ArrayList<Road>();
-		finding_route();
-		generate_mass_and_length();
+		route.add(r);
+		//finding_route();
+		//generate_mass_and_length();
 		
 		
 	}
 	public void setMyRoad(Road r){
-		myRoad = r;
+
 	}
 public void generate_mass_and_length()
 {
@@ -56,7 +57,7 @@ public void generate_mass_and_length()
 
 public void finding_route()
 {
-	//
+	route.add(myRoad);
 }
 
 public double max_acceleration()
@@ -109,7 +110,7 @@ public void update_position(double dt )
 	//distance travelled at current step
 	double dp = (cur_speed + (cur_speed + cur_accel*dt))*0.5*dt;
 	// adding the distance travelled to the fraction of the current road
-	double fraction = loc_fraction + dp/myRoad.length;
+	double fraction = loc_fraction + dp/route.get(0).length;
 	int count;
 	// if the distance travelled is longer than what is left of current road,
 	// the vehicle start on the next road on the route
@@ -118,11 +119,11 @@ public void update_position(double dt )
 		//calculating how much longer than what is left of the road that the vehicle have
 		//travelled in current timestep
 		fraction = fraction - 1;
-		dp = fraction*myRoad.length;
+		dp = fraction*route.get(0).length;
 		//finding number of vehicles on current road
-		count = myRoad.totalVehicles()-1;
+		count = route.get(0).totalVehicles()-1;
 		//removes the last vehicle, which is this one
-		myRoad.vehicles.remove(count);
+		route.get(0).vehicles.remove(count);
 		
 		//some if-sentence here to terminate the car if it has reached the destination
 		
@@ -133,7 +134,7 @@ public void update_position(double dt )
 		//(route.get(0)).vehicles.add(0,this);
 		
 		// calculating fraction completed at next road on route
-		fraction = dp/myRoad.length;
+		fraction = dp/route.get(0).length;
 	}
 	// setting loc_fraction equal the fraction completed at current road
 	loc_fraction = fraction;
@@ -246,7 +247,7 @@ public double get_speed()
 //temporary function to find the acceleration for simple model use
 public void set_acceleration()
 {
-	cur_accel =myRoad.getLimit() - this.cur_speed/6; 
+	cur_accel =(route.get(0).getLimit() - this.cur_speed)/6; 
 }
 
 

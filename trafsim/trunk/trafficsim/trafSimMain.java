@@ -10,7 +10,7 @@ public class trafSimMain {
 		create1Road();
 		Controller myCont = new Controller(1000,1);
 		myCont.addRoad(r);
-		Vehicle myCar = new Car();
+		Vehicle myCar = new Car(r);
 		myCont.addVehicle(myCar);
 		r.addVehicle(myCar);
 		myCar.setMyRoad(r);

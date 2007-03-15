@@ -2,7 +2,8 @@
 
 public class Semi extends Vehicle {
 
-	public Semi() {
+	public Semi(Road r) {
+		super(r);
 		// TODO Auto-generated constructor stub
 	}
 
