@@ -8,6 +8,7 @@ public class Controller {
 	ArrayList<Node> Node_list;
 	double totaltime;
 	final double dt;
+	double current_time;
 	boolean[][] mapGrid;
 	
 	/* 
@@ -16,6 +17,7 @@ public class Controller {
 	public Controller(double totTime, double step ){
 		totaltime = totTime;
 		dt = step;
+		current_time = 0;
 		Vehicle_list = new ArrayList();
 		Roads_list = new ArrayList();
 		Node_list = new ArrayList();

@@ -11,7 +11,7 @@ public abstract class Vehicle {
 	public double lenght;		//length of this vehicle
 	public double cur_speed;	//initial speed at current time step
 	public double cur_accel;	//acceleration at current time step, constant through the time step 
-	//public Road loc_road;		//will be obmitted because this Road is Route[0]
+	public Road myRoad;		//will be obmitted because this Road is Route[0]
 	public double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
 	public Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
 
@@ -134,6 +134,12 @@ public void update_speed(double dt) //call in the end of timestep as the other u
 	cur_speed = cur_speed + cur_accel*dt;
 }
 
+
+//set the speed to some fixed speed
+public void set_speed(double speed){
+	cur_speed = speed;
+}
+
 //Function to calculate acceleration at current time step, constant acceleration assumed during timestep
 
 public void find_acceleration()
@@ -226,7 +232,12 @@ public double get_speed()
 {
 	return cur_speed;
 }
-
+public void set_acceleration()
+{
+	if (cur_speed < myRoad.getLimit()){
+		//do stuff
+	}
+}
 
 }
 
