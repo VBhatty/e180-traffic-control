@@ -55,11 +55,23 @@ public double getLimit(){
 	return speed_limit;
 }
 
+
 public double getAvgSpeed(){
-	for ( int i=0; i<vehicles.size(); i++ ){
-		car
+	Vehicle theCar;
+	double[] speedArray;
+	
+	speedArray = new double[vehicles.size()];
+	for ( int i=0; i < vehicles.size(); i++ ){
+		theCar = vehicles(i);
+		speedArray(i) = theCar.cur_speed;
 	}
-	return 
+	
+	double sumSpeed;
+	for (int i=0; i < speedArray.size(); i++){
+		sumSpeed = sumSpeed + speedArray(i);
+	}
+	avgSpeed = sumSpeed / vehicles.size();
+	return avgSpeed
 }
 
 }
