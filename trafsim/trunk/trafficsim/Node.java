@@ -1,21 +1,24 @@
 
-
+import edu.uci.ics.*;
+import edu.uci.ics.jung.graph.impl.SparseVertex;
+import org.apache.commons.collections.*;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-public class Node {
 
-	public String name;
-	public Point2D start_location;
-	public ArrayList<Road> roads;
-	Node (Point2D location,String n){
-		roads= new ArrayList<Road>();
-		start_location = location;
-		name = n;
+
+public class Node extends SparseVertex{
+
+	public double x;
+	public double y;
+
+	Node (){
+		super();
 	}
-	void addRoad(Road r){
-		roads.add(r);
+	void setX(double X){
+		x = X;
 	}
-	void sortRoads(){
-		
+	void setY(double Y){
+		y=Y;
 	}
 }

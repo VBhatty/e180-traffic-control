@@ -1,26 +1,34 @@
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+
+import edu.uci.ics.jung.graph.DirectedEdge;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.Vertex;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.utils.GraphUtils;
 
 public class Controller {
 // fields
-	ArrayList <Vehicle>Vehicle_list;
-	ArrayList  <Road>Roads_list;
-	ArrayList <Node>Node_list;
+	
 	int totaltime;
 	final int dt;
 	int current_time;
 	boolean[][] mapGrid;
+	static Map myMap; 
 	
 	/* 
 	 * constructor for simulation controller
 	 */
 	public Controller(int totTime, int step ){
+		myMap = new Map();
 		totaltime = totTime;
 		dt = step;
 		current_time = 0;
-		Vehicle_list = new ArrayList<Vehicle>();
-		Roads_list = new ArrayList<Road>();
-		Node_list = new ArrayList<Node>();
+
 	}
 	
 	double getCurrentTime(){
@@ -32,31 +40,59 @@ public class Controller {
 	double getTotalTime(){
 		return totaltime;
 	}
+	double getEllapsed(){
+		return 10;
+	}
 	void updateRoad(double dt){
-		for (int i=0; i < Roads_list.size(); i++) {
-			Road road = (Road)Roads_list.get(i);
-			road.updateVehicles(dt);
+		Set<Road> myRoads = myMap.getEdges();
+		Iterator ro = myRoads.iterator();
+		while(ro.hasNext()){
+			Road rr = (Road)ro.next();
+			rr.updateVehicles(dt);
 		}
 	}
 	
 	public int totalVehicles() {
 		int total = 0;
-		for (int i=0; i < Roads_list.size(); i++) {
-			Road road = (Road)Roads_list.get(i);
-			total += road.totalVehicles();
+		Set<Road> myRoads = myMap.getEdges(); 
+		Iterator ro = myRoads.iterator();
+		while (ro.hasNext()){
+			Road rr =(Road) ro.next();
+			total += rr.totalVehicles();
 		}
 		return total;
 	}
 	
-	void addVehicle(Vehicle v){
-		Vehicle_list.add(v);
-
-	}
 	void addNode(Node n){
-		Node_list.add(n);
+		myMap.addVertex(n);
 	}
 
 	public void addRoad(Road r) {
-		Roads_list.add(r);
+		GraphUtils.addEdge(myMap,r.start_node,r.end_node);
+	}
+	
+	static Controller myCont;
+	public static void main(String[] args) {
+		myCont = new Controller(1000,1);
+		myMap = new Map();
+		Node v1 = new Node();
+		v1.setX(0);v1.setY(0);
+		myMap.addVertex(v1);
+		Node v2 = new Node();
+		v2.setX(100); v2.setY(0);
+		myMap.addVertex(v2);
+		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
+		myMap.addRoad(r);
+		Car v = new Car(r,0.0);
+		r.addVehicle(v);
+		for (int i =0; i<myCont.getTotalTime(); i++){
+			myCont.updateRoad(myCont.getStep());
+		}
+
+	}
+
+	
+	public static void create1Road(){
+		
 	}
 }

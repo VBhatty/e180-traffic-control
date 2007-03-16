@@ -2,6 +2,8 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import edu.uci.ics.jung.graph.Edge;
+
 public abstract class Vehicle {
 
 // Class parameters
@@ -26,24 +28,34 @@ public abstract class Vehicle {
 									
 
 	abstract boolean isNull();
-// Constructor	
-	public Vehicle(Road r)
+	
+	/* 
+	 * Creates a vehicle at the beginning of road r
+	 */
+	public Vehicle(Road r,double fract)
 	{
+		
 		cur_speed=0;
 		cur_accel=0;
-		loc_fraction=0;
+		loc_fraction=fract;
 		average_speed=0;
 		time_since_creation=0;
 		destination=null;
+		myRoad = r;
 		route = new ArrayList<Road>();
 		route.add(r);
+		r.addVehicle(this);
 		//finding_route();
 		//generate_mass_and_length();
 		
 		
 	}
+
 	public void setMyRoad(Road r){
 
+	}
+	void setDestination(Node n){
+		destination=n;
 	}
 public void generate_mass_and_length()
 {

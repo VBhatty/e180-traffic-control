@@ -5,8 +5,9 @@ import java.util.Random;
 
 public class Source extends Node{
 
-	Source(Point2D location, String n) {
-		super(location, n);
+	Source() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	private Random U;

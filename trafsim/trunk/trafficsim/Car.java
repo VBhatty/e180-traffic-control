@@ -1,10 +1,11 @@
 
 public class Car extends Vehicle {
 
-	public Car(Road r) {
-		super(r);
+	public Car(Road r,double perc) {
+		super(r,perc);
 		// TODO Auto-generated constructor stub
 	}
+	
 
 	@Override
 	boolean isNull() {

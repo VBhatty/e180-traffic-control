@@ -1,12 +1,15 @@
 
 import java.util.ArrayList;
 
+import edu.uci.ics.jung.graph.Vertex;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
-public class Road {
+
+public class Road extends DirectedSparseEdge {
 	
 	int id;
 	public String name;
-	public ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
+	ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
 	public double coeff_of_friq;	//the current coefficient of friction of the road
 	public double length;	//the legth of the road
 	public Node start_node; //the node at the start of the road
@@ -15,8 +18,11 @@ public class Road {
 	public int width;	//number of lanes of the road
 	public double average_speed; // average speed of the current vehicles on the road
 	public double average_weight;	//average weight of the current vehicles on the road
-	
+	public Road(Node n1, Node n2){
+		super(n1,n2);
+	}
 public Road(int id, String Name, double length, double speed_limit,int width, Node start, Node end ){
+	super((Vertex)start,(Vertex)end);
 	this.id = id;
 	this.name =  Name;
 	this.length = length;
@@ -27,12 +33,12 @@ public Road(int id, String Name, double length, double speed_limit,int width, No
 	vehicles = new ArrayList<Vehicle>();
 }
 
-public ArrayList get_vehicle_list() {
+public ArrayList<Vehicle> get_vehicle_list() {
 	return this.vehicles;
 }
 
 public void addVehicle(Vehicle vehicle) {
-	vehicles.add(vehicle);
+	this.vehicles.add(vehicle);
 }
 public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
