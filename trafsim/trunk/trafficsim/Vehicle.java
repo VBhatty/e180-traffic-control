@@ -217,7 +217,7 @@ public double neccessary_car_in_front_acceleration()
 // finding acceleration
 	{
 // r - the current road of the car in front
-	r = car_in_front.route.get(0);
+	r = (car_in_front.getRoute()).get(0);
 	
 // f - the current fraction of the road the car in front has completed
 	 f = car_in_front.loc_fraction;
@@ -227,11 +227,26 @@ public double neccessary_car_in_front_acceleration()
 	}
 	//search through route to find distance to the point f (fraction of the road) on r (Road),
 	//update dist while searching
+	if (route.get(0) == r){
+		dist = (f-loc_fraction)*r.getLength();
+		return nec;
+	}
+	else{
+		
 	
+		dist = (1-loc_fraction)*(route.get(0))getLength();
+	    int i = 1;
+	    while(route.get(i) != r){
+	    	dist = dist + (route.get(i)).getLength();
+	    	i = i+1;
+	    }
+	    dist = dist + f*r.getLength();
+	    dist = dist - (car_in_front.getLength()+1);
 // using constant acceleration equation to calculate the acceleration needed
 	nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
 	
 	return nec;
+	}
 }
 public Node[] nodes_before_full_stop_acceleration()
 {
@@ -268,5 +283,10 @@ public void printSpeed()
 	System.out.println(get_speed());
 }
 
+}
+
+public ArrayList<Road> getRoute()
+{
+	return route;
 }
 
