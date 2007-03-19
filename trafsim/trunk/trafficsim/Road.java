@@ -94,7 +94,14 @@ private void printVehicleList() {
 	for (int i = 0; i<vehicles.size();i++){
 		vehicles.get(i).printSpeed();
 	}
-	
+}
+
+public Node getEndNode(){
+	return end_node;
+}
+
+public double getLength(){
+	return this.length;
 }
 
 }
