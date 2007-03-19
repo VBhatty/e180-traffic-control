@@ -248,6 +248,42 @@ public double neccessary_car_in_front_acceleration()
 	return nec;
 	}
 }
+
+//Searching through all roads on route within safe breaking distance. If the speed limit changes within
+//safe breaking distance calculate acceleration needed to get new speedlimit at that point.
+public double getAccelerationToNearestNodeOrRoad(){
+	double dist = 0;
+	double endNodeSpeedLimit;
+	double safeBreakDist = this.getSafeBreakingDist();
+	double dist2newSpeedLimit = 0;
+	double currSpeed = this.cur_speed;
+	double roadSpeedLimit;
+	double endNodeSpeedLimit;
+	
+	int i = 0;	
+	while(dist<safeBreakDist){		//Going through roads at vehicle's route
+		roadSpeedLimit = route(i).getLimit();
+		endNodeSpeedLimit = route(i).getEndNode().getSpeedLimit();
+		if (i != 0) {				//Calculating distance to end of road / endnode start of new road
+			dist2newSpeedLimit = dist2newSpeedLimit + route(i).getLength();		//If checking a road ahead dist2newSpeedLimit equals the sum of the road lengths + fraction of current road not driven
+		} else() {
+			dist2newSpeedLimit = (route(i).getLength() * (1-this.loc_fraction)); 	//If checking current road, distance to change in speedlimit = the fraction of road not yet driven
+		}
+		
+		if (roadSpeedLimit < currSpeed) {		//Comparing current vehicle speed to speedlimit of at each road ahead
+			newSpeedLimit = roadSpeedLimit;			//If change in speedlimit at a road, get new speedlimit and end while-loop to calculate acceleration
+			dist2newSpeedLimit = dist2newSpeedLimit - route(i).getLength();		//Change in speedlimit at a road starts at the end of the road
+			break;
+		} else if (endNodeSpeedLimit < currSpeed) {
+			newSpeedLimit = endNodeSpeedLimit;		//If change in speedlimit at the endnode of the road, get new speedlimit and end while-loop to calculate acceleration
+			break
+		}
+		i = i+1;
+	}
+	nec = (Math.pow(newSpeedlimit,2) - Math.pow(currSpeed,2)) / (2*dist2newSpeedLimit);		//Necessary acceleration to reach new speedlimit
+	return nec;
+}
+
 public Node[] nodes_before_full_stop_acceleration()
 {
 	Node[] N = null;
@@ -290,3 +326,11 @@ public ArrayList<Road> getRoute()
 	return route;
 }
 
+//Finding the safe breaking distance of a vehicle
+public double getSafeBreakingDist(){
+	double v = 2.236936292*get_speed();		//Current speed of vehicle converted from m/s to mph
+	double safeDist;			
+	safeDist = (88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3); //Formula from physical model
+	safeDist = 0.3048*safeDist; //Safe breaking distance converted from feet to meter
+	return safeDist
+}
