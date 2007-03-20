@@ -10,7 +10,8 @@ public class Road extends DirectedSparseEdge {
 	int id;
 	public String name;
 	ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
-	public double coeff_of_friq;	//the current coefficient of friction of the road
+	public double coeff_of_fric;	//the current coefficient of friction of the road
+	public double weather_coeff;	//higher weather coefficient means more rain and poorer coeff of friction
 	public double length;	//the legth of the road
 	public Node start_node; //the node at the start of the road
 	public Node end_node; //the node at the end of the road
@@ -30,6 +31,8 @@ public Road(int id, String Name, double length, double speed_limit,int width, No
 	this.width = width;
 	this.start_node = start;
 	this.end_node = end;
+	this.coeff_of_fric = 0.7;
+	this.weather_coeff = 0.0;
 	vehicles = new ArrayList<Vehicle>();
 }
 
@@ -102,6 +105,12 @@ public Node getEndNode(){
 
 public double getLength(){
 	return this.length;
+}
+
+public double getCoeffOfFriction() {
+	double coeffFric;
+	coeffFric = this.coeff_of_fric - 0.25 * this.weather_coeff;		// Taken from 2-27 Mathematical Model.ppt
+	return coeffFric
 }
 
 }
