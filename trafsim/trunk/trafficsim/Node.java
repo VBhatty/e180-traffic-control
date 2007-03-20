@@ -23,6 +23,11 @@ public class Node extends SparseVertex{
 		y=Y;
 	}
 	
+	void setSpeedlimit(double speedlimit){
+		
+		this.speedlimit = speedlimit;
+	}
+	
 	public double getSpeedLimit(){
 		return speedlimit
 	}
