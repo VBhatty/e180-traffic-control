@@ -31,16 +31,16 @@ public class trafSimMain {
 		Road r1 = new Road(0,"alcatraz",500,25,1,v1, v2);
 		Road r2 = new Road(1,"cosmo street",500,40,1,v2, v3);
 		
-		Car v1 = new Car(r,0.0);
-		Car v2 = new Car(r,0.0);
-		Car v3 = new Car(r,0.0);
-		Car v4 = new Car(r,0.0);
-		Car v5 = new Car(r,0.0);
-		Car[] cars = {v1,v2,v3,v4,v5};
+		Car c1 = new Car(r1,0.0);
+		Car c2 = new Car(r1,0.0);
+		Car c3 = new Car(r1,0.0);
+		Car c4 = new Car(r1,0.0);
+		Car c5 = new Car(r1,0.0);
+		Car[] cars = {c1,c2,c3,c4,c5};
 		int count =0;
 		
 		
-		double nextStart;
+		double nextStart = 5;
 		
 		for (double time = 0; time < tend; time=time+dt){
 			
@@ -52,7 +52,7 @@ public class trafSimMain {
 				nextStart = time + (double)v1.generate_next_car(time);
 				generate =1;
 			}
-			if (time >= nextStart){
+			else if (time >= nextStart){
 				//generate vehicle
 				r1.addVehicle(cars[count]);
 				count++;
