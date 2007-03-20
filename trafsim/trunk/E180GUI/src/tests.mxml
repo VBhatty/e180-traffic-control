@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute"
+	 creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import com.adobe.serialization.json.JSON;
+			
+			public function init():void{
+				var myClass:TestClass = new TestClass();
+				myClass.name = "test";
+				myClass.userId = 5;
+				
+				var output:String = JSON.encode(myClass);
+				Alert.show(output);
+			}
+		]]>
+	</mx:Script>
+</mx:Application>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="init()" 
+	layout="absolute"  
+	xmlns:ns1="com.E180.containers.*" 
+	xmlns:ns2="com.E180.GUI.*"
+	xmlns:desktop="com.lingolinko.gui.desktop.*"
+	xmlns:dock="com.lingolinko.gui.launcher.*"
+	 xmlns:ns3="com.E180.canned.*">
+	<mx:Style source="../css/OSX.css" />
+	<mx:Script>
+		<![CDATA[
+			import com.lingolinko.gui.launcher.DockLauncher;
+			import mx.core.BitmapAsset;
+			import com.lingolinko.gui.launcher.DockElement;
+		
+			[Bindable]
+            [Embed(source="../css/nk3.png")]
+            public var desktopbg:Class;
+            
+            
+            [Embed(source="../icons/Settings.png")]
+            [Bindable]
+            public var settings:Class;
+            
+            [Embed(source="../icons/News.png")]
+            [Bindable]
+            public var newsImg:Class;
+		
+			public function init() : void{
+				mx.core.Application.application.setStyle('backgroundImage', desktopbg)	
+				var img:BitmapAsset = new newsImg() as BitmapAsset;
+				var img1:BitmapAsset = new settings() as BitmapAsset
+				var element:DockElement  = new DockElement( img.bitmapData,  64, 64, "Result Viewer" );
+				var element1:DockElement = new DockElement( img1.bitmapData, 64, 64, "Runner Settings" );
+				var launcher:DockLauncher = new DockLauncher();
+				launcher.addChild(element);
+				launcher.addChild(element1);
+				desktop.addChild( launcher );
+				desktop.dock = launcher;
+				launcher.setStyle("bottom", 0);
+				launcher.setStyle("horizontalCenter", 0);
+			}
+			
+		]]>
+	</mx:Script>
+	<desktop:LingoDesktop id="desktop" width="100%" height="100%">
+		<ns2:TrafficEditor x="10" y="19">
+		</ns2:TrafficEditor>
+		<ns3:AnimationDemo x="30" y="30">
+		</ns3:AnimationDemo>
+		<ns3:SerializationDemo x="40" y="40">
+		</ns3:SerializationDemo>
+		
+	</desktop:LingoDesktop>
+	
+</mx:Application>
