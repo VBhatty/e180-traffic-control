@@ -12,11 +12,11 @@ public class Source extends Node{
 
 	private Random U;
 	
-	public int generate_next_car(double time){
+	public double generate_next_car(double time){
 		
 		double f = get_freqency(time);
 		double x = U.nextFloat();
-		int dt = (int)(1/f)*Math.log(1-x);
+		double dt = (1/f)*Math.log(1-x);
 		return dt;
 	}
 	

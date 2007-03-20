@@ -9,6 +9,7 @@ public abstract class Vehicle {
 // Class parameters
 
 	//	public static final double mass_mean = 1000; //may be used as distribution mean to generate mass
+	public static final double g = 9.8;
 	public double mass;			//mass of this vehicle
 	public double lenght;		//length of this vehicle
 	public double cur_speed;	//initial speed at current time step
@@ -252,7 +253,7 @@ public double neccessary_car_in_front_acceleration()
 	else{
 		
 	
-		dist = (1-loc_fraction)*(route.get(0))getLength();
+		dist = (1-loc_fraction)*(route.get(0)).getLength();
 	    int i = 1;
 	    while(route.get(i) != r){
 	    	dist = dist + (route.get(i)).getLength();
@@ -276,17 +277,18 @@ public double accelerationToNearestNodeOrRoad(){
 	double dist2newSpeedLimit = 0;
 	double currSpeed = this.cur_speed;
 	double roadSpeedLimit;
-	double endNodeSpeedLimit;
 	
-	int i = 0;	
+	int i = 0;
+	double newSpeedLimit=0;
 	while(dist<safeBreakDist){		//Going through roads at vehicle's route
 		roadSpeedLimit = route.get(i).getLimit();
 		endNodeSpeedLimit = route.get(i).getEndNode().getSpeedLimit();
 		if (i != 0) {				//Calculating distance to end of road / endnode start of new road
 			dist2newSpeedLimit = dist2newSpeedLimit + route.get(i).getLength();		//If checking a road ahead dist2newSpeedLimit equals the sum of the road lengths + fraction of current road not driven
-		} else() {
+		} else {
 			dist2newSpeedLimit = (route.get(i).getLength() * (1-this.loc_fraction)); 	//If checking current road, distance to change in speedlimit = the fraction of road not yet driven
 		}
+		
 		
 		if (roadSpeedLimit < currSpeed) {		//Comparing current vehicle speed to speedlimit of at each road ahead
 			newSpeedLimit = roadSpeedLimit;			//If change in speedlimit at a road, get new speedlimit and end while-loop to calculate acceleration
@@ -294,11 +296,11 @@ public double accelerationToNearestNodeOrRoad(){
 			break;
 		} else if (endNodeSpeedLimit < currSpeed) {
 			newSpeedLimit = endNodeSpeedLimit;		//If change in speedlimit at the endnode of the road, get new speedlimit and end while-loop to calculate acceleration
-			break
+			break;
 		}
 		i = i+1;
 	}
-	nec = (Math.pow(newSpeedlimit,2) - Math.pow(currSpeed,2)) / (2*dist2newSpeedLimit);		//Necessary acceleration to reach new speedlimit
+	double nec = (Math.pow(newSpeedLimit,2) - Math.pow(currSpeed,2)) / (2*dist2newSpeedLimit);		//Necessary acceleration to reach new speedlimit
 	return nec;
 }
 
@@ -349,7 +351,7 @@ public double getSafeBreakingDist(){
 	double safeDist;			
 	safeDist = (88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3); //Formula from physical model
 	safeDist = 0.3048*safeDist; //Safe breaking distance converted from feet to meter
-	return safeDist
+	return safeDist;
 }
 
 }

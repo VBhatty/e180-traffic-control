@@ -29,6 +29,6 @@ public class Node extends SparseVertex{
 	}
 	
 	public double getSpeedLimit(){
-		return speedlimit
+		return speedlimit;
 	}
 }

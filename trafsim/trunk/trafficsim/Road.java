@@ -110,7 +110,7 @@ public double getLength(){
 public double getCoeffOfFriction() {
 	double coeffFric;
 	coeffFric = this.coeff_of_fric - 0.25 * this.weather_coeff;		// Taken from 2-27 Mathematical Model.ppt
-	return coeffFric
+	return coeffFric;
 }
 
 }
