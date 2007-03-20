@@ -220,7 +220,7 @@ public double neccessary_car_in_front_acceleration()
 	Road r;
 // neccessary acceleration to get the same speed as the car in front 1 meter 
 //	behind the current position of the rearend of the car in front, by constant acceleration
-	double nec;
+	double nec=0;
 // distance to the car in front
 	double dist = 0;
 //	 v - the current speed of the car in front
@@ -232,9 +232,9 @@ public double neccessary_car_in_front_acceleration()
 	{
 		nec= Float.POSITIVE_INFINITY;
 	}
-	else
+	
 // finding acceleration
-	{
+	
 // r - the current road of the car in front
 	r = (car_in_front.getRoute()).get(0);
 	
@@ -243,7 +243,7 @@ public double neccessary_car_in_front_acceleration()
 	
 // v - the current speed of the car in front
 	 v = car_in_front.get_speed();
-	}
+	
 	//search through route to find distance to the point f (fraction of the road) on r (Road),
 	//update dist while searching
 	if (route.get(0) == r){
@@ -260,7 +260,7 @@ public double neccessary_car_in_front_acceleration()
 	    	i = i+1;
 	    }
 	    dist = dist + f*r.getLength();
-	    dist = dist - (car_in_front.getLength()+1);
+	    //dist = dist - (car_in_front.getLength()+1);
 // using constant acceleration equation to calculate the acceleration needed
 	nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
 	
