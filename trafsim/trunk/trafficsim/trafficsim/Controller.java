@@ -15,7 +15,7 @@ import edu.uci.ics.jung.utils.GraphUtils;
 
 public class Controller {
 // fields
-	
+	static Controller myCont;
 	int totaltime;
 	final int dt;
 	int current_time;
@@ -73,8 +73,21 @@ public class Controller {
 		GraphUtils.addEdge(myMap,r.start_node,r.end_node);
 	}
 	
-	static Controller myCont;
+	
 	public static void main(String[] args) {
+		create1Road();
+		
+		for (int i =0; i<myCont.getTotalTime(); i++){
+			myCont.updateRoad(myCont.getStep());
+		}
+
+	}
+
+	/* 
+	 * this is how we add test cases.  Make similar static void methods
+	 * that set myCont and myMap and get called from the above main method
+	 */
+	public static void create1Road(){
 		myCont = new Controller(1000,1);
 		myMap = new Map();
 		Node v1 = new Node();
@@ -87,14 +100,5 @@ public class Controller {
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
 		r.addVehicle(v);
-		for (int i =0; i<myCont.getTotalTime(); i++){
-			myCont.updateRoad(myCont.getStep());
-		}
-
-	}
-
-	
-	public static void create1Road(){
-		
 	}
 }

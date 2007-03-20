@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry path="" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true" kind="con"/>
+	<classpathentry path="trafficsim/lib/colt.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/commons-collections-3.2.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/concurrent.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/jung-1.7.6.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/resolver.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/serializer.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/xercesImpl.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/xercesSamples.jar" exported="true" kind="lib"/>
+	<classpathentry path="trafficsim/lib/xml-apis.jar" exported="true" kind="lib"/>
+	<classpathentry path="" kind="output"/>
+</classpath>
