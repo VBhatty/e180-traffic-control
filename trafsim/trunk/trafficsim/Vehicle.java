@@ -1,8 +1,8 @@
 
 import java.util.ArrayList;
-import java.util.Random;
+//import java.util.Random;
 
-import edu.uci.ics.jung.graph.Edge;
+//import edu.uci.ics.jung.graph.Edge;
 
 public abstract class Vehicle {
 
@@ -60,8 +60,8 @@ public abstract class Vehicle {
 	}
 public void generate_mass_and_length()
 {
-	Random U = new Random();
-	double x =  U.nextFloat();
+	//Random U = new Random();
+	//double x =  U.nextFloat();
 	// probability function depending on subclass 
 	//mass=mass_mean = some function of x
 	// length function depending on subclass, for cars:
