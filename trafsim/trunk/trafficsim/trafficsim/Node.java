@@ -1,3 +1,5 @@
+package trafficsim;
+
 
 //import edu.uci.ics.*;
 import edu.uci.ics.jung.graph.impl.SparseVertex;

@@ -1,3 +1,5 @@
+package trafficsim;
+
 
 public class Car extends Vehicle {
 

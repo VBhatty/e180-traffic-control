@@ -1,3 +1,5 @@
+package trafficsim;
+
 //import edu.uci.ics.jung.graph.Edge;
 //import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
