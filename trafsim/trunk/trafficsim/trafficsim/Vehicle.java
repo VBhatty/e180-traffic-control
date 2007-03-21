@@ -350,8 +350,10 @@ public ArrayList<Road> getRoute()
 //Finding the safe breaking distance of a vehicle
 public double getSafeBreakingDist(){
 	double v = 2.236936292*get_speed();		//Current speed of vehicle converted from m/s to mph
-	double safeDist;			
-	safeDist = (88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3); //Formula from physical model
+	double safeDist;
+	double Cf = route.get(0).getCoeffOfFriction();
+	
+	safeDist =  (Cf/0.7)* ((88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3)); //Formula from physical model
 	safeDist = 0.3048*safeDist; //Safe breaking distance converted from feet to meter
 	return safeDist;
 }
