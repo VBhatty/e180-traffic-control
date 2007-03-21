@@ -33,4 +33,9 @@ public class Node extends SparseVertex{
 	public double getSpeedLimit(){
 		return speedlimit;
 	}
+	
+	public boolean generate_new_car(int time){
+		return false;
+	}
+	
 }
