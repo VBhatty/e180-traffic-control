@@ -86,7 +86,7 @@ public class Controller {
 	
 	
 	public static void main(String[] args) {
-		create1Road();
+		create2Road();
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		
@@ -111,5 +111,34 @@ public class Controller {
 		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
+	}
+	
+	public static void create2Road(){
+		myCont = new Controller(100,1);
+		myMap = new Map();
+		
+		Node v1 = new Source(1);
+		v1.setX(0);v1.setY(0);
+		myMap.addVertex(v1);
+		
+		Node v2 = new Node();
+		v2.setX(100); v2.setY(0);
+		myMap.addVertex(v2);
+		
+		Node v3 = new Node();
+		v3.setX(400); v3.setY(0);
+		myMap.addVertex(v3);
+		
+		
+		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
+		Road rr = new Road(1,"oslo",300,50,1,v2, v3);
+		
+		
+		myMap.addRoad(r);
+		myMap.addRoad(rr);
+		
+		
+		Car v = new Car(r,0.0);
+		v.route.add(rr);
 	}
 }
