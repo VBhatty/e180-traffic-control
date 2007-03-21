@@ -45,7 +45,18 @@ public class Controller {
 	double getEllapsed(){
 		return 10;
 	}
-	void updateRoad(double dt){
+	void updateRoad(double dt, int i){
+		
+		boolean create;
+		
+		Set<Node> myNodes = myMap.getVertices();
+		Iterator no = myNodes.iterator();
+		
+		while(no.hasNext()){
+			Node nn = (Node)no.next();
+			create = nn.generate_new_car(i);
+		}
+		
 		Set<Road> myRoads = myMap.getEdges();
 		Iterator ro = myRoads.iterator();
 		while(ro.hasNext()){
@@ -78,7 +89,8 @@ public class Controller {
 		create1Road();
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
-			myCont.updateRoad(myCont.getStep());
+		
+			myCont.updateRoad(myCont.getStep(),i);
 		}
 
 	}
@@ -90,7 +102,7 @@ public class Controller {
 	public static void create1Road(){
 		myCont = new Controller(1000,1);
 		myMap = new Map();
-		Node v1 = new Node();
+		Node v1 = new Source(1);
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		Node v2 = new Node();
