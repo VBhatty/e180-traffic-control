@@ -7,22 +7,42 @@ import java.util.Random;
 
 public class Source extends Node{
 
-	Source() {
+	int sourceId;
+	
+	Source(int id) {
 		super();
+		this.sourceId=id;
 		// TODO Auto-generated constructor stub
 	}
 
-	private Random U;
+	private Random U = new Random();
 	
-	public double generate_next_car(double time){
+//	old function
+	//public double generate_next_car(double time){
 		
+		//double f = get_freqency(time);
+		//double x = U.nextFloat();
+		//double dt = (1/f)*Math.log(1-x);
+		//return dt;
+	//}
+	
+	//return true if a car should be created
+	public boolean generate_new_car(int time){
+		
+		boolean carCreation;
 		double f = get_freqency(time);
 		double x = U.nextFloat();
-		double dt = (1/f)*Math.log(1-x);
-		return dt;
+		if(x < f){
+			carCreation = true;
+			System.out.println("A car is created at source: " + sourceId + "at time" + time);
+		}
+		else{
+			carCreation =false;
+		}
+		return carCreation;
 	}
 	
-	public double get_freqency(double time){
+	public double get_freqency(int time){
 		return 0.03;
 	}
 
