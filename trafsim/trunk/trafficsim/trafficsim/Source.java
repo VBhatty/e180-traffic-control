@@ -34,7 +34,7 @@ public class Source extends Node{
 		double x = U.nextFloat();
 		if(x < f){
 			carCreation = true;
-			System.out.println("A car is created at source: " + sourceId + " at time: " + time);
+		//	System.out.println("A car is created at source: " + sourceId + " at time: " + time);
 		}
 		else{
 			carCreation =false;
