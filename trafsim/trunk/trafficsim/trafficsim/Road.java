@@ -57,6 +57,9 @@ public void updateVehicles(double dt){
 		vehicle.update_position(dt);
 		vehicle.update_speed(dt);
 		vehicle.printSpeed();
+		//vehicle.printMaxBreaking();
+		//vehicle.printMaxAcceleration();
+		//vehicle.printSafeBreakingDist();
 	}
 }
 

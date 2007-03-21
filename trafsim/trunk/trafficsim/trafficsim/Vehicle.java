@@ -37,7 +37,7 @@ public abstract class Vehicle {
 	 */
 	public Vehicle(Road r,double fract)
 	{
-		
+		mass = 1500;
 		cur_speed=0;
 		cur_accel=0;
 		loc_fraction=fract;
@@ -83,17 +83,25 @@ public double max_acceleration()
 	return aMax;
 }
 
-public double max_breaking()
+public double max_breaking() //Giving out maximum possible deceleration (breaking)
 {
 	double bMax = 0;
 	double v = this.cur_speed;
-	double Cf0 = route.get(0).getCoeffOfFriction();
+	double Cf0 = 0.7; //route.get(0).getCoeffOfFriction();
 	double Cfw = Cf0;		//Cf(w) and Cf(0) are different if weather-coeff. is set to other than zero
-	double b = 24/(Math.pow(50,2));		//Constants b and c taken from Physical Model.ppt
-	double c = 74/(Math.pow(50,3));
+	double b = 0.01464176482072;		//Constants b and c taken from Physical Model.ppt and computed to fit the SI-system
+	double c = 0.00201974953161;
 	
-	bMax = Cfw / (Cf0 * (2*b + 3*c*v));
+	bMax = -Cfw / (Cf0 * (2*b + 3*c*v));
 	return bMax;
+}
+
+public void printMaxBreaking(){		//Just for testing the function max_breaking()
+	System.out.println(max_breaking());
+}
+
+public void printMaxAcceleration(){		//Just for testing the function max_acceleration()
+	System.out.println(max_acceleration());
 }
 
 public Vehicle find_car_in_front()
@@ -370,11 +378,15 @@ public ArrayList<Road> getRoute()
 public double getSafeBreakingDist(){
 	double v = 2.236936292*get_speed();		//Current speed of vehicle converted from m/s to mph
 	double safeDist;
-	double Cf = route.get(0).getCoeffOfFriction();
+	double Cf = 0.7; //route.get(0).getCoeffOfFriction();
 	
 	safeDist =  (Cf/0.7)* ((88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3)); //Formula from physical model
 	safeDist = 0.3048*safeDist; //Safe breaking distance converted from feet to meter
 	return safeDist;
+}
+
+public void printSafeBreakingDist(){		//Just for testing the function
+	System.out.println(getSafeBreakingDist());
 }
 
 }
