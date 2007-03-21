@@ -132,7 +132,7 @@ public void update_position(double dt )
 	//distance travelled at current step
 	double dp = (cur_speed + (cur_speed + cur_accel*dt))*0.5*dt;
 	// adding the distance travelled to the fraction of the current road
-	double fraction = loc_fraction + dp/route.get(0).length;
+	double fraction = loc_fraction + dp/(route.get(0).length);
 	int count;
 	// if the distance travelled is longer than what is left of current road,
 	// the vehicle start on the next road on the route
@@ -145,22 +145,34 @@ public void update_position(double dt )
 		//finding number of vehicles on current road
 		count = route.get(0).totalVehicles()-1;
 		//removes the last vehicle, which is this one
-		route.get(0).vehicles.remove(count);
+		(route.get(0).vehicles).remove(count);
 		
-		//some if-sentence here to terminate the car if it has reached the destination
+		
 		
 		//remove completed road from route
-		//route.remove(0);
+		route.remove(0);
 		
-		//add this vehicle to the vehicles-list of the road
-		//(route.get(0)).vehicles.add(0,this);
+		//if route is empty, then the vehicle has reached the destination
+		if (route.isEmpty() == true){
+			fraction = 0;//sets the fraction to zero to get out of the while loop, but
+						// doesn't add the vehicle to a new road as the routelist is 
+			            // is empty
+		}
+		//the vehicle is moving to a new road
+		else{
+			//add this vehicle to vehicles (the list of vehicles at the road) at 
+			//next road on the route
+			(route.get(0)).vehicles.add(0,this);
+			// calculating fraction completed at next road on route
+			fraction = dp/(route.get(0).length);
+			
+		}
 		
-		// calculating fraction completed at next road on route
-		fraction = dp/route.get(0).length;
 	}
 	// setting loc_fraction equal the fraction completed at current road
 	loc_fraction = fraction;
 }
+
 public void update_speed(double dt) //call in the end of timestep as the other updatefunctions use speed at  
 									// start of time step as cur_speed
 {
@@ -219,55 +231,57 @@ public void getAcceleration() {
 
 public double neccessary_car_in_front_acceleration()
 {
-	Road r;
+	
 // neccessary acceleration to get the same speed as the car in front 1 meter 
 //	behind the current position of the rearend of the car in front, by constant acceleration
-	double nec=0;
-// distance to the car in front
-	double dist = 0;
-//	 v - the current speed of the car in front
-	double v = 0;
-//	 f - the current fraction of the road the car in front has completed
-	double f;
+	double nec;
+
 // If no car in front, there is no reason to accelerate to adapt to the car in front
 	if (car_in_front.isNull())
 	{
 		nec= Float.POSITIVE_INFINITY;
 	}
+//there is a car in front:
+	else // finding acceleration 
+	{
+		// distance to the car in front
+		double dist = 0;
+
 	
-// finding acceleration
+		// r - the current road of the car in front
+		Road r = (car_in_front.getRoute()).get(0);
 	
-// r - the current road of the car in front
-	r = (car_in_front.getRoute()).get(0);
+		// f - the current fraction of the road the car in front has completed
+	 	double f = car_in_front.loc_fraction;
 	
-// f - the current fraction of the road the car in front has completed
-	 f = car_in_front.loc_fraction;
+	 	// v - the current speed of the car in front
+	 	double v = car_in_front.get_speed();
 	
-// v - the current speed of the car in front
-	 v = car_in_front.get_speed();
-	
-	//search through route to find distance to the point f (fraction of the road) on r (Road),
-	//update dist while searching
-	if (route.get(0) == r){
-		dist = (f-loc_fraction)*r.getLength();
-		return nec;
-	}
-	else{
+	 	//search through route to find distance to the point f (fraction of the road) on r (Road),
+	 	//update dist while searching
+	 	if (route.get(0) == r){
+	 		dist = (f-loc_fraction)*r.getLength();
+	 	}
+	 	else{
 		
 	
-		dist = (1-loc_fraction)*(route.get(0)).getLength();
-	    int i = 1;
-	    while(route.get(i) != r){
-	    	dist = dist + (route.get(i)).getLength();
-	    	i = i+1;
-	    }
-	    dist = dist + f*r.getLength();
-	    //dist = dist - (car_in_front.getLength()+1);
-// using constant acceleration equation to calculate the acceleration needed
-	nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
+	 		dist = (1-loc_fraction)*(route.get(0)).getLength();
+	 		int i = 1;
+	 		while(route.get(i) != r){
+	 			dist = dist + (route.get(i)).getLength();
+	 			i = i+1;
+	 		}
+	 		dist = dist + f*r.getLength();
+	 		}
 	
-	return nec;
+	 	dist = dist - (car_in_front.getLength()+1);
+	
+	 	// using constant acceleration equation to calculate the acceleration needed
+        nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
 	}
+	
+return nec;
+
 }
 
 //Searching through all roads on route within safe breaking distance. If the speed limit changes within
