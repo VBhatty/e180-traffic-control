@@ -15,7 +15,7 @@ public class trafSimMain {
 		double dt=1;
 		double tend=100;
 		
-		Source v1 = new Source();
+		Source v1 = new Source(2);
 		v1.setX(0);
 		v1.setY(0);
 		//dummy variable
@@ -51,7 +51,7 @@ public class trafSimMain {
 			//if generate is 0, then a car just left the source, and a new car
 			//will be generated at time nextStart
 			if (generate == 0){
-				nextStart = time + (double)v1.generate_next_car(time);
+				
 				generate =1;
 			}
 			else if (time >= nextStart){
