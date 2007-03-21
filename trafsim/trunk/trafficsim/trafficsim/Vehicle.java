@@ -42,6 +42,7 @@ public abstract class Vehicle {
 		cur_accel=0;
 		loc_fraction=fract;
 		average_speed=0;
+		distance_travelled=0;
 		time_since_creation=0;
 		destination=null;
 		myRoad = r;
@@ -134,6 +135,12 @@ public void update_stat(double dt) //done after cur_accel is found on each step,
 	//updates average_speed by divide distance_travelled by time_since_creation
 	average_speed= distance_travelled/time_since_creation;
 }
+public void printStat(){
+	System.out.println("The car has reached it's destination");
+	System.out.println("Traveltime was: " + time_since_creation);
+	System.out.println("The distance travelled was: " + distance_travelled);
+	System.out.println("Average speed: " + average_speed);
+}
 
 public void update_position(double dt )
 {
@@ -165,6 +172,7 @@ public void update_position(double dt )
 			fraction = 0;//sets the fraction to zero to get out of the while loop, but
 						// doesn't add the vehicle to a new road as the routelist is 
 			            // is empty
+			this.printStat();
 		}
 		//the vehicle is moving to a new road
 		else{
@@ -173,10 +181,11 @@ public void update_position(double dt )
 			(route.get(0)).vehicles.add(0,this);
 			// calculating fraction completed at next road on route
 			fraction = dp/(route.get(0).length);
-			
+			myRoad =route.get(0);
 		}
 		
 	}
+	
 	// setting loc_fraction equal the fraction completed at current road
 	loc_fraction = fraction;
 }
