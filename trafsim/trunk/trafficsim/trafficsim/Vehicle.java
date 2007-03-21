@@ -13,7 +13,7 @@ public abstract class Vehicle {
 	//	public static final double mass_mean = 1000; //may be used as distribution mean to generate mass
 	public static final double g = 9.8;
 	public double mass;			//mass of this vehicle
-	public double lenght;		//length of this vehicle
+	public double length;		//length of this vehicle
 	public double cur_speed;	//initial speed at current time step
 	public double cur_accel;	//acceleration at current time step, constant through the time step 
 	public Road myRoad;		//will be obmitted because this Road is Route[0]
@@ -67,7 +67,7 @@ public void generate_mass_and_length()
 	// probability function depending on subclass 
 	//mass=mass_mean = some function of x
 	// length function depending on subclass, for cars:
-	lenght= 5.773e-4*mass+2.834;
+	length= 5.773e-4*mass+2.834;
 }
 
 public void finding_route()
@@ -282,6 +282,11 @@ public double neccessary_car_in_front_acceleration()
 	
 return nec;
 
+}
+
+private double getLength() {
+	// TODO Auto-generated method stub
+	return this.length;
 }
 
 //Searching through all roads on route within safe breaking distance. If the speed limit changes within

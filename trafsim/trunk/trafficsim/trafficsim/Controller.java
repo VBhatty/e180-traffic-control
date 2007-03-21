@@ -99,6 +99,5 @@ public class Controller {
 		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
-		r.addVehicle(v);
 	}
 }
