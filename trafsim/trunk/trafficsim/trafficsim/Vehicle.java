@@ -204,6 +204,7 @@ public void set_speed(double speed){
 
 //Function to calculate acceleration at current time step, constant acceleration assumed during timestep
 
+/*
 public void find_acceleration()
 {
 	double accel = neccessary_car_in_front_acceleration();
@@ -245,7 +246,7 @@ public void getAcceleration() {
 		a = this.max_breaking();
 	}
 }
-
+*/
 public double neccessary_car_in_front_acceleration()
 {
 	
@@ -342,23 +343,7 @@ public double accelerationToNearestNodeOrRoad(){
 	return nec;
 }
 
-public Node[] nodes_before_full_stop_acceleration()
-{
-	Node[] N = null;
-// Calculate the distance it takes to come to a full stop,
-// then finding nodes at the route within this range, returning an array of these nodes
-	return N;
-	
-}
-public double neccessary_node_in_front_acceleration(Node n)
-{
-	double nec = 0;
-// similar to neccessary_car_in_front_acceleration
-// find the distance to n, and the velocity change needed to get the speed of
-// the road at the route that starts at node n, and calculate the acceleration
-// needed to obtain this speed by constant acceleration
-	return nec;
-}
+
 
 public double get_speed()
 {
@@ -396,6 +381,12 @@ public double getSafeBreakingDist(){
 
 public void printSafeBreakingDist(){		//Just for testing the function
 	System.out.println(getSafeBreakingDist());
+}
+public double getDistance_travelled(){
+	return distance_travelled;
+}
+public void printInfo(){
+	System.out.println("Distance travelled is " + getDistance_travelled());
 }
 
 }
