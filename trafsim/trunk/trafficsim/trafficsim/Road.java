@@ -55,6 +55,7 @@ public void updateVehicles(double dt){
 		
 		vehicle.set_acceleration();
 		vehicle.update_position(dt);
+		vehicle.update_stat(dt);
 		vehicle.update_speed(dt);
 		vehicle.printSpeed();
 		//vehicle.printMaxBreaking();
