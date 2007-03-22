@@ -71,6 +71,7 @@ public void updateVehicles(double dt){
 		//vehicle.printMaxBreaking();
 		//vehicle.printMaxAcceleration();
 		//vehicle.printSafeBreakingDist();
+		//vehicle.printAccelerationToRoadsAhead();
 	}
 }
 

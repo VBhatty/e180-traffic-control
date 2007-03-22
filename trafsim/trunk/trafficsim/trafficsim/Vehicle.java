@@ -360,23 +360,32 @@ public double accelerationToRoadsAhead(){
 	double mySpeed = this.cur_speed;	//Current speed
 	double speedLimit;			//Speedlimit of roads ahead
 	
-	dist = route.get(0).length * (1 - this.loc_fraction);	//Distance from car to next road 
+	if (route.size() > 0){		//Preventing systemcrash when car is out of system/no roads on route
+	dist = route.get(0).length * (1 - this.loc_fraction);	//Distance from car to next road
+	}
 	
 	int i = 1;					//counter, stepping 1 road ahead each time
+	
 	while(dist<prefBreakDist){
-		if (route.get(i) != null){			//If sink ahead, iow. NO new road, skip out of while-loop
-		
-			speedLimit = route.get(i).speed_limit;		//Speedlimit on roads ahead of current road
-			if (speedLimit < mySpeed){					//Only necessary to break if new speedlimit is less
-				accNew = (Math.pow(speedLimit,2) - Math.pow(mySpeed,2)) / (2*dist);
-				if (accNew < a){						//Choosing hardest breaking decelration
-					a = accNew;
-				}
-			}
-			dist = dist + route.get(i).length;			//Updating distance
-			i = i + 1;
+		if (i >= route.size()){			//If sink ahead, iow. NO new road, skip out of while-loop
+			break;
 		}
+		speedLimit = route.get(i).speed_limit;		//Speedlimit on roads ahead of current road
+		if (speedLimit < mySpeed){					//Only necessary to break if new speedlimit is less
+			accNew = (Math.pow(speedLimit,2) - Math.pow(mySpeed,2)) / (2*dist);
+			if (accNew < a){						//Choosing hardest breaking decelration
+				a = accNew;
+			}
+		}
+		dist = dist + route.get(i).length;			//Updating distance
+		i = i + 1;		
 	}
+	if (a > 0){
+		a = 0;
+	}
+	/*if (a < max_breaking()){
+		a = max_breaking();
+	}*/
 	return a;
 	
 }
@@ -434,7 +443,7 @@ public double get_speed()
 //temporary function to find the acceleration for simple model use
 public void set_acceleration()
 {
-	double a = AccelerationDueToCarInFront();
+	double a = AccelerationDueToCarInFront(); //Math.min(AccelerationDueToCarInFront() , accelerationToRoadsAhead() );
 	if(a == 1000){
 		cur_accel =(route.get(0).getLimit() - this.cur_speed)/6; 
 	}else{
