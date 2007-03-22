@@ -6,5 +6,17 @@ package trafficsim;
  * and adjusts its acceleration accordingly
  */
 public class trafficController extends Node{
-
+	private double speedlimit;
+	
+	boolean isTrafCont(){
+		return true;
+	}
+	void setSpeedlimit(double limit){
+		
+		speedlimit = limit;
+	}
+	
+	public double getSpeedLimit(){
+		return speedlimit;
+	}
 }

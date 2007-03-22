@@ -45,6 +45,10 @@ public class Controller {
 	double getEllapsed(){
 		return 10;
 	}
+	
+	/* 
+	 * please comment, what is i???
+	 */
 	void updateRoad(double dt, int i){
 		
 		boolean create;
@@ -54,7 +58,9 @@ public class Controller {
 		
 		while(no.hasNext()){
 			Node nn = (Node)no.next();
-			create = nn.generate_new_car(i);
+			if (nn.isSource()){
+				create = ((Source)nn).generate_new_car(i);
+			}
 		}
 		
 		Set<Road> myRoads = myMap.getEdges();
@@ -114,6 +120,11 @@ public class Controller {
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
 	}
+
+	public static void readEditorMap(){
+		
+	}
+
 	
 	public static void create2Road(){
 		myCont = new Controller(100,1);

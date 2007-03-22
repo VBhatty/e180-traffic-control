@@ -13,7 +13,6 @@ public class Node extends SparseVertex{
 
 	public double x;
 	public double y;
-	public double speedlimit;
 
 	Node (){
 		super();
@@ -24,17 +23,10 @@ public class Node extends SparseVertex{
 	void setY(double Y){
 		y=Y;
 	}
-	
-	void setSpeedlimit(double speedlimit){
-		
-		this.speedlimit = speedlimit;
+	boolean isSource(){
+		return false;
 	}
-	
-	public double getSpeedLimit(){
-		return speedlimit;
-	}
-	
-	public boolean generate_new_car(int time){
+	boolean isTrafCont(){
 		return false;
 	}
 	

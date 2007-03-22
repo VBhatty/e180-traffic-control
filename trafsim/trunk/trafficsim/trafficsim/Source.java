@@ -8,14 +8,15 @@ import java.util.Random;
 public class Source extends Node{
 
 	int sourceId;
-	
+	private Random U = new Random();
 	Source(int id) {
 		super();
 		this.sourceId=id;
-		// TODO Auto-generated constructor stub
 	}
 
-	private Random U = new Random();
+	boolean isSource(){
+		return true;
+	}
 	
 //	old function
 	//public double generate_next_car(double time){

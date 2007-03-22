@@ -303,7 +303,6 @@ return nec;
 }
 
 private double getLength() {
-	// TODO Auto-generated method stub
 	return this.length;
 }
 
@@ -311,7 +310,7 @@ private double getLength() {
 //safe breaking distance calculate acceleration needed to get new speedlimit at that point.
 public double accelerationToNearestNodeOrRoad(){
 	double dist = 0;
-	double endNodeSpeedLimit;
+	double endNodeSpeedLimit=0;
 	double safeBreakDist = this.getSafeBreakingDist();
 	double dist2newSpeedLimit = 0;
 	double currSpeed = this.cur_speed;
@@ -321,7 +320,9 @@ public double accelerationToNearestNodeOrRoad(){
 	double newSpeedLimit=0;
 	while(dist<safeBreakDist){		//Going through roads at vehicle's route
 		roadSpeedLimit = route.get(i).getLimit();
-		endNodeSpeedLimit = route.get(i).getEndNode().getSpeedLimit();
+		if (route.get(i).getEndNode().isTrafCont()){
+			endNodeSpeedLimit = ((trafficController)route.get(i).getEndNode()).getSpeedLimit();
+		}
 		if (i != 0) {				//Calculating distance to end of road / endnode start of new road
 			dist2newSpeedLimit = dist2newSpeedLimit + route.get(i).getLength();		//If checking a road ahead dist2newSpeedLimit equals the sum of the road lengths + fraction of current road not driven
 		} else {
@@ -333,7 +334,7 @@ public double accelerationToNearestNodeOrRoad(){
 			newSpeedLimit = roadSpeedLimit;			//If change in speedlimit at a road, get new speedlimit and end while-loop to calculate acceleration
 			dist2newSpeedLimit = dist2newSpeedLimit - route.get(i).getLength();		//Change in speedlimit at a road starts at the end of the road
 			break;
-		} else if (endNodeSpeedLimit < currSpeed) {
+		} else if (route.get(i).getEndNode().isTrafCont()&& endNodeSpeedLimit < currSpeed) {
 			newSpeedLimit = endNodeSpeedLimit;		//If change in speedlimit at the endnode of the road, get new speedlimit and end while-loop to calculate acceleration
 			break;
 		}
