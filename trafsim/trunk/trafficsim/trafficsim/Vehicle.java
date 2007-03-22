@@ -1,5 +1,6 @@
 package trafficsim;
 
+//import Vehicle;
 
 import java.util.ArrayList;
 //import java.util.Random;
@@ -45,6 +46,7 @@ public abstract class Vehicle {
 	public Vehicle(Road r,double fract)
 	{
 		mass = 1500;
+		car_in_front=null;
 		cur_speed=0;
 		cur_accel=0;
 		loc_fraction=fract;
@@ -170,13 +172,15 @@ public void update_stat(double dt)
 	//updates average_speed by divide distance_travelled by time_since_creation
 	average_speed= distance_travelled/time_since_creation;
 }
-
 public void printStat(){
 	System.out.println("The car has reached it's destination");
 	System.out.println("Traveltime was: " + time_since_creation);
 	System.out.println("The distance travelled was: " + distance_travelled);
 	System.out.println("Average speed: " + average_speed);
 }
+
+
+
 
 /*
  * updates the position of this vehicle
@@ -430,8 +434,13 @@ public double get_speed()
 //temporary function to find the acceleration for simple model use
 public void set_acceleration()
 {
-	cur_accel =(route.get(0).getLimit() - this.cur_speed)/6; 
-}
+	double a = AccelerationDueToCarInFront();
+	if(a == 1000){
+		cur_accel =(route.get(0).getLimit() - this.cur_speed)/6; 
+	}else{
+		cur_accel=a;
+	}
+}	
 
 
 public void printSpeed() 
@@ -451,7 +460,7 @@ public double getSafeBreakingDist(){
 	double safeDist;
 	double Cf = 0.7; //route.get(0).getCoeffOfFriction();
 	
-	safeDist =  (Cf/0.7)* ((88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3)); //Formula from physical model
+	safeDist =  (0.7/Cf)* ((88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3)); //Formula from physical model
 	safeDist = 0.3048*safeDist; //Safe breaking distance converted from feet to meter
 	return safeDist;
 }
@@ -464,6 +473,90 @@ public double getDistance_travelled(){
 }
 public void printInfo(){
 	System.out.println("Distance travelled is " + getDistance_travelled());
+}
+
+//another version of AccelerationDueToCarInFront
+public double AccelerationDueToCarInFront(){
+	//initializing target acceleration
+	double a;
+	//mbd = breakingdistance by applying maximum breaking, or "faen te hæstkukbræmsing"
+	double mbd= getSafeBreakingDist();
+	//pbd = breakingdistance by applying prefered breaking
+	double pbd= 1.5*mbd;//might be modified later on
+	
+	
+	//finding the distance to car in front
+	double distance;
+
+	// If no car in front, there is no reason to accelerate to adapt to the car in front
+		if (car_in_front == null)
+		{
+			a=1000;
+			//distance=pbd;
+		}
+	//there is a car in front:
+		else if(car_in_front.getRoute().isEmpty() == true){
+			
+			a=1000; 
+		}
+		else
+		{
+			//safe following distance
+			double sfd = pbd + car_in_front.getLength()-mbd;
+			// r - the current road of the car in front
+			Road r = (car_in_front.getRoute()).get(0);
+		
+			// f - the current fraction of the road the car in front has completed
+		 	double f = car_in_front.getLoc_fraction();
+		 	
+		 	
+		 	//search through route to find distance to the point f (fraction of the road) on r (Road),
+		 	//update dist while searching
+		 	if (route.get(0) == r){
+		 		distance = (f-loc_fraction)*r.getLength();
+		 	}
+		 	else{
+			
+		
+		 		distance = (1-loc_fraction)*(route.get(0)).getLength();
+		 		int i = 1;
+		 		while(route.get(i) != r){
+		 			distance = distance + (route.get(i)).getLength();
+		 			i = i+1;
+		 		}
+		 		distance = distance + f*r.getLength();
+		 		}
+		
+		
+		 	// using constant acceleration equation to calculate the acceleration needed
+	        //nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
+		 		//System.out.println(distance);
+			if (distance < sfd){
+				a = 0.8*max_breaking();
+				System.out.println("BREAKING");
+			}
+			else{
+				a=1000;
+				
+			}
+	
+		}
+	return a;
+}
+public double getLoc_fraction(){
+	return loc_fraction;
+}
+
+
+
+
+
+
+public void setSpeed(double speed){
+	cur_speed=speed;
+}
+public void setCarInFront(Vehicle carInFront){
+	car_in_front = carInFront;
 }
 
 }
