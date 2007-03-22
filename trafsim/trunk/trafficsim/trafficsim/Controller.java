@@ -151,7 +151,13 @@ public class Controller {
 		myMap.addRoad(rr);
 		
 		
-		Car v = new Car(r,0.0);
+		Car v = new Car(r,0.12);
+		Car follower = new Car(r,0.0);
+		
 		v.route.add(rr);
+		follower.route.add(rr);
+		follower.setCarInFront(v);
+		follower.setSpeed(4);
+		
 	}
 }
