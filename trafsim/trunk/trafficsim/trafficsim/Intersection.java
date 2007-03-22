@@ -13,5 +13,6 @@ public class Intersection extends Node {
 	 */
 	Intersection(){
 		
+		myIntersection = new Map();
 	}
 }

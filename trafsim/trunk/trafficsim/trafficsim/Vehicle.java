@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 //import edu.uci.ics.jung.graph.Edge;
 
+/*
+ * Vehicle class is super class for all cars,  acceleration and speed are calculated
+ * by the car at each time step.  Each car belongs to a road and has a user set mass
+ * and length
+ */
 public abstract class Vehicle {
 
 // Class parameters
@@ -29,7 +34,9 @@ public abstract class Vehicle {
 	public ArrayList<Road> route;	//ArrayList containing the roads on the route from current road to
 									//the road that ends in the destination node in chronological ordering
 									
-
+	/*
+	 * Null car object is used if a car has no car in front
+	 */
 	abstract boolean isNull();
 	
 	/* 
@@ -54,13 +61,24 @@ public abstract class Vehicle {
 		
 		
 	}
-
+	
+	/*
+	 * Manually sets the road of this car
+	 */
 	public void setMyRoad(Road r){
-
+		
 	}
+	
+	/*
+	 * Manually sets the destination of this car
+	 */
 	void setDestination(Node n){
 		destination=n;
 	}
+	
+	/*
+	 * generates the mass and length of this car
+	 */
 public void generate_mass_and_length()
 {
 	//Random U = new Random();
@@ -71,11 +89,17 @@ public void generate_mass_and_length()
 	length= 5.773e-4*mass+2.834;
 }
 
+/*
+ * finds the route that this car will take
+ */
 public void finding_route()
 {
 	route.add(myRoad);
 }
 
+/*
+ * The maximum acceleration that this car can use
+ */
 public double max_acceleration()
 {
 	double aMax = 0;
@@ -84,6 +108,9 @@ public double max_acceleration()
 	return aMax;
 }
 
+/*
+ * The maximum negative acceleration (breaking) that this car can use
+ */
 public double max_breaking() //Giving out maximum possible deceleration (breaking)
 {
 	double bMax = 0;
@@ -97,6 +124,7 @@ public double max_breaking() //Giving out maximum possible deceleration (breakin
 	return bMax;
 }
 
+
 public void printMaxBreaking(){		//Just for testing the function max_breaking()
 	System.out.println(max_breaking());
 }
@@ -105,20 +133,24 @@ public void printMaxAcceleration(){		//Just for testing the function max_acceler
 	System.out.println(max_acceleration());
 }
 
+/*
+ * searches through route to find the nearest car in front on the current route.
+ * Starting by searching route[0] for the vehicle with the smallest value
+ * loc_frac > this.loc_fraq.
+ * If no cars fulfils this requirement it searches route[i] while it finds a road with
+ * at least one vehicle on it, returning the vehicle with the smallest loc_fraq
+ */
 public Vehicle find_car_in_front()
 {
-	//searches through route to find the nearest car in front on the current route.
-	//Starting by searching route[0] for the vehicle with the smallest value
-	//loc_frac > this.loc_fraq.
-	//If no cars fulfils this requirement it searches route[i] while it finds a road with
-	//at least one vehicle on it, returning the vehicle with the smallest loc_fraq
 	Vehicle somecar = null;
 	return somecar;
 }
 
+/*
+ * find the vehicle in front and set this as vehicle_in_front if it isn't already
+ */
 public void check_car_in_front()
 {
-	//find the vehicle in front and set this as vehicle_in_front if it isn't allready
 	Vehicle somecar= find_car_in_front();
 	if (car_in_front != somecar)
 	{
@@ -126,7 +158,10 @@ public void check_car_in_front()
 	}
 }
 
-public void update_stat(double dt) //done after cur_accel is found on each step,and before cur_speed
+/*
+ * done after cur_accel is found on each step,and before cur_speed
+ */
+public void update_stat(double dt)
 {
 	// updates time_since_creation by adding the last timestep
 	time_since_creation = time_since_creation + dt;
@@ -135,6 +170,7 @@ public void update_stat(double dt) //done after cur_accel is found on each step,
 	//updates average_speed by divide distance_travelled by time_since_creation
 	average_speed= distance_travelled/time_since_creation;
 }
+
 public void printStat(){
 	System.out.println("The car has reached it's destination");
 	System.out.println("Traveltime was: " + time_since_creation);
@@ -142,6 +178,9 @@ public void printStat(){
 	System.out.println("Average speed: " + average_speed);
 }
 
+/*
+ * updates the position of this vehicle
+ */
 public void update_position(double dt )
 {
 	//distance travelled at current step
