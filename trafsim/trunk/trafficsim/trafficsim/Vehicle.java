@@ -167,8 +167,15 @@ public void update_stat(double dt)
 {
 	// updates time_since_creation by adding the last timestep
 	time_since_creation = time_since_creation + dt;
+	
 	//updates distance_travelled by adding the distance travelled the last timestep assuming constant acceleration
-	distance_travelled =  distance_travelled + (cur_speed + (cur_speed + cur_accel*dt))*0.5*dt;
+	double nextspeed =cur_speed + cur_accel*dt;
+	if (nextspeed > 0){
+		distance_travelled =  distance_travelled + (cur_speed + nextspeed)*0.5*dt;
+	}else{
+		distance_travelled =  distance_travelled + (cur_speed)*0.5*dt;
+	}
+	
 	//updates average_speed by divide distance_travelled by time_since_creation
 	average_speed= distance_travelled/time_since_creation;
 }
@@ -187,8 +194,16 @@ public void printStat(){
  */
 public void update_position(double dt )
 {
+	double nextspeed =cur_speed + cur_accel*dt;
+	
 	//distance travelled at current step
-	double dp = (cur_speed + (cur_speed + cur_accel*dt))*0.5*dt;
+	double dp;
+	if (nextspeed > 0){
+		dp = (cur_speed + nextspeed)*0.5*dt;
+	}else{
+		dp = (cur_speed + 0)*0.5*dt;
+	}
+	
 	// adding the distance travelled to the fraction of the current road
 	double fraction = loc_fraction + dp/(route.get(0).length);
 	int count;
@@ -236,7 +251,13 @@ public void update_position(double dt )
 public void update_speed(double dt) //call in the end of timestep as the other updatefunctions use speed at  
 									// start of time step as cur_speed
 {
-	cur_speed = cur_speed + cur_accel*dt;
+	double nextspeed =cur_speed + cur_accel*dt;
+	if (nextspeed > 0){
+		cur_speed = nextspeed;
+	}else{
+		cur_speed = 0;
+	}
+
 }
 
 
