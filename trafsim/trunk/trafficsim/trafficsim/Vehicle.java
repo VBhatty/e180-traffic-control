@@ -345,6 +345,43 @@ private double getLength() {
 	return this.length;
 }
 
+//Going through all the ahead roads on the vehicles route and calculating what breaking
+//is needed to obtain the ahead roads speedlimit. The hardest deceleration is chosen.
+//Note: This method ONLY consider roads.
+public double accelerationToRoadsAhead(){
+	double dist = 0;
+	double a = this.cur_accel;	//current acceleration
+	double accNew = 10000;		//new acceleration sat high so it won't be chosen unless it's lower than current acc.
+	double prefBreakDist = this.getSafeBreakingDist() * 1.2;	//Preferred (comfortable) breaking distance
+	double mySpeed = this.cur_speed;	//Current speed
+	double speedLimit;			//Speedlimit of roads ahead
+	
+	dist = route.get(0).length * (1 - this.loc_fraction);	//Distance from car to next road 
+	
+	int i = 1;					//counter, stepping 1 road ahead each time
+	while(dist<prefBreakDist){
+		if (route.get(i) != null){			//If sink ahead, iow. NO new road, skip out of while-loop
+		
+			speedLimit = route.get(i).speed_limit;		//Speedlimit on roads ahead of current road
+			if (speedLimit < mySpeed){					//Only necessary to break if new speedlimit is less
+				accNew = (Math.pow(speedLimit,2) - Math.pow(mySpeed,2)) / (2*dist);
+				if (accNew < a){						//Choosing hardest breaking decelration
+					a = accNew;
+				}
+			}
+			dist = dist + route.get(i).length;			//Updating distance
+			i = i + 1;
+		}
+	}
+	return a;
+	
+}
+
+//Testing accelerationToRoadsAhead() by writing out data
+public void printAccelerationToRoadsAhead(){
+	System.out.println("Acceleration to road ahead is: " + accelerationToRoadsAhead());
+}
+
 //Searching through all roads on route within safe breaking distance. If the speed limit changes within
 //safe breaking distance calculate acceleration needed to get new speedlimit at that point.
 public double accelerationToNearestNodeOrRoad(){
