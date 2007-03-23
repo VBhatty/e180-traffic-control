@@ -50,6 +50,31 @@ public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
+public void updateVehicles(double dt){
+	
+	for ( int i=0; i < vehicles.size() ;i++){
+		Vehicle vehicle = (Vehicle)vehicles.get(i);
+		
+		//System.out.println("setting acceleration");
+		vehicle.set_acceleration();
+		
+		//System.out.println("finding position");
+		vehicle.update_position(dt);
+		
+		//System.out.println("updating stat");
+		vehicle.update_stat(dt);
+		
+		//System.out.println("updating speed");
+		vehicle.update_speed(dt);
+		
+		//System.out.println("printing info");
+		vehicle.printInfo();
+		//vehicle.printMaxBreaking();
+		//vehicle.printMaxAcceleration();
+		//vehicle.printSafeBreakingDist();
+	}
+}
+
 public void updateVehiclesAcceleration(double dt){
 	
 	for ( int i=0; i < vehicles.size() ;i++){
