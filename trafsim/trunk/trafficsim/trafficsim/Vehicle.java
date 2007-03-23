@@ -35,10 +35,14 @@ public abstract class Vehicle {
 	public ArrayList<Road> route;	//ArrayList containing the roads on the route from current road to
 									//the road that ends in the destination node in chronological ordering
 									
+	
+	// notUpdated is used so that one car cannot get it's position updated twice at the
+	//same time step because it changes to a road that is not updated by the controller
+	private boolean notUpdated;
+	
 	/*
 	 * Null car object is used if a car has no car in front
 	 */
-	private boolean notUpdated;
 	abstract boolean isNull();
 	
 	
