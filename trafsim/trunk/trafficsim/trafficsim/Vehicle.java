@@ -38,7 +38,9 @@ public abstract class Vehicle {
 	/*
 	 * Null car object is used if a car has no car in front
 	 */
+	private boolean notUpdated;
 	abstract boolean isNull();
+	
 	
 	/* 
 	 * Creates a vehicle at the beginning of road r
@@ -60,6 +62,7 @@ public abstract class Vehicle {
 		r.addVehicle(this);
 		//finding_route();
 		//generate_mass_and_length();
+		notUpdated=true;
 		
 		
 	}
@@ -194,58 +197,62 @@ public void printStat(){
  */
 public void update_position(double dt )
 {
-	double nextspeed =cur_speed + cur_accel*dt;
+	if(notUpdated){
+		
+		double nextspeed =cur_speed + cur_accel*dt;
 	
-	//distance travelled at current step
-	double dp;
-	if (nextspeed > 0){
-		dp = (cur_speed + nextspeed)*0.5*dt;
-	}else{
-		dp = (cur_speed + 0)*0.5*dt;
-	}
+		//distance travelled at current step
+		double dp;
+		if (nextspeed > 0){
+			dp = (cur_speed + nextspeed)*0.5*dt;
+		}else{
+			dp = (cur_speed + 0)*0.5*dt;
+		}
 	
-	// adding the distance travelled to the fraction of the current road
-	double fraction = loc_fraction + dp/(route.get(0).length);
-	int count;
-	// if the distance travelled is longer than what is left of current road,
-	// the vehicle start on the next road on the route
-	while ( fraction > 1)
-	{
-		//calculating how much longer than what is left of the road that the vehicle have
-		//travelled in current timestep
-		fraction = fraction - 1;
-		dp = fraction*route.get(0).length;
-		//finding number of vehicles on current road
-		count = route.get(0).totalVehicles()-1;
-		//removes the last vehicle, which is this one
-		(route.get(0).vehicles).remove(count);
+		// adding the distance travelled to the fraction of the current road
+		double fraction = loc_fraction + dp/(route.get(0).length);
+		int count;
+		// if the distance travelled is longer than what is left of current road,
+		// the vehicle start on the next road on the route
+		while ( fraction > 1)
+		{
+			//calculating how much longer than what is left of the road that the vehicle have
+			//travelled in current timestep
+			fraction = fraction - 1;
+			dp = fraction*route.get(0).length;
+			//finding number of vehicles on current road
+			count = route.get(0).totalVehicles()-1;
+			//removes the last vehicle, which is this one
+			(route.get(0).vehicles).remove(count);
 		
 		
 		
-		//remove completed road from route
-		route.remove(0);
+			//remove completed road from route
+			route.remove(0);
 		
-		//if route is empty, then the vehicle has reached the destination
-		if (route.isEmpty() == true){
-			fraction = 0;//sets the fraction to zero to get out of the while loop, but
+			//if route is empty, then the vehicle has reached the destination
+			if (route.isEmpty() == true){
+				fraction = 0;//sets the fraction to zero to get out of the while loop, but
 						// doesn't add the vehicle to a new road as the routelist is 
 			            // is empty
-			this.printStat();
-		}
-		//the vehicle is moving to a new road
-		else{
-			//add this vehicle to vehicles (the list of vehicles at the road) at 
-			//next road on the route
-			(route.get(0)).vehicles.add(0,this);
-			// calculating fraction completed at next road on route
-			fraction = dp/(route.get(0).length);
-			myRoad =route.get(0);
-		}
+				this.printStat();
+			}
+			//the vehicle is moving to a new road
+			else{
+				//add this vehicle to vehicles (the list of vehicles at the road) at 
+				//next road on the route
+				(route.get(0)).vehicles.add(0,this);
+				// calculating fraction completed at next road on route
+				fraction = dp/(route.get(0).length);
+				myRoad =route.get(0);
+			}
 		
-	}
+		}
 	
-	// setting loc_fraction equal the fraction completed at current road
-	loc_fraction = fraction;
+		// setting loc_fraction equal the fraction completed at current road
+		loc_fraction = fraction;
+		notUpdated=false;
+	}
 }
 
 public void update_speed(double dt) //call in the end of timestep as the other updatefunctions use speed at  
@@ -378,6 +385,7 @@ public void set_acceleration()
 	}else{
 		cur_accel=a;
 	}
+	notUpdated=true;
 }	
 
 
