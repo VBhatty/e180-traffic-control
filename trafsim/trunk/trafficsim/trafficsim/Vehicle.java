@@ -266,105 +266,13 @@ public void set_speed(double speed){
 	cur_speed = speed;
 }
 
-//Function to calculate acceleration at current time step, constant acceleration assumed during timestep
 
-/*
-public void find_acceleration()
-{
-	double accel = neccessary_car_in_front_acceleration();
-	double a;
-	
-	Node[] N = nodes_before_full_stop_acceleration();
-	
-	for (Node i : N)
-	{
-		a=neccessary_node_in_front_acceleration(i);
-		if(accel>a)
-		{
-			accel = a;
-		}
-	}
-	//here we have to figure out some algorithm to choose acceleration
-	//suggestion:
-	// cases:
-	// 1(emergency)		  if accel is less than max_breaking then acceleration is set equal to max_breaking
-	// 2(smooth breaking) if accel is between max_breaking and p*max_breaking with 
-	//					  some coefficient pb (0<pb<1) then acceleration is set equal to accel
-	// 3(needed acceleration small in magnitude, so acceleration is choosen according to speedlimit)
-	//					  if pb*max_breaking < accel < pa*max_acceleration
-	// 4(smooth acceleration)
-	// 5 (max acceleration)
-	
-	//maybe some if-sentence should be added so that the vehicle doesn't exceed the speed limit
-	//
-	// last set cur_accel = accel
-}
 
-//Taking safest acceleration, that is the breaking needed to avoid accidents, considering
-//both the car in front and nodes and roads ahead that might give another speedlimit than the current.
-public void getAcceleration() {
-	double a = Math.min( this.neccessary_car_in_front_acceleration(), this.accelerationToNearestNodeOrRoad() );
-	if (a > this.max_acceleration()) {
-		a = this.max_acceleration();
-	} else if (a < this.max_breaking()) {
-		a = this.max_breaking();
-	}
-}
-*/
-public double neccessary_car_in_front_acceleration()
-{
-	
-// neccessary acceleration to get the same speed as the car in front 1 meter 
-//	behind the current position of the rearend of the car in front, by constant acceleration
-	double nec;
-
-// If no car in front, there is no reason to accelerate to adapt to the car in front
-	if (car_in_front.isNull())
-	{
-		nec= Float.POSITIVE_INFINITY;
-	}
-//there is a car in front:
-	else // finding acceleration 
-	{
-		// distance to the car in front
-		double dist = 0;
-
-	
-		// r - the current road of the car in front
-		Road r = (car_in_front.getRoute()).get(0);
-	
-		// f - the current fraction of the road the car in front has completed
-	 	double f = car_in_front.loc_fraction;
-	
-	 	// v - the current speed of the car in front
-	 	double v = car_in_front.get_speed();
-	
-	 	//search through route to find distance to the point f (fraction of the road) on r (Road),
-	 	//update dist while searching
-	 	if (route.get(0) == r){
-	 		dist = (f-loc_fraction)*r.getLength();
-	 	}
-	 	else{
-		
-	
-	 		dist = (1-loc_fraction)*(route.get(0)).getLength();
-	 		int i = 1;
-	 		while(route.get(i) != r){
-	 			dist = dist + (route.get(i)).getLength();
-	 			i = i+1;
-	 		}
-	 		dist = dist + f*r.getLength();
-	 		}
-	
-	 	dist = dist - (car_in_front.getLength()+1);
-	
 	 	// using constant acceleration equation to calculate the acceleration needed
-        nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
-	}
+        //nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
 	
-return nec;
+	
 
-}
 
 private double getLength() {
 	return this.length;
