@@ -63,11 +63,26 @@ public class Controller {
 			}
 		}
 		
+		//getting all the edges (roads) of the system
 		Set<Road> myRoads = myMap.getEdges();
-		Iterator ro = myRoads.iterator();
-		while(ro.hasNext()){
-			Road rr = (Road)ro.next();
-			rr.updateVehicles(dt);
+		
+		//updating all the vehicles is done in two step so that the acceleration is
+		//not calculated based on the position of the car in two different timesteps
+		
+		// going through all the roads and for each updating the acceleration of
+		// the vehicles at each road
+		Iterator ro1 = myRoads.iterator();
+		while(ro1.hasNext()){
+			Road rr = (Road)ro1.next();
+			rr.updateVehiclesAcceleration(dt);
+		}
+		
+		// going through all the roads and for each updating the position and speed of
+		// the vehicles at each road
+		Iterator ro2 = myRoads.iterator();
+		while(ro2.hasNext()){
+			Road rr = (Road)ro2.next();
+			rr.updateVehiclesPosition(dt);
 		}
 	}
 	
