@@ -10,8 +10,9 @@ package trafficsim;
 public class trafSimMain {
 	
 	public static void main(String[] args) {
-		
 
+
+/*
 		double dt=1;
 		double tend=100;
 		
@@ -65,6 +66,7 @@ public class trafSimMain {
 			r2.updateVehicles(dt);
 			
 		}
+	*/
 	}
 	
 	
