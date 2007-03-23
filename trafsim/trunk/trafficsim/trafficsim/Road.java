@@ -29,7 +29,8 @@ public Road(int id, String Name, double length, double speed_limit,int width, No
 	this.id = id;
 	this.name =  Name;
 	this.length = length;
-	this.speed_limit = speed_limit;
+	//speed limit converted to meters per second so miles/hour can be used as input
+	this.speed_limit = speed_limit/2.237;
 	this.width = width;
 	this.start_node = start;
 	this.end_node = end;
@@ -49,13 +50,22 @@ public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
-public void updateVehicles(double dt){
+public void updateVehiclesAcceleration(double dt){
 	
 	for ( int i=0; i < vehicles.size() ;i++){
 		Vehicle vehicle = (Vehicle)vehicles.get(i);
 		
 		//System.out.println("setting acceleration");
 		vehicle.set_acceleration();
+		
+	}
+}
+
+public void updateVehiclesPosition(double dt){
+	
+	for ( int i=0; i < vehicles.size() ;i++){
+		Vehicle vehicle = (Vehicle)vehicles.get(i);
+		
 		
 		//System.out.println("finding position");
 		vehicle.update_position(dt);
