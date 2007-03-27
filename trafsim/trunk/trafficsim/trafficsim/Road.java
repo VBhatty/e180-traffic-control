@@ -172,21 +172,26 @@ public double getAvgSpeed(){
  * searches this road and finds every car from the percent
  * to the range
  */
+
+//this is wrong, must be a vehicle method searchRoute
 ArrayList<Vehicle> searchRoad(double start, double range){
 	ArrayList<Vehicle> carsOnStrip = new ArrayList<Vehicle>();
 	Iterator veh = vehicles.iterator();
+	//hmmm
 	double endPerc = range/this.getLength();
 	if (start +endPerc >1){
 		
 	}
 	while (veh.hasNext()){
 		Vehicle ve = (Vehicle)veh.next();
-		if (ve.getPercent()>start && ve.getPercent()<end){
+		if (ve.getPercent()>start && ve.getPercent()<range){
 			carsOnStrip.add(ve);
 		}
 	}
 	return carsOnStrip;
 }
+
+//this is wrong, must be a vehicle method searchRoute
 Vehicle findCarInFront(double start,double thresh){
 	ArrayList<Vehicle> carsOnStrip = searchRoad(start,thresh);
 	Iterator veh = carsOnStrip.iterator();

@@ -561,6 +561,8 @@ private double accelerationDueToCar(){
 		//pbd = breakingdistance by applying prefered breaking
 		double pbd= 1.5*mbd;//might be modified later on
 		
+		//too tired to go on
+		return 0;
 	}
 }
 int compare(Vehicle V1, Vehicle V2){
