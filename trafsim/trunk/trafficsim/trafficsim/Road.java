@@ -2,11 +2,22 @@ package trafficsim;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
-
+/*
+ * Roads are responsible for knowing the node which is starts and ends
+ * Also roads have a list of vehicles (sorted by position) currently
+ * on the road.  
+ * 
+ * NEW RULE:
+ * Anytime a there is a change in speed limit (ie straight to curved road,
+ * or just a random change) the roads nodes must be trafficControllers.
+ * This ensures that the car is the correct speed and ends the need to 
+ * look on roads ahead to find future speed limits
+ */
 public class Road extends DirectedSparseEdge {
 	
 	int id;
@@ -50,7 +61,7 @@ public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
-public void updateVehicles(double dt){
+public void updateVehicles1(double dt){
 	
 	for ( int i=0; i < vehicles.size() ;i++){
 		Vehicle vehicle = (Vehicle)vehicles.get(i);
@@ -74,14 +85,25 @@ public void updateVehicles(double dt){
 		//vehicle.printSafeBreakingDist();
 	}
 }
+public void updateVehicles(double dt){
+	for ( int i=0; i < vehicles.size() ;i++){
+		Vehicle vehicle = (Vehicle)vehicles.get(i);
+		vehicle.updateAcceleration();
+		vehicle.update_position(dt);
+		vehicle.update_stat(dt);
+		vehicle.update_speed(dt);
+		vehicle.printInfo();	
+	}
+}
 
+/*
+ * updates every vehicle's acceleration on this road
+ */
 public void updateVehiclesAcceleration(double dt){
 	
 	for ( int i=0; i < vehicles.size() ;i++){
 		Vehicle vehicle = (Vehicle)vehicles.get(i);
-		
-		//System.out.println("setting acceleration");
-		vehicle.set_acceleration();
+		vehicle.updateAcceleration();
 		
 	}
 }
@@ -143,6 +165,38 @@ public double getAvgSpeed(){
 	}
 	double avgSpeed = sumSpeed / vehicles.size();
 	return avgSpeed;
+}
+
+
+/*
+ * searches this road and finds every car from the percent
+ * to the range
+ */
+ArrayList<Vehicle> searchRoad(double start, double range){
+	ArrayList<Vehicle> carsOnStrip = new ArrayList<Vehicle>();
+	Iterator veh = vehicles.iterator();
+	double endPerc = range/this.getLength();
+	if (start +endPerc >1){
+		
+	}
+	while (veh.hasNext()){
+		Vehicle ve = (Vehicle)veh.next();
+		if (ve.getPercent()>start && ve.getPercent()<end){
+			carsOnStrip.add(ve);
+		}
+	}
+	return carsOnStrip;
+}
+Vehicle findCarInFront(double start,double thresh){
+	ArrayList<Vehicle> carsOnStrip = searchRoad(start,thresh);
+	Iterator veh = carsOnStrip.iterator();
+	Vehicle inFront;
+	if (veh.hasNext()){
+		inFront = (Vehicle)veh.next();
+	}else{
+		inFront = new Nullvehicle();
+	}
+	return inFront;
 }
 
 private void printVehicleList() {

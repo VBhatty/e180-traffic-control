@@ -2,7 +2,7 @@ package trafficsim;
 
 import java.util.ArrayList;
 
-public class Intersection extends Node {
+public class Intersection extends trafficController {
 	private ArrayList <Vehicle>waitVehicles;
 	private ArrayList <Vehicle>incomingRoads;
 	private ArrayList <Vehicle>outgoingRoads;

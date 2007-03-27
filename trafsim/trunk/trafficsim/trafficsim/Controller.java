@@ -51,39 +51,10 @@ public class Controller {
 	 */
 	void updateRoad(double dt, int i){
 		
-		boolean create;
+		myMap.updateSources();
 		
-		Set<Node> myNodes = myMap.getVertices();
-		Iterator no = myNodes.iterator();
-		
-		while(no.hasNext()){
-			Node nn = (Node)no.next();
-			if (nn.isSource()){
-				create = ((Source)nn).generate_new_car(i);
-			}
-		}
-		
-		//getting all the edges (roads) of the system
-		Set<Road> myRoads = myMap.getEdges();
-		
-		//updating all the vehicles is done in two step so that the acceleration is
-		//not calculated based on the position of the car in two different timesteps
-		
-		// going through all the roads and for each updating the acceleration of
-		// the vehicles at each road
-		Iterator ro1 = myRoads.iterator();
-		while(ro1.hasNext()){
-			Road rr = (Road)ro1.next();
-			rr.updateVehiclesAcceleration(dt);
-		}
-		
-		// going through all the roads and for each updating the position and speed of
-		// the vehicles at each road
-		Iterator ro2 = myRoads.iterator();
-		while(ro2.hasNext()){
-			Road rr = (Road)ro2.next();
-			rr.updateVehiclesPosition(dt);
-		}
+		myMap.updateRoads(dt);
+
 	}
 	
 	public int totalVehicles() {
@@ -109,7 +80,7 @@ public class Controller {
 	public static void main(String[] args) {
 		
 		System.out.println("Simulation started");
-		create2Road();
+		create1Road();
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		

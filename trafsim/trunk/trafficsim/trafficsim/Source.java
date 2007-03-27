@@ -28,10 +28,11 @@ public class Source extends Node{
 	//}
 	
 	//return true if a car should be created
-	public boolean generate_new_car(int time){
+	public boolean generate_new_car(){
 		
 		boolean carCreation;
-		double f = get_freqency(time);
+		//double f = get_freqency(time);
+		double f = .3;
 		double x = U.nextFloat();
 		if(x < f){
 			carCreation = true;

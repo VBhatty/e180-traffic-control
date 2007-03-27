@@ -70,7 +70,10 @@ public abstract class Vehicle {
 		
 		
 	}
-	
+	/*
+	 * empty constructor
+	 */
+	public Vehicle(){}
 	/*
 	 * Manually sets the road of this car
 	 */
@@ -457,7 +460,7 @@ public double AccelerationDueToCarInFront(){
 			Road r = (car_in_front.getRoute()).get(0);
 		
 			// f - the current fraction of the road the car in front has completed
-		 	double f = car_in_front.getLoc_fraction();
+		 	double f = car_in_front.getPercent();
 		 	
 		 	
 		 	//search through route to find distance to the point f (fraction of the road) on r (Road),
@@ -493,11 +496,10 @@ public double AccelerationDueToCarInFront(){
 		}
 	return a;
 }
-public double getLoc_fraction(){
+
+double getPercent(){
 	return loc_fraction;
 }
-
-
 
 
 
@@ -509,4 +511,72 @@ public void setCarInFront(Vehicle carInFront){
 	car_in_front = carInFront;
 }
 
+/*
+ * checks all possible sources of acceleration of this vehicle
+ * and updates the acceleration equal to the minimum of the 
+ * sources.
+ */
+public void updateAcceleration() {
+	//the acceleration due to the car in front
+	double carAccel = accelerationDueToCar();
+	//the acceleration due to nearest traffic controller
+	double contAccel = accelerationDueToTrafficCont();
+	//the acceleration due to the speed limit of this road
+	double roadAccel = accelerationDueToLimit();
+	
+	double minSoFar = Math.min(carAccel, contAccel);
+	double min = Math.min(minSoFar, roadAccel);
+	cur_accel = min;
+}
+
+/*
+ * find the acceleration due to the speed limit of the current
+ * road.
+ */
+private double accelerationDueToLimit() {
+	// TODO Auto-generated method stub
+	return 0;
+}
+
+/*
+ * finds the acceleration due to traffic controller in breaking range
+ * returns 0 if no controller in sight
+ */
+private double accelerationDueToTrafficCont() {
+	//find nearest traffic controller
+	
+	//calculate acceleration needed to be at limit at traffic
+	//controller 
+	return 0;
+}
+
+private double accelerationDueToCar(){
+	Vehicle v = myRoad.findCarInFront(this.loc_fraction, this.getSafeBreakingDist());
+	if (v.isNull()){
+		return 0;
+	}
+	else
+	{
+		double mbd= getSafeBreakingDist();
+		//pbd = breakingdistance by applying prefered breaking
+		double pbd= 1.5*mbd;//might be modified later on
+		
+	}
+}
+int compare(Vehicle V1, Vehicle V2){
+	if (V1.getPercent()< V2.getPercent()){
+		return -1;
+	}else if (V1.getPercent()> V2.getPercent()){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+public boolean equals(Vehicle V1){
+	if (this.getPercent() == V1.getPercent()){
+		return true;
+	}else{
+		return false;
+	}
+}
 }
