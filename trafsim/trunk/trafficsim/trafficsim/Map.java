@@ -20,7 +20,7 @@ public class Map extends DirectedSparseGraph{
 		return arg0;
 	}
 	
-	void updateSources(){
+	void updateNodes(double dt){
 		Set<Node> myNodes = this.getVertices();
 		Iterator no = myNodes.iterator();
 		
@@ -28,6 +28,12 @@ public class Map extends DirectedSparseGraph{
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
 				((Source)nn).generate_new_car();
+			}
+			if (nn.isTrafCont()){
+				((trafficController)nn).updateTrafCont(dt);
+			}
+			if (nn.isSink()){
+				//nothing to do here yet
 			}
 		}
 	}

@@ -49,9 +49,9 @@ public class Controller {
 	/* 
 	 * please comment, what is i???
 	 */
-	void updateRoad(double dt, int i){
+	void update(double dt, int i){
 		
-		myMap.updateSources();
+		myMap.updateNodes(dt);
 		
 		myMap.updateRoads(dt);
 
@@ -84,7 +84,7 @@ public class Controller {
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		
-			myCont.updateRoad(myCont.getStep(),i);
+			myCont.update(myCont.getStep(),i);
 		}
 
 	}

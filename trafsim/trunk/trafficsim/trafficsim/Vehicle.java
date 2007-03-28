@@ -508,12 +508,24 @@ public void updateAcceleration() {
 /*
  * find the acceleration due to the speed limit of the current
  * road.
+ * 
+ * This is done by finding the acceleration needed to be at the
+ * speedlimit in one safe breaking distance.
+ * Does this work okay?
  */
 private double accelerationDueToLimit() {
 	Road myR = this.route.get(0);
 	double speedLimit = myR.getLimit();
-	//calculate acceleration to get to speed limit using max acceleration of car
-	return 0;
+	double mySpeed= this.get_speed();
+	double accel = Double.POSITIVE_INFINITY;
+	if (this.cur_accel < this.max_acceleration() && mySpeed<speedLimit){
+		//for now accelerate to half the max acceleration
+		accel = (this.max_acceleration()-this.cur_accel)/2;
+	}else{
+		
+		accel = (this.cur_accel-this.max_acceleration())/2;
+	}
+	return accel;
 }
 
 /*
@@ -523,33 +535,70 @@ private double accelerationDueToLimit() {
 private double accelerationDueToTrafficCont() {
 	//find nearest traffic controller
 	Node myNode = this.getNextNodeOnRoute();
+	double accel;
 	double speedLimit;
 	double distanceToNode;
+	double mySpeed = this.get_speed();
 	if (myNode.isTrafCont()){
 		 speedLimit = ((trafficController)myNode).getSpeedLimit();
-		 distanceToNode = 1- this.getPercent();
-		 //calculate the acceleration to be at speed limit in the given distance
-	} 
-	return 0;
+		 distanceToNode = (1- this.getPercent())*this.route.get(0).getLength();
+		 accel = (Math.pow(speedLimit, 2) - Math.pow(mySpeed, 2))/(2*distanceToNode);
+	} else {
+		return Double.POSITIVE_INFINITY;
+	}
+	return accel;
 }
 
 /*
  * this is the real version of acceleration due to the car in front
  * finds the car in front my querying the road.  
  * Please put your final version of acceleration in here
+ * 
+ * NOw calculates acceleration of car in front by trying to be at 
+ * the same velocity as the car in front when at the same position
+ * as the car in front of the distance between the cars is greater
+ * than the safe breaking distance.  Please double check this.
  */
 private double accelerationDueToCar(){
+	double accel = Double.POSITIVE_INFINITY;
 	Vehicle v = myRoad.findCarInFront(this,this.loc_fraction, this.getSafeBreakingDist());
 	if (v.isNull()){
-		return 0;
+		return accel;
 	}
 	else
 	{
-		//calculate acceleration here
-		return 0;
+		double SBD = this.getSafeBreakingDist();
+		double actFD = this.distanceBetCars(v);
+		double v1 = this.get_speed();
+		double v2 = v.get_speed();
+		if (SBD>actFD){
+			accel = (Math.pow(v2, 2) - Math.pow(v1, 2))/(2*actFD);
+		}
 	}
+	return accel;
 }
 
+/*
+ * finds distance between this car and car V1.  Assumes car is incident
+ * with this cars route.  Iterates through route until vehicle parameter is found
+ * and calculates distance
+ */
+double distanceBetCars(Vehicle V1){
+	double distance;
+	if(this.route.get(0).isOnRoad(V1)){
+		distance = Math.abs((this.getPercent() - V1.getPercent())*this.route.get(0).getLength());
+	}else{
+		distance = (1-this.getPercent())*this.route.get(0).getLength();
+		for (int i = 0; i<this.route.size(); i++){
+			if(this.route.get(i).isOnRoad(V1)){
+				distance = distance + V1.getPercent()*this.route.get(i).getLength();
+			}else{
+				distance = distance + this.route.get(i).getLength();
+			}
+		}
+	}
+	return distance;
+}
 /*
  * compare function to allow vehicle sorting by position
  */

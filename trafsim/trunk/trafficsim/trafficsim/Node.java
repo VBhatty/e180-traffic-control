@@ -29,5 +29,7 @@ public class Node extends SparseVertex{
 	boolean isTrafCont(){
 		return false;
 	}
-	
+	boolean isSink(){
+		return false;
+	}
 }

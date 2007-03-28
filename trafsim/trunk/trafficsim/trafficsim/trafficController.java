@@ -19,4 +19,12 @@ public class trafficController extends Node{
 	public double getSpeedLimit(){
 		return speedlimit;
 	}
+	
+	/*
+	 * updates state and speed limit of a trafficController
+	 */
+	void updateTrafCont(double dt){
+		
+	}
+	
 }

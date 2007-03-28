@@ -234,6 +234,16 @@ public double getCoeffOfFriction() {
 	coeffFric = this.coeff_of_fric - 0.25 * this.weather_coeff;		// Taken from 2-27 Mathematical Model.ppt
 	return coeffFric;
 }
+boolean isOnRoad(Vehicle v){
+	Iterator iter = vehicles.iterator();
+	boolean ret = false;
+	while (iter.hasNext()){
+		if (((Vehicle)iter.next()).equals(v)){
+			ret = true;
+		}
+	}
+	return ret;
+}
 }
 
 
