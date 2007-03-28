@@ -146,31 +146,6 @@ public void printMaxAcceleration(){		//Just for testing the function max_acceler
 }
 
 /*
- * searches through route to find the nearest car in front on the current route.
- * Starting by searching route[0] for the vehicle with the smallest value
- * loc_frac > this.loc_fraq.
- * If no cars fulfils this requirement it searches route[i] while it finds a road with
- * at least one vehicle on it, returning the vehicle with the smallest loc_fraq
- */
-public Vehicle find_car_in_front()
-{
-	Vehicle somecar = null;
-	return somecar;
-}
-
-/*
- * find the vehicle in front and set this as vehicle_in_front if it isn't already
- */
-public void check_car_in_front()
-{
-	Vehicle somecar= find_car_in_front();
-	if (car_in_front != somecar)
-	{
-		car_in_front = somecar;
-	}
-}
-
-/*
  * done after cur_accel is found on each step,and before cur_speed
  */
 public void update_stat(double dt)
@@ -558,6 +533,11 @@ private double accelerationDueToTrafficCont() {
 	return 0;
 }
 
+/*
+ * this is the real version of acceleration due to the car in front
+ * finds the car in front my querying the road.  
+ * Please put your final version of acceleration in here
+ */
 private double accelerationDueToCar(){
 	Vehicle v = myRoad.findCarInFront(this,this.loc_fraction, this.getSafeBreakingDist());
 	if (v.isNull()){
@@ -569,6 +549,10 @@ private double accelerationDueToCar(){
 		return 0;
 	}
 }
+
+/*
+ * compare function to allow vehicle sorting by position
+ */
 int compare(Vehicle V1, Vehicle V2){
 	if (V1.getPercent()< V2.getPercent()){
 		return -1;
@@ -578,6 +562,10 @@ int compare(Vehicle V1, Vehicle V2){
 		return 0;
 	}
 }
+
+/*
+ * equals function to allow vehicle sorting by position
+ */
 public boolean equals(Vehicle V1){
 	if (this.getPercent() == V1.getPercent()){
 		return true;
@@ -585,6 +573,9 @@ public boolean equals(Vehicle V1){
 		return false;
 	}
 }
+/*
+ * gets the next roads on the route
+ */
 Road getNextRoadOnRoute(){
 	if (this.route.size() > 1 ){
 		return this.route.get(1);
@@ -592,6 +583,9 @@ Road getNextRoadOnRoute(){
 		return null;
 	}
 }
+/*
+ * returns true if there is a next road
+ */
 boolean hasNextRoadOnRoute(){
 	if (this.route.size()==1){
 		return false;
@@ -599,6 +593,9 @@ boolean hasNextRoadOnRoute(){
 		return true;
 	}
 }
+/*
+ * gets the next node on the route
+ */
 Node getNextNodeOnRoute(){
 	return this.route.get(0).getEndNode();
 }
