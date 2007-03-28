@@ -1,9 +1,14 @@
 package trafficsim;
 
 //import Vehicle;
-
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
+import edu.uci.ics.jung.algorithms.shortestpath.ShortestPath;
+import edu.uci.ics.jung.algorithms.shortestpath.ShortestPathUtils;
 import java.util.ArrayList;
+import java.util.List;
 //import java.util.Random;
+
+import edu.uci.ics.jung.graph.ArchetypeGraph;
 
 //import edu.uci.ics.jung.graph.Edge;
 
@@ -30,9 +35,9 @@ public abstract class Vehicle {
 	public double average_speed;	//Average speed since creation
 	public double distance_travelled;	//distance travelled since creation
 	public double time_since_creation;	// time elapsed since creation
-
+	public Node startNode;
 	public Node destination;		//Destination of car, generated at timeof creation
-	public ArrayList<Road> route;	//ArrayList containing the roads on the route from current road to
+	public List<Road> route;	//ArrayList containing the roads on the route from current road to
 									//the road that ends in the destination node in chronological ordering
 									
 	
@@ -66,16 +71,37 @@ public abstract class Vehicle {
 		r.addVehicle(this);
 		//finding_route();
 		//generate_mass_and_length();
-		notUpdated=true;
-		
-		
+		notUpdated=true;	
+	}
+	/*
+	 * this is the most used constructor.  Since vehicles are created
+	 * at nodes.
+	 */
+	public Vehicle(Node start,Node endNode)
+	{
+		mass = 1500;
+		car_in_front=null;
+		cur_speed=0;
+		cur_accel=0;
+		loc_fraction=0;
+		average_speed=0;
+		distance_travelled=0;
+		time_since_creation=0;
+		destination=endNode;
+		startNode = start;
+		route = new ArrayList<Road>();
+		route = findRoute(startNode,destination);
+		//finding_route();
+		//generate_mass_and_length();
+		notUpdated=true;	
 	}
 	/*
 	 * empty constructor
 	 */
 	public Vehicle(){}
+	
 	/*
-	 * Manually sets the road of this car
+	 * Manually sets the road of this car and recalculates route
 	 */
 	public void setMyRoad(Road r){
 		
@@ -101,13 +127,6 @@ public void generate_mass_and_length()
 	length= 5.773e-4*mass+2.834;
 }
 
-/*
- * finds the route that this car will take
- */
-public void finding_route()
-{
-	route.add(myRoad);
-}
 
 /*
  * The maximum acceleration that this car can use
@@ -377,10 +396,11 @@ public void printSpeed()
 }
 
 
-public ArrayList<Road> getRoute()
+public List<Road> findRoute(Node n1, Node n2)
 {
-	
-	return route;
+	ArchetypeGraph myMap = this.startNode.getGraph();
+	DijkstraShortestPath dij = new DijkstraShortestPath( myMap,((Map)myMap).getWeight());
+	return ShortestPathUtils.getPath(((ShortestPath)dij),n1,n2);
 }
 
 //Finding the safe breaking distance of a vehicle
@@ -424,7 +444,7 @@ public double AccelerationDueToCarInFront(){
 			//distance=pbd;
 		}
 	//there is a car in front:
-		else if(car_in_front.getRoute().isEmpty() == true){
+		else if(car_in_front.route.isEmpty() == true){
 			
 			a=1000; 
 		}
@@ -433,7 +453,7 @@ public double AccelerationDueToCarInFront(){
 			//safe following distance
 			double sfd = pbd + car_in_front.getLength()-mbd;
 			// r - the current road of the car in front
-			Road r = (car_in_front.getRoute()).get(0);
+			Road r = (car_in_front.route).get(0);
 		
 			// f - the current fraction of the road the car in front has completed
 		 	double f = car_in_front.getPercent();

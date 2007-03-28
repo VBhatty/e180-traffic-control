@@ -32,24 +32,43 @@ public class Controller {
 		current_time = 0;
 
 	}
-	
+	/*
+	 * adds a node to the static map myMap
+	 */
+	void addNode(Node n){
+		myMap.addVertex(n);
+	}
+
+	/*
+	 * adds a raod to the static map myMap
+	 */
+	public void addRoad(Road r) {
+		GraphUtils.addEdge(myMap,r.start_node,r.end_node);
+	}
+	/*
+	 * gets the current time in the simulation
+	 */
 	double getCurrentTime(){
 		return current_time;
 	}
+	/*
+	 * gets the step size for the simulation
+	 */
 	double getStep(){
 		return dt;
 	}
+	/*
+	 * gets the elapsed time of the simulation
+	 */
 	double getTotalTime(){
 		return totaltime;
-	}
-	double getEllapsed(){
-		return 10;
 	}
 	
 	/* 
 	 * please comment, what is i???
+	 * i dunno!  its gone!
 	 */
-	void update(double dt, int i){
+	void update(double dt){
 		
 		myMap.updateNodes(dt);
 		
@@ -57,25 +76,7 @@ public class Controller {
 
 	}
 	
-	public int totalVehicles() {
-		int total = 0;
-		Set<Road> myRoads = myMap.getEdges(); 
-		Iterator ro = myRoads.iterator();
-		while (ro.hasNext()){
-			Road rr =(Road) ro.next();
-			total += rr.totalVehicles();
-		}
-		return total;
-	}
-	
-	void addNode(Node n){
-		myMap.addVertex(n);
-	}
 
-	public void addRoad(Road r) {
-		GraphUtils.addEdge(myMap,r.start_node,r.end_node);
-	}
-	
 	
 	public static void main(String[] args) {
 		
@@ -84,7 +85,7 @@ public class Controller {
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		
-			myCont.update(myCont.getStep(),i);
+			myCont.update(myCont.getStep());
 		}
 
 	}

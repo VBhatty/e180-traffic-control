@@ -5,10 +5,14 @@ package trafficsim;
 import java.util.Iterator;
 import java.util.Set;
 
+import edu.uci.ics.jung.graph.ArchetypeEdge;
+import edu.uci.ics.jung.graph.decorators.NumberEdgeValue;
+import edu.uci.ics.jung.graph.decorators.UserDatumNumberEdgeValue;
 import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 
 
 public class Map extends DirectedSparseGraph{
+	UserDatumNumberEdgeValue weight;
 	public Road addRoad(Road arg0) {
 		// TODO Auto-generated method stub
 		super.addEdge(arg0);
@@ -37,6 +41,25 @@ public class Map extends DirectedSparseGraph{
 			}
 		}
 	}
+	/*
+	 * calculates the weight of the road in its current condition
+	 * 
+	 */
+	void setWeight(Road r){
+		double avgVel = r.getAvgSpeed2();
+		double speedLimit = r.getLimit();
+		if (avgVel==0){
+			avgVel = speedLimit;
+		}
+		double leng = r.getLength();
+		Number weight = leng/avgVel;
+		((NumberEdgeValue) weight).setNumber(((ArchetypeEdge)this),weight);
+	}
+	
+	NumberEdgeValue getWeight(){
+		return weight;
+	}
+
 	
 	/*
 	 * iterates through the roads and updates all the cars acceleration, position
@@ -53,10 +76,20 @@ public class Map extends DirectedSparseGraph{
 		Iterator ro1 = myRoads.iterator();
 		while(ro1.hasNext()){
 			Road rr = (Road)ro1.next();
+			setRoadWeight(rr);
 			rr.updateVehicles(dt);
 			//rr.updateVehiclesAcceleration(dt);
 			//rr.updateVehiclesPosition(dt);
 		}
 	}
-	
+	public int totalVehicles() {
+		int total = 0;
+		Set<Road> myRoads = this.getEdges(); 
+		Iterator ro = myRoads.iterator();
+		while (ro.hasNext()){
+			Road rr =(Road) ro.next();
+			total += rr.totalVehicles();
+		}
+		return total;
+	}
 }

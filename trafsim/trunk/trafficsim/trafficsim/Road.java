@@ -4,7 +4,10 @@ package trafficsim;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import edu.uci.ics.jung.graph.ArchetypeEdge;
 import edu.uci.ics.jung.graph.Vertex;
+import edu.uci.ics.jung.graph.decorators.NumberEdgeValue;
+import edu.uci.ics.jung.graph.decorators.UserDatumNumberEdgeValue;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 /*
@@ -31,7 +34,8 @@ public class Road extends DirectedSparseEdge {
 	public double speed_limit; //speed limit of the road
 	public int width;	//number of lanes of the road
 	public double average_speed; // average speed of the current vehicles on the road
-	public double average_weight;	//average weight of the current vehicles on the road
+	public double average_weight;
+	//average weight of the current vehicles on the road
 	public Road(Node n1, Node n2){
 		super(n1,n2);
 	}
@@ -48,6 +52,7 @@ public Road(int id, String Name, double length, double speed_limit,int width, No
 	this.coeff_of_fric = 0.7;
 	this.weather_coeff = 0.0;
 	vehicles = new ArrayList<Vehicle>();
+	weight =new UserDatumNumberEdgeValue(id);
 }
 
 public ArrayList<Vehicle> get_vehicle_list() {
@@ -244,6 +249,11 @@ boolean isOnRoad(Vehicle v){
 	}
 	return ret;
 }
+
+
+
+
+
 }
 
 
