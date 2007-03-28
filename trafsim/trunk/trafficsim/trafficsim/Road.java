@@ -172,15 +172,18 @@ public double getAvgSpeed(){
  * searches this road and finds every car from the percent
  * to the range
  */
-
-//this is wrong, must be a vehicle method searchRoute
-ArrayList<Vehicle> searchRoad(double start, double range){
+ArrayList<Vehicle> searchRoad(Vehicle myV,double start, double range){
 	ArrayList<Vehicle> carsOnStrip = new ArrayList<Vehicle>();
 	Iterator veh = vehicles.iterator();
 	//hmmm
 	double endPerc = range/this.getLength();
 	if (start +endPerc >1){
-		
+		//the car must search beyond current road on route
+		double percentOver = 1- (start +endPerc);
+		if (myV.hasNextRoadOnRoute()){
+			Road nextRoad = myV.getNextRoadOnRoute();
+			carsOnStrip = nextRoad.searchRoad(myV,0,percentOver*nextRoad.length);
+		}
 	}
 	while (veh.hasNext()){
 		Vehicle ve = (Vehicle)veh.next();
@@ -191,9 +194,8 @@ ArrayList<Vehicle> searchRoad(double start, double range){
 	return carsOnStrip;
 }
 
-//this is wrong, must be a vehicle method searchRoute
-Vehicle findCarInFront(double start,double thresh){
-	ArrayList<Vehicle> carsOnStrip = searchRoad(start,thresh);
+Vehicle findCarInFront(Vehicle myV, double start,double range){
+	ArrayList<Vehicle> carsOnStrip = searchRoad(myV,start,range);
 	Iterator veh = carsOnStrip.iterator();
 	Vehicle inFront;
 	if (veh.hasNext()){
@@ -214,6 +216,15 @@ public Node getEndNode(){
 	return end_node;
 }
 
+boolean endNodeIsController(){
+	Node n1 = getEndNode();
+	if (n1.isTrafCont()){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 public double getLength(){
 	return this.length;
 }
@@ -223,7 +234,6 @@ public double getCoeffOfFriction() {
 	coeffFric = this.coeff_of_fric - 0.25 * this.weather_coeff;		// Taken from 2-27 Mathematical Model.ppt
 	return coeffFric;
 }
-
 }
 
 

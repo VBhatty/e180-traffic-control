@@ -404,6 +404,7 @@ public void printSpeed()
 
 public ArrayList<Road> getRoute()
 {
+	
 	return route;
 }
 
@@ -534,7 +535,9 @@ public void updateAcceleration() {
  * road.
  */
 private double accelerationDueToLimit() {
-	// TODO Auto-generated method stub
+	Road myR = this.route.get(0);
+	double speedLimit = myR.getLimit();
+	//calculate acceleration to get to speed limit using max acceleration of car
 	return 0;
 }
 
@@ -544,24 +547,25 @@ private double accelerationDueToLimit() {
  */
 private double accelerationDueToTrafficCont() {
 	//find nearest traffic controller
-	
-	//calculate acceleration needed to be at limit at traffic
-	//controller 
+	Node myNode = this.getNextNodeOnRoute();
+	double speedLimit;
+	double distanceToNode;
+	if (myNode.isTrafCont()){
+		 speedLimit = ((trafficController)myNode).getSpeedLimit();
+		 distanceToNode = 1- this.getPercent();
+		 //calculate the acceleration to be at speed limit in the given distance
+	} 
 	return 0;
 }
 
 private double accelerationDueToCar(){
-	Vehicle v = myRoad.findCarInFront(this.loc_fraction, this.getSafeBreakingDist());
+	Vehicle v = myRoad.findCarInFront(this,this.loc_fraction, this.getSafeBreakingDist());
 	if (v.isNull()){
 		return 0;
 	}
 	else
 	{
-		double mbd= getSafeBreakingDist();
-		//pbd = breakingdistance by applying prefered breaking
-		double pbd= 1.5*mbd;//might be modified later on
-		
-		//too tired to go on
+		//calculate acceleration here
 		return 0;
 	}
 }
@@ -580,5 +584,22 @@ public boolean equals(Vehicle V1){
 	}else{
 		return false;
 	}
+}
+Road getNextRoadOnRoute(){
+	if (this.route.size() > 1 ){
+		return this.route.get(1);
+	}else{
+		return null;
+	}
+}
+boolean hasNextRoadOnRoute(){
+	if (this.route.size()==1){
+		return false;
+	}else{
+		return true;
+	}
+}
+Node getNextNodeOnRoute(){
+	return this.route.get(0).getEndNode();
 }
 }
