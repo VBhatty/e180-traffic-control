@@ -76,7 +76,7 @@ public class Map extends DirectedSparseGraph{
 		Iterator ro1 = myRoads.iterator();
 		while(ro1.hasNext()){
 			Road rr = (Road)ro1.next();
-			setRoadWeight(rr);
+			setWeight(rr);
 			rr.updateVehicles(dt);
 			//rr.updateVehiclesAcceleration(dt);
 			//rr.updateVehiclesPosition(dt);
