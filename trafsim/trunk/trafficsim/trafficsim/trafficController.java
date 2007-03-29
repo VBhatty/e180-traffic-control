@@ -21,7 +21,8 @@ public class trafficController extends Node{
 	}
 	
 	/*
-	 * updates state and speed limit of a trafficController
+	 * updates state, speed limit and other functions
+	 * of a trafficController
 	 */
 	void updateTrafCont(double dt){
 		
