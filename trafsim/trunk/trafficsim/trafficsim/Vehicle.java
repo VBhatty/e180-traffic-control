@@ -12,7 +12,7 @@ import edu.uci.ics.jung.graph.ArchetypeGraph;
 
 //import edu.uci.ics.jung.graph.Edge;
 
-/*
+/**
  * Vehicle class is super class for all cars,  acceleration and speed are calculated
  * by the car at each time step.  Each car belongs to a road and has a user set mass
  * and length
@@ -45,13 +45,13 @@ public abstract class Vehicle {
 	//same time step because it changes to a road that is not updated by the controller
 	private boolean notUpdated;
 	
-	/*
+	/**
 	 * Null car object is used if a car has no car in front
 	 */
 	abstract boolean isNull();
 	
 	
-	/* 
+	/** 
 	 * Creates a vehicle at the beginning of road r
 	 */
 	public Vehicle(Road r,double fract)
@@ -73,7 +73,8 @@ public abstract class Vehicle {
 		//generate_mass_and_length();
 		notUpdated=true;	
 	}
-	/*
+	
+	/**
 	 * this is the most used constructor.  Since vehicles are created
 	 * at nodes.
 	 */
@@ -90,31 +91,32 @@ public abstract class Vehicle {
 		destination=endNode;
 		startNode = start;
 		route = new ArrayList<Road>();
-		route = findRoute(startNode,destination);
 		//finding_route();
 		//generate_mass_and_length();
 		notUpdated=true;	
 	}
-	/*
+	/**
 	 * empty constructor
 	 */
-	public Vehicle(){}
+	public Vehicle(){
+
+	}
 	
-	/*
+	/**
 	 * Manually sets the road of this car and recalculates route
 	 */
 	public void setMyRoad(Road r){
 		
 	}
 	
-	/*
+	/**
 	 * Manually sets the destination of this car
 	 */
 	void setDestination(Node n){
 		destination=n;
 	}
 	
-	/*
+	/**
 	 * generates the mass and length of this car
 	 */
 public void generate_mass_and_length()
@@ -128,7 +130,7 @@ public void generate_mass_and_length()
 }
 
 
-/*
+/**
  * The maximum acceleration that this car can use
  */
 public double max_acceleration()
@@ -139,7 +141,7 @@ public double max_acceleration()
 	return aMax;
 }
 
-/*
+/**
  * The maximum negative acceleration (breaking) that this car can use
  */
 public double max_breaking() //Giving out maximum possible deceleration (breaking)
@@ -164,7 +166,7 @@ public void printMaxAcceleration(){		//Just for testing the function max_acceler
 	System.out.println(max_acceleration());
 }
 
-/*
+/**
  * done after cur_accel is found on each step,and before cur_speed
  */
 public void update_stat(double dt)
@@ -193,7 +195,7 @@ public void printStat(){
 
 
 
-/*
+/**
  * updates the position of this vehicle
  */
 public void update_position(double dt )
@@ -269,7 +271,9 @@ public void update_speed(double dt) //call in the end of timestep as the other u
 }
 
 
-//set the speed to some fixed speed
+/**
+ * set the speed to some fixed speed
+ */
 public void set_speed(double speed){
 	cur_speed = speed;
 }
@@ -507,7 +511,7 @@ public void setCarInFront(Vehicle carInFront){
 	car_in_front = carInFront;
 }
 
-/*
+/**
  * checks all possible sources of acceleration of this vehicle
  * and updates the acceleration equal to the minimum of the 
  * sources.
@@ -525,7 +529,7 @@ public void updateAcceleration() {
 	cur_accel = min;
 }
 
-/*
+/**
  * find the acceleration due to the speed limit of the current
  * road.
  * 
@@ -548,7 +552,7 @@ private double accelerationDueToLimit() {
 	return accel;
 }
 
-/*
+/**
  * finds the acceleration due to traffic controller in breaking range
  * returns 0 if no controller in sight
  */
@@ -569,7 +573,7 @@ private double accelerationDueToTrafficCont() {
 	return accel;
 }
 
-/*
+/**
  * this is the real version of acceleration due to the car in front
  * finds the car in front my querying the road.  
  * Please put your final version of acceleration in here
@@ -598,7 +602,7 @@ private double accelerationDueToCar(){
 	return accel;
 }
 
-/*
+/**
  * finds distance between this car and car V1.  Assumes car is incident
  * with this cars route.  Iterates through route until vehicle parameter is found
  * and calculates distance
@@ -619,7 +623,7 @@ double distanceBetCars(Vehicle V1){
 	}
 	return distance;
 }
-/*
+/**
  * compare function to allow vehicle sorting by position
  */
 int compare(Vehicle V1, Vehicle V2){
@@ -632,7 +636,7 @@ int compare(Vehicle V1, Vehicle V2){
 	}
 }
 
-/*
+/**
  * equals function to allow vehicle sorting by position
  */
 public boolean equals(Vehicle V1){
@@ -642,7 +646,7 @@ public boolean equals(Vehicle V1){
 		return false;
 	}
 }
-/*
+/**
  * gets the next roads on the route
  */
 Road getNextRoadOnRoute(){
@@ -652,7 +656,7 @@ Road getNextRoadOnRoute(){
 		return null;
 	}
 }
-/*
+/**
  * returns true if there is a next road
  */
 boolean hasNextRoadOnRoute(){
@@ -662,7 +666,7 @@ boolean hasNextRoadOnRoute(){
 		return true;
 	}
 }
-/*
+/**
  * gets the next node on the route
  */
 Node getNextNodeOnRoute(){

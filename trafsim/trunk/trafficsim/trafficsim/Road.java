@@ -52,7 +52,6 @@ public Road(int id, String Name, double length, double speed_limit,int width, No
 	this.coeff_of_fric = 0.7;
 	this.weather_coeff = 0.0;
 	vehicles = new ArrayList<Vehicle>();
-	weight =new UserDatumNumberEdgeValue(id);
 }
 
 public ArrayList<Vehicle> get_vehicle_list() {

@@ -28,8 +28,7 @@ public class Source extends Node{
 	//}
 	
 	//return true if a car should be created
-	public boolean generate_new_car(){
-		
+	public boolean generate_new_car(){	
 		boolean carCreation;
 		//double f = get_freqency(time);
 		double f = .3;

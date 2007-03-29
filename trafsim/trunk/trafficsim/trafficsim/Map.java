@@ -14,6 +14,7 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 public class Map extends DirectedSparseGraph{
 	UserDatumNumberEdgeValue weight;
 	public Road addRoad(Road arg0) {
+		weight = new UserDatumNumberEdgeValue(arg0);
 		super.addEdge(arg0);
 		return arg0;
 	}
@@ -39,19 +40,18 @@ public class Map extends DirectedSparseGraph{
 			}
 		}
 	}
-	/*
+	/**
 	 * calculates the weight of the road in its current condition
-	 * 
 	 */
 	void setWeight(Road r){
 		double avgVel = r.getAvgSpeed2();
 		double speedLimit = r.getLimit();
-		if (avgVel==0){
+		if (((Double)avgVel).isNaN()){
 			avgVel = speedLimit;
 		}
 		double leng = r.getLength();
-		Number weight = leng/avgVel;
-		((NumberEdgeValue) weight).setNumber(((ArchetypeEdge)this),weight);
+		Number w = leng/avgVel;
+		weight.setNumber(r,w);
 	}
 	
 	NumberEdgeValue getWeight(){
@@ -76,8 +76,6 @@ public class Map extends DirectedSparseGraph{
 			Road rr = (Road)ro1.next();
 			setWeight(rr);
 			rr.updateVehicles(dt);
-			//rr.updateVehiclesAcceleration(dt);
-			//rr.updateVehiclesPosition(dt);
 		}
 	}
 	public int totalVehicles() {
@@ -89,5 +87,14 @@ public class Map extends DirectedSparseGraph{
 			total += rr.totalVehicles();
 		}
 		return total;
+	}
+	
+	public void initializeWeights(){
+		Set<Road> myRoads = this.getEdges();
+		Iterator ro1 = myRoads.iterator();
+		while(ro1.hasNext()){
+			Road rr = (Road)ro1.next();
+			setWeight(rr);
+		}
 	}
 }
