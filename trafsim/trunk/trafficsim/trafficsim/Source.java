@@ -46,5 +46,4 @@ public class Source extends Node{
 	public double get_freqency(int time){
 		return 0.03;
 	}
-
 }
