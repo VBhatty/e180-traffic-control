@@ -30,7 +30,6 @@ public abstract class Vehicle {
 	public Road myRoad;		//will be obmitted because this Road is Route[0]
 	public double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
 	public Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
-
 // Some vehicle statistics
 	public double average_speed;	//Average speed since creation
 	public double distance_travelled;	//distance travelled since creation
@@ -38,7 +37,7 @@ public abstract class Vehicle {
 	public Node startNode;
 	public Node destination;		//Destination of car, generated at timeof creation
 	public List<Road> route;	//ArrayList containing the roads on the route from current road to
-									//the road that ends in the destination node in chronological ordering
+	int routePos;								//the road that ends in the destination node in chronological ordering
 									
 	
 	// notUpdated is used so that one car cannot get it's position updated twice at the
@@ -192,13 +191,64 @@ public void printStat(){
 	System.out.println("Average speed: " + average_speed);
 }
 
+public void updatePosition(double dt)
+{
+	if(notUpdated){
+		
+		double nextspeed =cur_speed + cur_accel*dt;
 
+		double dp;
+		if (nextspeed > 0){
+			dp = (cur_speed + nextspeed)*0.5*dt;
+		}else{
+			dp = (cur_speed + 0)*0.5*dt;
+		}
+	
+		//update the fraction of road travelled
+		double fraction = loc_fraction + dp/(route.get(0).length);
+		
+		// if the distance travelled is longer than what is left of current road,
+		// the vehicle start on the next road on the route
+		while ( fraction > 1)
+		{
+			//calculating how much longer than what is left of the road that the vehicle have
+			//travelled in current timestep
+			fraction = fraction - 1;
+			dp = fraction*route.get(0).length;
+			//removes the last vehicle, which is this one
+			route.get(0).removeVehicle(this);
+			route.remove(0);
+		
+			//if route is empty, then the vehicle has reached the destination
+			if (route.isEmpty() == true){
+				fraction = 0;//sets the fraction to zero to get out of the while loop, but
+						// doesn't add the vehicle to a new road as the routelist is 
+			            // is empty
+				this.printStat();
+			}
+			//the vehicle is moving to a new road
+			else{
+				//add this vehicle to vehicles (the list of vehicles at the road) at 
+				//next road on the route
+				(route.get(0)).vehicles.add(0,this);
+				// calculating fraction completed at next road on route
+				fraction = dp/(route.get(0).length);
+				myRoad =route.get(0);
+			}
+		
+		}
+	
+		// setting loc_fraction equal the fraction completed at current road
+		loc_fraction = fraction;
+		notUpdated=false;
+	}
+}
 
 
 /**
  * updates the position of this vehicle
  */
-public void update_position(double dt )
+public void update_position1(double dt )
 {
 	if(notUpdated){
 		
@@ -215,6 +265,8 @@ public void update_position(double dt )
 		// adding the distance travelled to the fraction of the current road
 		double fraction = loc_fraction + dp/(route.get(0).length);
 		int count;
+		
+
 		// if the distance travelled is longer than what is left of current road,
 		// the vehicle start on the next road on the route
 		while ( fraction > 1)
@@ -527,6 +579,7 @@ public void updateAcceleration() {
 	double minSoFar = Math.min(carAccel, contAccel);
 	double min = Math.min(minSoFar, roadAccel);
 	cur_accel = min;
+	notUpdated=true;
 }
 
 /**
@@ -671,5 +724,14 @@ boolean hasNextRoadOnRoute(){
  */
 Node getNextNodeOnRoute(){
 	return this.route.get(0).getEndNode();
+}
+
+boolean isAtDestination(double percent){
+	if (myRoad.equals(destination) && destination.isSink() && percent>=1){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 }

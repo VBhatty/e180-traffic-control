@@ -74,7 +74,7 @@ public void updateVehicles1(double dt){
 		vehicle.set_acceleration();
 		
 		//System.out.println("finding position");
-		vehicle.update_position(dt);
+		vehicle.updatePosition(dt);
 		
 		//System.out.println("updating stat");
 		vehicle.update_stat(dt);
@@ -93,7 +93,7 @@ public void updateVehicles(double dt){
 	for ( int i=0; i < vehicles.size() ;i++){
 		Vehicle vehicle = (Vehicle)vehicles.get(i);
 		vehicle.updateAcceleration();
-		vehicle.update_position(dt);
+		vehicle.updatePosition(dt);
 		vehicle.update_stat(dt);
 		vehicle.update_speed(dt);
 		vehicle.printInfo();	
@@ -119,7 +119,7 @@ public void updateVehiclesPosition(double dt){
 		
 		
 		//System.out.println("finding position");
-		vehicle.update_position(dt);
+		vehicle.updatePosition(dt);
 		
 		//System.out.println("updating stat");
 		vehicle.update_stat(dt);
@@ -249,10 +249,9 @@ boolean isOnRoad(Vehicle v){
 	return ret;
 }
 
-
-
-
-
+boolean equals(Road r){
+	return this.id==r.id;
+}
 }
 
 
