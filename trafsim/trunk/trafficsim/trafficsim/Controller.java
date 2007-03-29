@@ -115,7 +115,7 @@ public class Controller {
 	public static void Roadpathfinding(){
 		myCont = new Controller(1000,1);
 		myMap = new Map();
-		Node v1 = new Source(1);
+		Node v1 = new Node();
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		Node v2 = new Node();
@@ -124,7 +124,7 @@ public class Controller {
 		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
 		myMap.addRoad(r);
 		myMap.initializeWeights();
-		Car c = new Car(v1,v2);
+		new Car(v1,v2);
 	}
 	
 	public static void create2Road(){

@@ -84,15 +84,15 @@ public abstract class Vehicle {
 		car_in_front=null;
 		cur_speed=0;
 		cur_accel=0;
-		loc_fraction=0;
 		average_speed=0;
 		distance_travelled=0;
 		time_since_creation=0;
 		destination=endNode;
 		startNode = start;
 		route = new ArrayList<Road>();
-		//finding_route();
-		//generate_mass_and_length();
+		route = findRoute(start, endNode);
+		myRoad = route.get(0);
+		myRoad.addVehicle(this);
 		notUpdated=true;	
 	}
 	/**
