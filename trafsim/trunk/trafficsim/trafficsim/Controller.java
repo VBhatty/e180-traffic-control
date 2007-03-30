@@ -97,7 +97,8 @@ public class Controller {
 	public static void create1Road(){
 		myCont = new Controller(1000,1);
 		myMap = new Map();
-		Node v1 = new Source(1);
+		//Node v1 = new Source(1);
+		Node v1 = new Source();
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		Node v2 = new Node();
@@ -131,7 +132,8 @@ public class Controller {
 		myCont = new Controller(100,1);
 		myMap = new Map();
 		
-		Node v1 = new Source(1);
+		//Node v1 = new Source(1);
+		Node v1 = new Source();
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		

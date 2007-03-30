@@ -1,19 +1,30 @@
 package trafficsim;
 
-
+import java.util.UUID;
 
 //import java.awt.geom.Point2D;
 import java.util.Random;
 
 public class Source extends Node{
 
-	int sourceId;
+	//int sourceId;
 	private Random U = new Random();
-	Source(int id) {
+	
+	private UUID sourceID;
+	
+	Source() {
 		super();
-		this.sourceId=id;
+		this.sourceID = UUID.randomUUID();
 	}
 
+	public String getID() {
+		return this.sourceID.toString();
+	}
+	
+	public String getSourceID() {
+		return super.getID();
+	}
+	
 	boolean isSource(){
 		return true;
 	}
@@ -43,7 +54,7 @@ public class Source extends Node{
 		return carCreation;
 	}
 	
-	public double get_freqency(int time){
+	public double getFrequency(){
 		return 0.03;
 	}
 }

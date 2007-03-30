@@ -38,5 +38,25 @@ public class Factory {
 		
 		return newRoad;
 	}
+	
+	public SinkVO sinkToSinkVO(Sink sink) {
+		SinkVO newSink = new SinkVO();
+		
+		newSink.setId(sink.getID());
+		newSink.setNodeId(sink.getNodeID());
+		
+		return newSink;
+	}
+	
+	public SourceVO sourceToSouceVO(Source source) {
+		SourceVO newSource = new SourceVO();
+		
+		newSource.setId(source.getID());
+		newSource.setNodeId(source.getSourceID());
+		newSource.setFrequency(source.getFrequency());
+		
+		return newSource;
+	}
+	
 }
 
