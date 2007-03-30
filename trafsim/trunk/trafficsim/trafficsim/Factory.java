@@ -28,5 +28,15 @@ public class Factory {
 		return newNode;
 	}
 
+	public RoadVO roadToRoadVO(Road road) {
+		RoadVO newRoad = new RoadVO();
+		
+		newRoad.setId(road.getID());
+		newRoad.setFromNodeId(road.getStartNode().getID());
+		newRoad.setToNodeId(road.getEndNode().getID());
+		newRoad.setSpeedLimit(road.getSpeedLimit());
+		
+		return newRoad;
+	}
 }
 

@@ -220,10 +220,6 @@ private void printVehicleList() {
 	}
 }
 
-public Node getEndNode(){
-	return end_node;
-}
-
 boolean endNodeIsController(){
 	Node n1 = getEndNode();
 	if (n1.isTrafCont()){
@@ -260,6 +256,19 @@ public String getID() {
 boolean equals(Road r){
 	return this.id==r.id;
 }
+
+public Node getStartNode() {
+	return this.start_node;
+}
+
+public Node getEndNode() {
+	return this.end_node;
+}
+
+public double getSpeedLimit() {
+	return this.speed_limit;
+}
+
 }
 
 
