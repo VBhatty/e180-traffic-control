@@ -1,7 +1,6 @@
 package trafficsim;
 
 
-
 public class Semi extends Vehicle {
 
 	public Semi(Road r,double fract) {
