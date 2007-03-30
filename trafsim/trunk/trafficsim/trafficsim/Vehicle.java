@@ -6,7 +6,11 @@ import edu.uci.ics.jung.algorithms.shortestpath.ShortestPath;
 import edu.uci.ics.jung.algorithms.shortestpath.ShortestPathUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 //import java.util.Random;
+
+
+import java.util.UUID;
 
 import edu.uci.ics.jung.graph.ArchetypeGraph;
 
@@ -38,7 +42,13 @@ public abstract class Vehicle {
 	public Node destination;		//Destination of car, generated at timeof creation
 	public List<Road> route;	//ArrayList containing the roads on the route from current road to
 	int routePos;								//the road that ends in the destination node in chronological ordering
+	
+
+	private Collection<Double> percentageAlongRoads;
+	private Collection<String> roadIds;
+	private int spawnTime;
 									
+	private UUID id;
 	
 	// notUpdated is used so that one car cannot get it's position updated twice at the
 	//same time step because it changes to a road that is not updated by the controller
@@ -55,6 +65,9 @@ public abstract class Vehicle {
 	 */
 	public Vehicle(Road r,double fract)
 	{
+		this.percentageAlongRoads = new ArrayList<Double>();
+		this.roadIds = new ArrayList<String>();
+		
 		mass = 1500;
 		car_in_front=null;
 		cur_speed=0;
@@ -70,9 +83,31 @@ public abstract class Vehicle {
 		r.addVehicle(this);
 		//finding_route();
 		//generate_mass_and_length();
-		notUpdated=true;	
+		//set spawntime
+		notUpdated=true;
+		
+		id = UUID.randomUUID();
 	}
 	
+	public int getSpawnTime() {
+		return this.spawnTime;
+	}
+	
+	public String getID() {
+		return this.id.toString();
+	}
+	
+	public Node getSource() {
+		return this.startNode;
+	}
+	
+	public Node getDestination() {
+		return this.destination;
+	}
+	
+	public double getWeight() {
+		return this.mass;
+	}
 	/**
 	 * this is the most used constructor.  Since vehicles are created
 	 * at nodes.
@@ -140,6 +175,14 @@ public double max_acceleration()
 	return aMax;
 }
 
+public Collection<Double> getPercentages() {
+	return this.percentageAlongRoads;
+}
+
+public Collection<String> getRoads() {
+	return this.roadIds;
+}
+
 /**
  * The maximum negative acceleration (breaking) that this car can use
  */
@@ -163,6 +206,12 @@ public void printMaxBreaking(){		//Just for testing the function max_breaking()
 
 public void printMaxAcceleration(){		//Just for testing the function max_acceleration()
 	System.out.println(max_acceleration());
+}
+
+public void update_data(double dt) {
+	this.percentageAlongRoads.add(loc_fraction);
+	this.roadIds.add(myRoad.getID());
+	
 }
 
 /**
@@ -338,7 +387,7 @@ public void set_speed(double speed){
 	
 
 
-private double getLength() {
+public double getLength() {
 	return this.length;
 }
 
@@ -484,7 +533,7 @@ public void printInfo(){
 public double AccelerationDueToCarInFront(){
 	//initializing target acceleration
 	double a;
-	//mbd = breakingdistance by applying maximum breaking, or "faen te hæstkukbræmsing"
+	//mbd = breakingdistance by applying maximum breaking, or "faen te hï¿½stkukbrï¿½msing"
 	double mbd= getSafeBreakingDist();
 	//pbd = breakingdistance by applying prefered breaking
 	double pbd= 1.5*mbd;//might be modified later on

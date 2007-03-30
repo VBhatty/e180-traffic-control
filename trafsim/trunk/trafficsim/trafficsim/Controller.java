@@ -103,7 +103,7 @@ public class Controller {
 		Node v2 = new Node();
 		v2.setX(100); v2.setY(0);
 		myMap.addVertex(v2);
-		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
+		Road r = new Road("alcatraz",100,25,1,v1, v2);
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
 	}
@@ -121,7 +121,7 @@ public class Controller {
 		Node v2 = new Node();
 		v2.setX(100); v2.setY(0);
 		myMap.addVertex(v2);
-		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
+		Road r = new Road("alcatraz",100,25,1,v1, v2);
 		myMap.addRoad(r);
 		myMap.initializeWeights();
 		new Car(v1,v2);
@@ -144,8 +144,8 @@ public class Controller {
 		myMap.addVertex(v3);
 		
 		
-		Road r = new Road(0,"alcatraz",100,25,1,v1, v2);
-		Road rr = new Road(1,"oslo",300,50,1,v2, v3);
+		Road r = new Road("alcatraz",100,25,1,v1, v2);
+		Road rr = new Road("oslo",300,50,1,v2, v3);
 		
 		
 		myMap.addRoad(r);

@@ -2,6 +2,7 @@ package trafficsim;
 
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.Iterator;
 
 import edu.uci.ics.jung.graph.ArchetypeEdge;
@@ -23,7 +24,8 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
  */
 public class Road extends DirectedSparseEdge {
 	
-	int id;
+	private UUID id;
+	//int id;
 	public String name;
 	ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
 	public double coeff_of_fric;	//the current coefficient of friction of the road
@@ -39,9 +41,9 @@ public class Road extends DirectedSparseEdge {
 	public Road(Node n1, Node n2){
 		super(n1,n2);
 	}
-public Road(int id, String Name, double length, double speed_limit,int width, Node start, Node end ){
+public Road(String Name, double length, double speed_limit,int width, Node start, Node end ){
 	super((Vertex)start,(Vertex)end);
-	this.id = id;
+	this.id = UUID.randomUUID();
 	this.name =  Name;
 	this.length = length;
 	//speed limit converted to meters per second so miles/hour can be used as input
@@ -81,6 +83,8 @@ public void updateVehicles1(double dt){
 		
 		//System.out.println("updating speed");
 		vehicle.update_speed(dt);
+		
+		vehicle.update_data(dt);
 		
 		//System.out.println("printing info");
 		vehicle.printInfo();
@@ -247,6 +251,10 @@ boolean isOnRoad(Vehicle v){
 		}
 	}
 	return ret;
+}
+
+public String getID() {
+	return this.id.toString();
 }
 
 boolean equals(Road r){
