@@ -17,6 +17,16 @@ public class Factory {
 		
 		return newCar;
 	}
+	
+	public NodeVO nodeToNodeVO(Node node) {
+		NodeVO newNode = new NodeVO();
+		
+		newNode.setId(node.getID());
+		newNode.setX(node.getX());
+		newNode.setY(node.getY());
+		
+		return newNode;
+	}
 
 }
 

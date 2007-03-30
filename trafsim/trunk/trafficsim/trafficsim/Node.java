@@ -11,8 +11,8 @@ import java.util.UUID;
 
 public class Node extends SparseVertex{
 
-	public double x;
-	public double y;
+	private double x;
+	private double y;
 	
 	public UUID id;
 
@@ -30,6 +30,15 @@ public class Node extends SparseVertex{
 	void setY(double Y){
 		y=Y;
 	}
+	
+	public double getX() {
+		return this.x;
+	}
+	
+	public double getY() {
+		return this.y;
+	}
+	
 	boolean isSource(){
 		return false;
 	}
