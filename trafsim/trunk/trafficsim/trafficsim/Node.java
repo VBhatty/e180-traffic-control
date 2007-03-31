@@ -48,4 +48,5 @@ public class Node extends SparseVertex{
 	boolean isSink(){
 		return false;
 	}
+
 }

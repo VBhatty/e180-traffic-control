@@ -27,8 +27,14 @@ public abstract class Vehicle {
 
 	//	public static final double mass_mean = 1000; //may be used as distribution mean to generate mass
 	public static final double g = 9.8;
+	
+	//these variables are specified in each extending instance
+	double maxVisibility;
 	public double mass;			//mass of this vehicle
 	public double length;		//length of this vehicle
+	
+	
+	
 	public double cur_speed;	//initial speed at current time step
 	public double cur_accel;	//acceleration at current time step, constant through the time step 
 	public Road myRoad;		//will be obmitted because this Road is Route[0]
@@ -67,8 +73,6 @@ public abstract class Vehicle {
 	{
 		this.percentageAlongRoads = new ArrayList<Double>();
 		this.roadIds = new ArrayList<String>();
-		
-		mass = 1500;
 		car_in_front=null;
 		cur_speed=0;
 		cur_accel=0;
@@ -85,7 +89,7 @@ public abstract class Vehicle {
 		//generate_mass_and_length();
 		//set spawntime
 		notUpdated=true;
-		
+		maxVisibility = 25;
 		id = UUID.randomUUID();
 	}
 	
@@ -127,6 +131,7 @@ public abstract class Vehicle {
 		route = findRoute(start, endNode);
 		myRoad = route.get(0);
 		myRoad.addVehicle(this);
+		maxVisibility = 25;
 		notUpdated=true;	
 	}
 	/**
@@ -512,7 +517,7 @@ public List<Road> findRoute(Node n1, Node n2)
 public double getSafeBreakingDist(){
 	double v = 2.236936292*get_speed();		//Current speed of vehicle converted from m/s to mph
 	double safeDist;
-	double Cf = 0.7; //route.get(0).getCoeffOfFriction();
+	double Cf = route.get(0).getCoeffOfFriction();
 	
 	safeDist =  (0.7/Cf)* ((88/50)*v + (24/Math.pow(50,2))*Math.pow(v,2) + (74/Math.pow(50,3))*Math.pow(v,3)); //Formula from physical model
 	safeDist = 0.3048*safeDist; //Safe breaking distance converted from feet to meter
@@ -664,10 +669,10 @@ private double accelerationDueToTrafficCont() {
 	double accel;
 	double speedLimit;
 	double distanceToNode;
+	distanceToNode = (1- this.getPercent())*this.route.get(0).getLength();
+	speedLimit = ((trafficController)myNode).getSpeedLimit();
 	double mySpeed = this.get_speed();
-	if (myNode.isTrafCont()){
-		 speedLimit = ((trafficController)myNode).getSpeedLimit();
-		 distanceToNode = (1- this.getPercent())*this.route.get(0).getLength();
+	if (myNode.isTrafCont() && distanceToNode <= maxVisibility){
 		 accel = (Math.pow(speedLimit, 2) - Math.pow(mySpeed, 2))/(2*distanceToNode);
 	} else {
 		return Double.POSITIVE_INFINITY;
@@ -782,5 +787,8 @@ boolean isAtDestination(double percent){
 	else{
 		return false;
 	}
+}
+double getVisRange(){
+	return maxVisibility;
 }
 }

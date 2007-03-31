@@ -119,7 +119,8 @@ public class Controller {
 		Node v1 = new Node();
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
-		Node v2 = new Node();
+		Node v2 = new trafficController();
+		//((trafficController)v2).setSpeedlimit(0);
 		v2.setX(100); v2.setY(0);
 		myMap.addVertex(v2);
 		Road r = new Road("alcatraz",100,25,1,v1, v2);

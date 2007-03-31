@@ -269,6 +269,17 @@ public double getSpeedLimit() {
 	return this.speed_limit;
 }
 
+/**
+ * returns true if the vehicle is within the safe breaking distance
+ * of the end node of this road.  Assumes vehicle is on this road
+ * @param V
+ * @return
+ */
+boolean isWithinSBD(Vehicle V){
+	double SBD = V.getSafeBreakingDist();
+	double distToEndNode = this.getLength() - V.getPercent()*this.getLength();
+	return distToEndNode<=SBD;
+}
 }
 
 
