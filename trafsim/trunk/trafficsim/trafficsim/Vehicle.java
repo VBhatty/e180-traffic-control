@@ -30,24 +30,28 @@ public abstract class Vehicle {
 	
 	//these variables are specified in each extending instance
 	double maxVisibility;
-	public double mass;			//mass of this vehicle
-	public double length;		//length of this vehicle
+	double mass;			//mass of this vehicle
+	double length;	//length of this vehicle
+	//movement variables
+	double speedX;
+	double speedY;
+	double accelX;	
+	double accelY;
 	
-	
-	
-	public double cur_speed;	//initial speed at current time step
-	public double cur_accel;	//acceleration at current time step, constant through the time step 
-	public Road myRoad;		//will be obmitted because this Road is Route[0]
-	public double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
-	public Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
-// Some vehicle statistics
-	public double average_speed;	//Average speed since creation
-	public double distance_travelled;	//distance travelled since creation
-	public double time_since_creation;	// time elapsed since creation
-	public Node startNode;
-	public Node destination;		//Destination of car, generated at timeof creation
-	public List<Road> route;	//ArrayList containing the roads on the route from current road to
-	int routePos;								//the road that ends in the destination node in chronological ordering
+	//position variables
+	Node startNode;
+	Node destination;
+	Road myRoad;		//will be obmitted because this Road is Route[0]
+	double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
+	Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
+
+	// Some vehicle statistics
+	double average_speed;	//Average speed since creation
+	double distance_travelled;	//distance travelled since creation
+	double time_since_creation;	// time elapsed since creation
+		
+	List<Road> route;	//ArrayList containing the roads on the route from current road to
+	int routePos;  //position on route of the car, use this instead of deleting routes								//the road that ends in the destination node in chronological ordering
 	
 
 	private Collection<Double> percentageAlongRoads;
@@ -74,8 +78,10 @@ public abstract class Vehicle {
 		this.percentageAlongRoads = new ArrayList<Double>();
 		this.roadIds = new ArrayList<String>();
 		car_in_front=null;
-		cur_speed=0;
-		cur_accel=0;
+		accelX=0;
+		accelY=0;
+		speedX=0;
+		speedY=0;
 		loc_fraction=fract;
 		average_speed=0;
 		distance_travelled=0;
@@ -120,8 +126,10 @@ public abstract class Vehicle {
 	{
 		mass = 1500;
 		car_in_front=null;
-		cur_speed=0;
-		cur_accel=0;
+		speedX=0;
+		speedY=0;
+		accelX=0;
+		accelY=0;
 		average_speed=0;
 		distance_travelled=0;
 		time_since_creation=0;
@@ -194,7 +202,7 @@ public Collection<String> getRoads() {
 public double max_breaking() //Giving out maximum possible deceleration (breaking)
 {
 	double bMax = 0;
-	double v = this.cur_speed;
+	double v = this.getSpeed();
 	double Cf0 = 0.7; //route.get(0).getCoeffOfFriction();
 	double Cfw = Cf0;		//Cf(w) and Cf(0) are different if weather-coeff. is set to other than zero
 	double b = 0.01464176482072;		//Constants b and c taken from Physical Model.ppt and computed to fit the SI-system
@@ -228,11 +236,11 @@ public void update_stat(double dt)
 	time_since_creation = time_since_creation + dt;
 	
 	//updates distance_travelled by adding the distance travelled the last timestep assuming constant acceleration
-	double nextspeed =cur_speed + cur_accel*dt;
+	double nextspeed =getSpeed() + getAccel()*dt;
 	if (nextspeed > 0){
-		distance_travelled =  distance_travelled + (cur_speed + nextspeed)*0.5*dt;
+		distance_travelled =  distance_travelled + (getSpeed() + nextspeed)*0.5*dt;
 	}else{
-		distance_travelled =  distance_travelled + (cur_speed)*0.5*dt;
+		distance_travelled =  distance_travelled + (getSpeed())*0.5*dt;
 	}
 	
 	//updates average_speed by divide distance_travelled by time_since_creation
@@ -249,13 +257,13 @@ public void updatePosition(double dt)
 {
 	if(notUpdated){
 		
-		double nextspeed =cur_speed + cur_accel*dt;
+		double nextspeed =getSpeed() + getAccel()*dt;
 
 		double dp;
 		if (nextspeed > 0){
-			dp = (cur_speed + nextspeed)*0.5*dt;
+			dp = (getSpeed() + nextspeed)*0.5*dt;
 		}else{
-			dp = (cur_speed + 0)*0.5*dt;
+			dp = (getSpeed() + 0)*0.5*dt;
 		}
 	
 		//update the fraction of road travelled
@@ -306,14 +314,14 @@ public void update_position1(double dt )
 {
 	if(notUpdated){
 		
-		double nextspeed =cur_speed + cur_accel*dt;
+		double nextspeed =getSpeed() + getAccel()*dt;
 	
 		//distance travelled at current step
 		double dp;
 		if (nextspeed > 0){
-			dp = (cur_speed + nextspeed)*0.5*dt;
+			dp = (getSpeed() + nextspeed)*0.5*dt;
 		}else{
-			dp = (cur_speed + 0)*0.5*dt;
+			dp = (getSpeed() + 0)*0.5*dt;
 		}
 	
 		// adding the distance travelled to the fraction of the current road
@@ -364,33 +372,30 @@ public void update_position1(double dt )
 	}
 }
 
-public void update_speed(double dt) //call in the end of timestep as the other updatefunctions use speed at  
-									// start of time step as cur_speed
+public void updateSpeed(double dt) //call in the end of timestep as the other updatefunctions use speed at  
+									// start of time step as getSpeed()
 {
-	double nextspeed =cur_speed + cur_accel*dt;
-	if (nextspeed > 0){
-		cur_speed = nextspeed;
+	double nextspeedX =speedX + accelX*dt;
+	double nextspeedY =speedY + accelY*dt;
+	if (nextspeedX > 0){
+		setSpeedX(nextspeedX);
 	}else{
-		cur_speed = 0;
+		setSpeedX(0);
 	}
-
+	if (nextspeedX > 0){
+		setSpeedY(nextspeedY);
+	}else{
+		setSpeedY(0);
+	}
 }
 
 
 /**
- * set the speed to some fixed speed
+ * set the x speed to some fixed speed
  */
-public void set_speed(double speed){
-	cur_speed = speed;
+public void setSpeedY(double x){
+	speedY = x;
 }
-
-
-
-	 	// using constant acceleration equation to calculate the acceleration needed
-        //nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
-	
-	
-
 
 public double getLength() {
 	return this.length;
@@ -401,10 +406,10 @@ public double getLength() {
 //Note: This method ONLY consider roads.
 public double accelerationToRoadsAhead(){
 	double dist = 0;
-	double a = this.cur_accel;	//current acceleration
+	double a = getAccel();	//current acceleration
 	double accNew = 10000;		//new acceleration sat high so it won't be chosen unless it's lower than current acc.
 	double prefBreakDist = this.getSafeBreakingDist() * 1.2;	//Preferred (comfortable) breaking distance
-	double mySpeed = this.cur_speed;	//Current speed
+	double mySpeed = this.getSpeed();	//Current speed
 	double speedLimit;			//Speedlimit of roads ahead
 	
 	if (route.size() > 0){		//Preventing systemcrash when car is out of system/no roads on route
@@ -417,7 +422,7 @@ public double accelerationToRoadsAhead(){
 		if (i >= route.size()){			//If sink ahead, iow. NO new road, skip out of while-loop
 			break;
 		}
-		speedLimit = route.get(i).speed_limit;		//Speedlimit on roads ahead of current road
+		speedLimit = route.get(i).speedLimit;		//Speedlimit on roads ahead of current road
 		if (speedLimit < mySpeed){					//Only necessary to break if new speedlimit is less
 			accNew = (Math.pow(speedLimit,2) - Math.pow(mySpeed,2)) / (2*dist);
 			if (accNew < a){						//Choosing hardest breaking decelration
@@ -449,7 +454,7 @@ public double accelerationToNearestNodeOrRoad(){
 	double endNodeSpeedLimit=0;
 	double safeBreakDist = this.getSafeBreakingDist();
 	double dist2newSpeedLimit = 0;
-	double currSpeed = this.cur_speed;
+	double currSpeed = this.getSpeed();
 	double roadSpeedLimit;
 	
 	int i = 0;
@@ -482,27 +487,18 @@ public double accelerationToNearestNodeOrRoad(){
 
 
 
-public double get_speed()
+public double getSpeed()
 {
-	return cur_speed;
+	return Math.sqrt(speedX*speedX + speedY*speedY);
 }
-
-//temporary function to find the acceleration for simple model use
-public void set_acceleration()
-{
-	double a = AccelerationDueToCarInFront(); //Math.min(AccelerationDueToCarInFront() , accelerationToRoadsAhead() );
-	if(a == 1000){
-		cur_accel =(route.get(0).getLimit() - this.cur_speed)/6; 
-	}else{
-		cur_accel=a;
-	}
-	notUpdated=true;
-}	
+double getAccel(){
+	return Math.sqrt(accelX*accelX + accelY*accelY);
+}
 
 
 public void printSpeed() 
 {
-	System.out.println(get_speed());
+	System.out.println(getSpeed());
 }
 
 
@@ -515,7 +511,7 @@ public List<Road> findRoute(Node n1, Node n2)
 
 //Finding the safe breaking distance of a vehicle
 public double getSafeBreakingDist(){
-	double v = 2.236936292*get_speed();		//Current speed of vehicle converted from m/s to mph
+	double v = 2.236936292*getSpeed();		//Current speed of vehicle converted from m/s to mph
 	double safeDist;
 	double Cf = route.get(0).getCoeffOfFriction();
 	
@@ -588,7 +584,7 @@ public double AccelerationDueToCarInFront(){
 		
 		
 		 	// using constant acceleration equation to calculate the acceleration needed
-	        //nec = 0.5*(v-cur_speed)*(v+cur_speed)/dist;
+	        //nec = 0.5*(v-getSpeed())*(v+getSpeed())/dist;
 		 		//System.out.println(distance);
 			if (distance < sfd){
 				a = 0.8*max_breaking();
@@ -610,8 +606,8 @@ double getPercent(){
 
 
 
-public void setSpeed(double speed){
-	cur_speed=speed;
+public void setSpeedX(double x){
+	speedX=x;
 }
 public void setCarInFront(Vehicle carInFront){
 	car_in_front = carInFront;
@@ -632,7 +628,8 @@ public void updateAcceleration() {
 	
 	double minSoFar = Math.min(carAccel, contAccel);
 	double min = Math.min(minSoFar, roadAccel);
-	cur_accel = min;
+	accelX = min*Math.cos(route.get(routePos).getRoadAngle());
+	accelY = min*Math.sin(route.get(routePos).getRoadAngle());
 	notUpdated=true;
 }
 
@@ -647,14 +644,14 @@ public void updateAcceleration() {
 private double accelerationDueToLimit() {
 	Road myR = this.route.get(0);
 	double speedLimit = myR.getLimit();
-	double mySpeed= this.get_speed();
+	double mySpeed= this.getSpeed();
 	double accel = Double.POSITIVE_INFINITY;
-	if (this.cur_accel < this.max_acceleration() && mySpeed<speedLimit){
+	if (getAccel() < this.max_acceleration() && mySpeed<speedLimit){
 		//for now accelerate to half the max acceleration
-		accel = (this.max_acceleration()-this.cur_accel)/2;
+		accel = (this.max_acceleration()-getAccel())/2;
 	}else{
 		
-		accel = (this.cur_accel-this.max_acceleration())/2;
+		accel = (getAccel()-this.max_acceleration())/2;
 	}
 	return accel;
 }
@@ -671,7 +668,7 @@ private double accelerationDueToTrafficCont() {
 	double distanceToNode;
 	distanceToNode = (1- this.getPercent())*this.route.get(0).getLength();
 	speedLimit = ((trafficController)myNode).getSpeedLimit();
-	double mySpeed = this.get_speed();
+	double mySpeed = this.getSpeed();
 	if (myNode.isTrafCont() && distanceToNode <= maxVisibility){
 		 accel = (Math.pow(speedLimit, 2) - Math.pow(mySpeed, 2))/(2*distanceToNode);
 	} else {
@@ -700,8 +697,8 @@ private double accelerationDueToCar(){
 	{
 		double SBD = this.getSafeBreakingDist();
 		double actFD = this.distanceBetCars(v);
-		double v1 = this.get_speed();
-		double v2 = v.get_speed();
+		double v1 = this.getSpeed();
+		double v2 = v.getSpeed();
 		if (SBD>actFD){
 			accel = (Math.pow(v2, 2) - Math.pow(v1, 2))/(2*actFD);
 		}
@@ -790,5 +787,15 @@ boolean isAtDestination(double percent){
 }
 double getVisRange(){
 	return maxVisibility;
+}
+double getXpos(){
+	//i dunno if we need this
+	return 0;
+	
+}
+double getYpos(){
+	//i dunno if we need this
+	return 0;
+	
 }
 }

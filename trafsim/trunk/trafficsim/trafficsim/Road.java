@@ -26,37 +26,48 @@ public class Road extends DirectedSparseEdge {
 	
 	private UUID id;
 	//int id;
-	public String name;
-	ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
-	public double coeff_of_fric;	//the current coefficient of friction of the road
-	public double weather_coeff;	//higher weather coefficient means more rain and poorer coeff of friction
-	public double length;	//the legth of the road
-	public Node start_node; //the node at the start of the road
-	public Node end_node; //the node at the end of the road
-	public double speed_limit; //speed limit of the road
-	public int width;	//number of lanes of the road
-	public double average_speed; // average speed of the current vehicles on the road
-	public double average_weight;
-	//average weight of the current vehicles on the road
-	public Road(Node n1, Node n2){
+	 String name;
+	 ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
+	 double coeff_of_fric;	//the current coefficient of friction of the road
+	 double weather_coeff;	//higher weather coefficient means more rain and poorer coeff of friction
+	 double length;	//the legth of the road
+	 Node start_node; //the node at the start of the road
+	 Node end_node; //the node at the end of the road
+	 double speedLimit; //speed limit of the road
+	 int width;	//number of lanes of the road
+	 double average_speed; // average speed of the current vehicles on the road
+	 double average_weight; //average weight of the current vehicles on the road
+	 double roadAngle;  //the angle which the road is measured from positive x axis 
+	
+	 Road(Node n1, Node n2){
 		super(n1,n2);
 	}
-public Road(String Name, double length, double speed_limit,int width, Node start, Node end ){
+public Road(String Name, double speed_limit,int width, Node start, Node end ){
 	super((Vertex)start,(Vertex)end);
 	this.id = UUID.randomUUID();
 	this.name =  Name;
-	this.length = length;
 	//speed limit converted to meters per second so miles/hour can be used as input
-	this.speed_limit = speed_limit/2.237;
+	this.speedLimit = speed_limit/2.237;
 	this.width = width;
 	this.start_node = start;
 	this.end_node = end;
 	this.coeff_of_fric = 0.7;
 	this.weather_coeff = 0.0;
 	vehicles = new ArrayList<Vehicle>();
+	setRoadAngle();
+	setLength();
 }
 
-public ArrayList<Vehicle> get_vehicle_list() {
+private void setLength() {
+	double startX = this.getStartNode().getX();
+	double startY = this.getStartNode().getY();
+	double endX = this.getEndNode().getX();
+	double endY = this.getEndNode().getY();
+	double dX = endX - startX;
+	double dY = endY - startY;
+	this.length = Math.sqrt(dX*dX + dY*dY);
+}
+public ArrayList<Vehicle> getVehicleList() {
 	return this.vehicles;
 }
 
@@ -67,39 +78,13 @@ public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
-public void updateVehicles1(double dt){
-	
-	for ( int i=0; i < vehicles.size() ;i++){
-		Vehicle vehicle = (Vehicle)vehicles.get(i);
-		
-		//System.out.println("setting acceleration");
-		vehicle.set_acceleration();
-		
-		//System.out.println("finding position");
-		vehicle.updatePosition(dt);
-		
-		//System.out.println("updating stat");
-		vehicle.update_stat(dt);
-		
-		//System.out.println("updating speed");
-		vehicle.update_speed(dt);
-		
-		vehicle.update_data(dt);
-		
-		//System.out.println("printing info");
-		vehicle.printInfo();
-		//vehicle.printMaxBreaking();
-		//vehicle.printMaxAcceleration();
-		//vehicle.printSafeBreakingDist();
-	}
-}
 public void updateVehicles(double dt){
 	for ( int i=0; i < vehicles.size() ;i++){
 		Vehicle vehicle = (Vehicle)vehicles.get(i);
 		vehicle.updateAcceleration();
 		vehicle.updatePosition(dt);
 		vehicle.update_stat(dt);
-		vehicle.update_speed(dt);
+		vehicle.updateSpeed(dt);
 		vehicle.printInfo();	
 	}
 }
@@ -129,7 +114,7 @@ public void updateVehiclesPosition(double dt){
 		vehicle.update_stat(dt);
 		
 		//System.out.println("updating speed");
-		vehicle.update_speed(dt);
+		vehicle.updateSpeed(dt);
 		
 		//System.out.println("printing info");
 		vehicle.printInfo();
@@ -145,14 +130,14 @@ public int totalVehicles() {
 }
 
 public double getLimit(){
-	return speed_limit;
+	return speedLimit;
 }
 
 public double getAvgSpeed2(){
 	double sum = 0;
 	for (int i=0; i < vehicles.size(); i++) {
 		Vehicle vehicle = (Vehicle)vehicles.get(i);
-		sum += vehicle.get_speed();
+		sum += vehicle.getSpeed();
 	}
 	return sum / totalVehicles();
 }
@@ -164,7 +149,7 @@ public double getAvgSpeed(){
 	speedArray = new double[vehicles.size()];
 	for ( int i=0; i < vehicles.size(); i++ ){
 		theCar = (Vehicle)vehicles.get(i);
-		speedArray[i] = theCar.cur_speed;
+		speedArray[i] = theCar.getSpeed();
 	}
 	
 	double sumSpeed =0;
@@ -266,7 +251,7 @@ public Node getEndNode() {
 }
 
 public double getSpeedLimit() {
-	return this.speed_limit;
+	return this.speedLimit;
 }
 
 /**
@@ -279,6 +264,18 @@ boolean isWithinSBD(Vehicle V){
 	double SBD = V.getSafeBreakingDist();
 	double distToEndNode = this.getLength() - V.getPercent()*this.getLength();
 	return distToEndNode<=SBD;
+}
+public double getRoadAngle() {
+	return roadAngle;
+}
+public void setRoadAngle() {
+	double startX = this.getStartNode().getX();
+	double startY = this.getStartNode().getY();
+	double endX = this.getEndNode().getX();
+	double endY = this.getEndNode().getY();
+	double dX = endX - startX;
+	double dY = endY - startY;
+	roadAngle = Math.atan(dY/dX);
 }
 }
 
