@@ -5,6 +5,8 @@
 import java.util.Iterator;
 import java.util.Set;
 
+import sun.security.action.GetBooleanAction;
+
 //import edu.uci.ics.jung.graph.DirectedEdge;
 //mport edu.uci.ics.jung.graph.Graph;
 //import edu.uci.ics.jung.graph.Vertex;
@@ -87,7 +89,6 @@ public class Controller {
 		
 			myCont.update(myCont.getStep());
 		}
-
 	}
 
 	/** 
