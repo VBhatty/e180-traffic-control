@@ -35,9 +35,6 @@ public class Map extends DirectedSparseGraph{
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);
 			}
-			if (nn.isSink()){
-				//nothing to do here yet
-			}
 		}
 	}
 	/**

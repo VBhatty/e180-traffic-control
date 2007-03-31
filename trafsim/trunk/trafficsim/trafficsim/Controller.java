@@ -43,7 +43,7 @@ public class Controller {
 	 * adds a raod to the static map myMap
 	 */
 	public void addRoad(Road r) {
-		GraphUtils.addEdge(myMap,r.start_node,r.end_node);
+		GraphUtils.addEdge(myMap,r.getStartNode(),r.getEndNode());
 	}
 	/**
 	 * gets the current time in the simulation
@@ -104,7 +104,7 @@ public class Controller {
 		Node v2 = new Node();
 		v2.setX(100); v2.setY(0);
 		myMap.addVertex(v2);
-		Road r = new Road("alcatraz",25,1,v1, v2);
+		Road r = new Road("alcatraz",25,v1, v2);
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
 	}
@@ -120,10 +120,10 @@ public class Controller {
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		Node v2 = new trafficController();
-		//((trafficController)v2).setSpeedlimit(0);
+		((trafficController)v2).setSpeedlimit(0);
 		v2.setX(100); v2.setY(0);
 		myMap.addVertex(v2);
-		Road r = new Road("alcatraz",25,1,v1, v2);
+		Road r = new Road("alcatraz",25,v1, v2);
 		myMap.addRoad(r);
 		myMap.initializeWeights();
 		new Car(v1,v2);
@@ -147,8 +147,8 @@ public class Controller {
 		myMap.addVertex(v3);
 		
 		
-		Road r = new Road("alcatraz",25,1,v1, v2);
-		Road rr = new Road("oslo",50,1,v2, v3);
+		Road r = new Road("alcatraz",25,v1, v2);
+		Road rr = new Road("oslo",50,v2, v3);
 		
 		
 		myMap.addRoad(r);
@@ -158,8 +158,8 @@ public class Controller {
 		Car v = new Car(r,0.12);
 		Car follower = new Car(r,0.0);
 		
-		v.route.add(rr);
-		follower.route.add(rr);
+		v.getRoute().add(rr);
+		follower.getRoute().add(rr);
 		follower.setCarInFront(v);
 		//follower.setSpeed(4);
 		

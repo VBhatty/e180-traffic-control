@@ -2,6 +2,9 @@ package trafficsim;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Iterator;
 
@@ -24,36 +27,34 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
  */
 public class Road extends DirectedSparseEdge {
 	
-	private UUID id;
+	 private UUID id;
 	//int id;
-	 String name;
-	 ArrayList <Vehicle>vehicles;	//list of current vehicles on the road
-	 double coeff_of_fric;	//the current coefficient of friction of the road
-	 double weather_coeff;	//higher weather coefficient means more rain and poorer coeff of friction
-	 double length;	//the legth of the road
-	 Node start_node; //the node at the start of the road
-	 Node end_node; //the node at the end of the road
-	 double speedLimit; //speed limit of the road
-	 int width;	//number of lanes of the road
-	 double average_speed; // average speed of the current vehicles on the road
-	 double average_weight; //average weight of the current vehicles on the road
-	 double roadAngle;  //the angle which the road is measured from positive x axis 
+	 private String name;
+	 private TreeSet<Vehicle> vehicles;	//list of current vehicles on the road
+	 private double coeff_of_fric;	//the current coefficient of friction of the road
+	 private double weather_coeff;	//higher weather coefficient means more rain and poorer coeff of friction
+	 private double length;	//the legth of the road
+	 private Node start_node; //the node at the start of the road
+	 private Node end_node; //the node at the end of the road
+	 private double speedLimit; //speed limit of the road
+	 private double averageSpeed; // average speed of the current vehicles on the road
+	 private double averageWeight; //average weight of the current vehicles on the road
+	 private double roadAngle;  //the angle which the road is measured from positive x axis 
 	
 	 Road(Node n1, Node n2){
 		super(n1,n2);
 	}
-public Road(String Name, double speed_limit,int width, Node start, Node end ){
+public Road(String Name, double speed_limit, Node start, Node end ){
 	super((Vertex)start,(Vertex)end);
 	this.id = UUID.randomUUID();
 	this.name =  Name;
 	//speed limit converted to meters per second so miles/hour can be used as input
 	this.speedLimit = speed_limit/2.237;
-	this.width = width;
 	this.start_node = start;
 	this.end_node = end;
 	this.coeff_of_fric = 0.7;
 	this.weather_coeff = 0.0;
-	vehicles = new ArrayList<Vehicle>();
+	vehicles = new TreeSet<Vehicle>();
 	setRoadAngle();
 	setLength();
 }
@@ -67,45 +68,35 @@ private void setLength() {
 	double dY = endY - startY;
 	this.length = Math.sqrt(dX*dX + dY*dY);
 }
-public ArrayList<Vehicle> getVehicleList() {
+public SortedSet<Vehicle> getVehicleList() {
 	return this.vehicles;
 }
 
 public void addVehicle(Vehicle vehicle) {
-	this.vehicles.add(0,vehicle);
+	this.vehicles.add(vehicle);
 }
 public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
 public void updateVehicles(double dt){
-	for ( int i=0; i < vehicles.size() ;i++){
-		Vehicle vehicle = (Vehicle)vehicles.get(i);
+		Iterator veh = vehicles.iterator();
+		while (veh.hasNext()){
+		Vehicle vehicle = (Vehicle)veh.next();
 		vehicle.updateAcceleration();
 		vehicle.updatePosition(dt);
 		vehicle.update_stat(dt);
 		vehicle.updateSpeed(dt);
 		vehicle.printInfo();	
+		}
 	}
-}
 
-/*
- * updates every vehicle's acceleration on this road
- */
-public void updateVehiclesAcceleration(double dt){
-	
-	for ( int i=0; i < vehicles.size() ;i++){
-		Vehicle vehicle = (Vehicle)vehicles.get(i);
-		vehicle.updateAcceleration();
-		
-	}
-}
 
 public void updateVehiclesPosition(double dt){
 	
-	for ( int i=0; i < vehicles.size() ;i++){
-		Vehicle vehicle = (Vehicle)vehicles.get(i);
-		
+	Iterator veh = vehicles.iterator();
+	while (veh.hasNext()){
+		Vehicle vehicle = (Vehicle)veh.next();
 		
 		//System.out.println("finding position");
 		vehicle.updatePosition(dt);
@@ -135,8 +126,9 @@ public double getLimit(){
 
 public double getAvgSpeed2(){
 	double sum = 0;
-	for (int i=0; i < vehicles.size(); i++) {
-		Vehicle vehicle = (Vehicle)vehicles.get(i);
+	Iterator veh = vehicles.iterator();
+	while (veh.hasNext()){
+		Vehicle vehicle = (Vehicle)veh.next();
 		sum += vehicle.getSpeed();
 	}
 	return sum / totalVehicles();
@@ -147,13 +139,16 @@ public double getAvgSpeed(){
 	double[] speedArray;
 	
 	speedArray = new double[vehicles.size()];
-	for ( int i=0; i < vehicles.size(); i++ ){
-		theCar = (Vehicle)vehicles.get(i);
+	Iterator veh = vehicles.iterator();
+	int i =0;
+	while (veh.hasNext()){
+		theCar= (Vehicle)veh.next();
 		speedArray[i] = theCar.getSpeed();
+		i=i+1;
 	}
 	
 	double sumSpeed =0;
-	for (int i=0; i < speedArray.length; i++){
+	for (int j=0; i < speedArray.length; i++){
 		sumSpeed = sumSpeed + speedArray[i];
 	}
 	double avgSpeed = sumSpeed / vehicles.size();
@@ -165,8 +160,9 @@ public double getAvgSpeed(){
  * searches this road and finds every car from the percent
  * to the range
  */
-ArrayList<Vehicle> searchRoad(Vehicle myV,double start, double range){
-	ArrayList<Vehicle> carsOnStrip = new ArrayList<Vehicle>();
+SortedSet<Vehicle> searchRoad(Vehicle myV,double start, double range){
+	SortedSet<Vehicle> carsOnStrip = new TreeSet<Vehicle>();
+	
 	Iterator veh = vehicles.iterator();
 	//hmmm
 	double endPerc = range/this.getLength();
@@ -178,17 +174,25 @@ ArrayList<Vehicle> searchRoad(Vehicle myV,double start, double range){
 			carsOnStrip = nextRoad.searchRoad(myV,0,percentOver*nextRoad.length);
 		}
 	}
+	SortedSet<Vehicle> s = Collections.synchronizedSortedSet(new TreeSet(carsOnStrip));
 	while (veh.hasNext()){
 		Vehicle ve = (Vehicle)veh.next();
 		if (ve.getPercent()>start && ve.getPercent()<range){
-			carsOnStrip.add(ve);
+			s.add(ve);
 		}
 	}
-	return carsOnStrip;
+	return s;
 }
-
+double distanceBetweenCars(Vehicle v1, Vehicle v2){
+	if (v1.isOnSameRoad(v2)){
+		return Math.abs(v1.getPercent()-v2.getPercent())*v1.getRoute().get(v1.getRoutePos()).getLength();
+	}
+	else{
+		throw new IllegalArgumentException("not on same road");
+	}
+}
 Vehicle findCarInFront(Vehicle myV, double start,double range){
-	ArrayList<Vehicle> carsOnStrip = searchRoad(myV,start,range);
+	SortedSet<Vehicle> carsOnStrip = searchRoad(myV,start,range);
 	Iterator veh = carsOnStrip.iterator();
 	Vehicle inFront;
 	if (veh.hasNext()){
@@ -200,8 +204,10 @@ Vehicle findCarInFront(Vehicle myV, double start,double range){
 }
 
 private void printVehicleList() {
-	for (int i = 0; i<vehicles.size();i++){
-		vehicles.get(i).printSpeed();
+	Iterator veh = vehicles.iterator();
+	while (veh.hasNext()){
+		Vehicle vehicle = (Vehicle)veh.next();
+		vehicle.printSpeed();
 	}
 }
 
@@ -276,6 +282,9 @@ public void setRoadAngle() {
 	double dX = endX - startX;
 	double dY = endY - startY;
 	roadAngle = Math.atan(dY/dX);
+}
+public TreeSet<Vehicle> getVehicles() {
+	return vehicles;
 }
 }
 

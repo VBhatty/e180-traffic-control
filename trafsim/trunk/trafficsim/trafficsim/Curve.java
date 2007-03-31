@@ -13,8 +13,8 @@ public class Curve extends Road{
 		public final boolean way;
 		
 	
-	public Curve(String Name, double speed_limit, int width, Node start, Node end,double r, boolean w) {
-		super(Name, speed_limit, width, start, end);
+	public Curve(String Name, double speed_limit, Node start, Node end,double r, boolean w) {
+		super(Name, speed_limit, start, end);
 		way = w;
 		radius = r;
 		

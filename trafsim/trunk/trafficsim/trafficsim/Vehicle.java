@@ -5,6 +5,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.algorithms.shortestpath.ShortestPath;
 import edu.uci.ics.jung.algorithms.shortestpath.ShortestPathUtils;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Collection;
 //import java.util.Random;
@@ -21,7 +22,7 @@ import edu.uci.ics.jung.graph.ArchetypeGraph;
  * by the car at each time step.  Each car belongs to a road and has a user set mass
  * and length
  */
-public abstract class Vehicle {
+public abstract class Vehicle implements Comparable {
 
 // Class parameters
 
@@ -29,29 +30,27 @@ public abstract class Vehicle {
 	public static final double g = 9.8;
 	
 	//these variables are specified in each extending instance
-	double maxVisibility;
-	double mass;			//mass of this vehicle
-	double length;	//length of this vehicle
+	private double maxVisibility;
+	protected double mass;			//mass of this vehicle
+	protected double length;	//length of this vehicle
 	//movement variables
-	double speedX;
-	double speedY;
-	double accelX;	
-	double accelY;
-	
+	private double speedX;
+	private double speedY;
+	private double accelX;	
+	private double accelY;
 	//position variables
-	Node startNode;
-	Node destination;
-	Road myRoad;		//will be obmitted because this Road is Route[0]
-	double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
-	Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
-
+	private Node startNode;
+	private Node destination;
+	private Road myRoad;		//will be obmitted because this Road is Route[0]
+	private double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
+	private Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
 	// Some vehicle statistics
-	double average_speed;	//Average speed since creation
-	double distance_travelled;	//distance travelled since creation
-	double time_since_creation;	// time elapsed since creation
+	private double average_speed;	//Average speed since creation
+	private double distance_travelled;	//distance travelled since creation
+	private double time_since_creation;	// time elapsed since creation
 		
-	List<Road> route;	//ArrayList containing the roads on the route from current road to
-	int routePos;  //position on route of the car, use this instead of deleting routes								//the road that ends in the destination node in chronological ordering
+	private List<Road> route;	//ArrayList containing the roads on the route from current road to
+	private int routePos;  //position on route of the car, use this instead of deleting routes								//the road that ends in the destination node in chronological ordering
 	
 
 	private Collection<Double> percentageAlongRoads;
@@ -68,7 +67,37 @@ public abstract class Vehicle {
 	 * Null car object is used if a car has no car in front
 	 */
 	abstract boolean isNull();
-	
+	/**
+	 * this is the most used constructor.  Since vehicles are created
+	 * at nodes.
+	 */
+	public Vehicle(Node start,Node endNode)
+	{
+		this.id = UUID.randomUUID();
+		mass = 1500;
+		car_in_front=null;
+		speedX=0;
+		speedY=0;
+		accelX=0;
+		accelY=0;
+		average_speed=0;
+		distance_travelled=0;
+		time_since_creation=0;
+		destination=endNode;
+		startNode = start;
+		route = new ArrayList<Road>();
+		route = findRoute(start, endNode);
+		myRoad = route.get(0);
+		myRoad.addVehicle(this);
+		maxVisibility = 25;
+		notUpdated=true;	
+	}
+	/**
+	 * empty constructor
+	 */
+	public Vehicle(){
+
+	}
 	
 	/** 
 	 * Creates a vehicle at the beginning of road r
@@ -117,36 +146,6 @@ public abstract class Vehicle {
 	
 	public double getWeight() {
 		return this.mass;
-	}
-	/**
-	 * this is the most used constructor.  Since vehicles are created
-	 * at nodes.
-	 */
-	public Vehicle(Node start,Node endNode)
-	{
-		mass = 1500;
-		car_in_front=null;
-		speedX=0;
-		speedY=0;
-		accelX=0;
-		accelY=0;
-		average_speed=0;
-		distance_travelled=0;
-		time_since_creation=0;
-		destination=endNode;
-		startNode = start;
-		route = new ArrayList<Road>();
-		route = findRoute(start, endNode);
-		myRoad = route.get(0);
-		myRoad.addVehicle(this);
-		maxVisibility = 25;
-		notUpdated=true;	
-	}
-	/**
-	 * empty constructor
-	 */
-	public Vehicle(){
-
 	}
 	
 	/**
@@ -267,7 +266,7 @@ public void updatePosition(double dt)
 		}
 	
 		//update the fraction of road travelled
-		double fraction = loc_fraction + dp/(route.get(0).length);
+		double fraction = getPercent() + dp/(route.get(routePos).getLength());
 		
 		// if the distance travelled is longer than what is left of current road,
 		// the vehicle start on the next road on the route
@@ -276,13 +275,15 @@ public void updatePosition(double dt)
 			//calculating how much longer than what is left of the road that the vehicle have
 			//travelled in current timestep
 			fraction = fraction - 1;
-			dp = fraction*route.get(0).length;
-			//removes the last vehicle, which is this one
-			route.get(0).removeVehicle(this);
-			route.remove(0);
+			dp = fraction*route.get(routePos).getLength();
+			//removes this vehicle
+			boolean ti;
+			if( ti = route.get(routePos).getVehicles().contains((Vehicle)this)){
+			route.get(routePos).removeVehicle((Vehicle)this);
+			}
 		
 			//if route is empty, then the vehicle has reached the destination
-			if (route.isEmpty() == true){
+			if (routePos <=route.size()){
 				fraction = 0;//sets the fraction to zero to get out of the while loop, but
 						// doesn't add the vehicle to a new road as the routelist is 
 			            // is empty
@@ -292,10 +293,11 @@ public void updatePosition(double dt)
 			else{
 				//add this vehicle to vehicles (the list of vehicles at the road) at 
 				//next road on the route
-				(route.get(0)).vehicles.add(0,this);
+				routePos = routePos +1;
+				fraction = dp/(route.get(routePos).getLength());
+				(route.get(routePos)).getVehicles().add(this);
 				// calculating fraction completed at next road on route
-				fraction = dp/(route.get(0).length);
-				myRoad =route.get(0);
+				myRoad =route.get(routePos);
 			}
 		
 		}
@@ -325,7 +327,7 @@ public void update_position1(double dt )
 		}
 	
 		// adding the distance travelled to the fraction of the current road
-		double fraction = loc_fraction + dp/(route.get(0).length);
+		double fraction = loc_fraction + dp/(route.get(0).getLength());
 		int count;
 		
 
@@ -336,11 +338,11 @@ public void update_position1(double dt )
 			//calculating how much longer than what is left of the road that the vehicle have
 			//travelled in current timestep
 			fraction = fraction - 1;
-			dp = fraction*route.get(0).length;
+			dp = fraction*route.get(0).getLength();
 			//finding number of vehicles on current road
 			count = route.get(0).totalVehicles()-1;
 			//removes the last vehicle, which is this one
-			(route.get(0).vehicles).remove(count);
+			(route.get(0).getVehicles()).remove(count);
 		
 		
 		
@@ -358,9 +360,9 @@ public void update_position1(double dt )
 			else{
 				//add this vehicle to vehicles (the list of vehicles at the road) at 
 				//next road on the route
-				(route.get(0)).vehicles.add(0,this);
+				(route.get(0)).getVehicles().add(this);
 				// calculating fraction completed at next road on route
-				fraction = dp/(route.get(0).length);
+				fraction = dp/(route.get(0).getLength());
 				myRoad =route.get(0);
 			}
 		
@@ -382,7 +384,7 @@ public void updateSpeed(double dt) //call in the end of timestep as the other up
 	}else{
 		setSpeedX(0);
 	}
-	if (nextspeedX > 0){
+	if (nextspeedY > 0){
 		setSpeedY(nextspeedY);
 	}else{
 		setSpeedY(0);
@@ -413,7 +415,7 @@ public double accelerationToRoadsAhead(){
 	double speedLimit;			//Speedlimit of roads ahead
 	
 	if (route.size() > 0){		//Preventing systemcrash when car is out of system/no roads on route
-	dist = route.get(0).length * (1 - this.loc_fraction);	//Distance from car to next road
+	dist = route.get(0).getLength() * (1 - this.loc_fraction);	//Distance from car to next road
 	}
 	
 	int i = 1;					//counter, stepping 1 road ahead each time
@@ -422,14 +424,14 @@ public double accelerationToRoadsAhead(){
 		if (i >= route.size()){			//If sink ahead, iow. NO new road, skip out of while-loop
 			break;
 		}
-		speedLimit = route.get(i).speedLimit;		//Speedlimit on roads ahead of current road
+		speedLimit = route.get(i).getSpeedLimit();		//Speedlimit on roads ahead of current road
 		if (speedLimit < mySpeed){					//Only necessary to break if new speedlimit is less
 			accNew = (Math.pow(speedLimit,2) - Math.pow(mySpeed,2)) / (2*dist);
 			if (accNew < a){						//Choosing hardest breaking decelration
 				a = accNew;
 			}
 		}
-		dist = dist + route.get(i).length;			//Updating distance
+		dist = dist + route.get(i).getLength();			//Updating distance
 		i = i + 1;		
 	}
 	if (a > 0){
@@ -447,6 +449,44 @@ public void printAccelerationToRoadsAhead(){
 	System.out.println("Acceleration to road ahead is: " + accelerationToRoadsAhead());
 }
 
+/**
+ * New idea:
+ * car accelerates so to be at the speed limit if its percent is < .50, if its greater
+ * then the car acclerates to be at the speed limit at the next node, if it is 
+ * a trafCont.  A trafCont exists anytime there is a change in speed limit, so if 
+ * there is no trafCont then the speed limit on the next road is the same. So the
+ * acceleration is calculated by the acceleration needed to be at the speed limit 
+ * by the 
+ * 
+ * @return
+ */
+double accelerationToNearestNodeOrRoad1(){
+	double accel = 0;
+	Node myNode = this.getNextNodeOnRoute();
+	double roadSpeedLimit = this.getRoute().get(routePos).getSpeedLimit();
+	double mySpeed = this.getSpeed();
+	double roadThresh = Math.abs(1- mySpeed/roadSpeedLimit);
+	if (this.getPercent() < .5 && roadThresh>.9)
+	{
+		double accelDistance = this.getRoute().get(routePos).getLength()*.5;
+		accel = (Math.pow(roadSpeedLimit, 2) - Math.pow(mySpeed, 2))/(2*accelDistance);
+	}
+	else if (this.getPercent() >= .5 && myNode.isTrafCont())
+	{
+		double nodeSpeedLimit = ((trafficController)myNode).getSpeedLimit();
+		double nodeThresh = Math.abs(1- mySpeed/nodeSpeedLimit);
+		double distanceToNode = (1- this.getPercent())*this.route.get(routePos).getLength();
+		if (nodeThresh>.9){
+		accel = (Math.pow(nodeSpeedLimit, 2) - Math.pow(mySpeed, 2))/(2*distanceToNode);
+		}
+	}else
+	{
+		double accelDistance = this.getRoute().get(routePos).getLength()*.5;
+		accel = (Math.pow(roadSpeedLimit, 2) - Math.pow(mySpeed, 2))/(2*accelDistance);
+	}
+	
+	return accel;
+}
 //Searching through all roads on route within safe breaking distance. If the speed limit changes within
 //safe breaking distance calculate acceleration needed to get new speedlimit at that point.
 public double accelerationToNearestNodeOrRoad(){
@@ -487,7 +527,7 @@ public double accelerationToNearestNodeOrRoad(){
 
 
 
-public double getSpeed()
+ double getSpeed()
 {
 	return Math.sqrt(speedX*speedX + speedY*speedY);
 }
@@ -621,13 +661,9 @@ public void setCarInFront(Vehicle carInFront){
 public void updateAcceleration() {
 	//the acceleration due to the car in front
 	double carAccel = accelerationDueToCar();
-	//the acceleration due to nearest traffic controller
-	double contAccel = accelerationDueToTrafficCont();
-	//the acceleration due to the speed limit of this road
-	double roadAccel = accelerationDueToLimit();
+	double nodeRoadAccel = accelerationToNearestNodeOrRoad1();
 	
-	double minSoFar = Math.min(carAccel, contAccel);
-	double min = Math.min(minSoFar, roadAccel);
+	double min = Math.min(carAccel, nodeRoadAccel);
 	accelX = min*Math.cos(route.get(routePos).getRoadAngle());
 	accelY = min*Math.sin(route.get(routePos).getRoadAngle());
 	notUpdated=true;
@@ -678,29 +714,25 @@ private double accelerationDueToTrafficCont() {
 }
 
 /**
- * this is the real version of acceleration due to the car in front
- * finds the car in front my querying the road.  
- * Please put your final version of acceleration in here
- * 
- * NOw calculates acceleration of car in front by trying to be at 
- * the same velocity as the car in front when at the same position
- * as the car in front of the distance between the cars is greater
- * than the safe breaking distance.  Please double check this.
+ * New Idea:
+ * If there is a car within visibilty of this car then within a threshold,
+ * find the acceleration needed to be at the car in fronts speed when this car
+ * is in the same position as the car in front
  */
 private double accelerationDueToCar(){
 	double accel = Double.POSITIVE_INFINITY;
-	Vehicle v = myRoad.findCarInFront(this,this.loc_fraction, this.getSafeBreakingDist());
+	Vehicle v = myRoad.findCarInFront(this,this.loc_fraction, this.maxVisibility);
 	if (v.isNull()){
 		return accel;
 	}
 	else
 	{
-		double SBD = this.getSafeBreakingDist();
-		double actFD = this.distanceBetCars(v);
 		double v1 = this.getSpeed();
 		double v2 = v.getSpeed();
-		if (SBD>actFD){
-			accel = (Math.pow(v2, 2) - Math.pow(v1, 2))/(2*actFD);
+		double carThresh = Math.abs(1- v1/v2);
+		double dist = myRoad.distanceBetweenCars(this, v);
+		if (carThresh>.9){
+			accel = (Math.pow(v2, 2) - Math.pow(v1, 2))/(2*dist);
 		}
 	}
 	return accel;
@@ -730,32 +762,30 @@ double distanceBetCars(Vehicle V1){
 /**
  * compare function to allow vehicle sorting by position
  */
-int compare(Vehicle V1, Vehicle V2){
-	if (V1.getPercent()< V2.getPercent()){
-		return -1;
-	}else if (V1.getPercent()> V2.getPercent()){
-		return 1;
-	}else{
-		return 0;
+int compareTo(Vehicle V2){
+	int ret=0;
+	if (this.equals(V2)){
+		ret= 0;
+	} else if (this.getPercent()< V2.getPercent()){
+		ret= -1;
+	}else if (this.getPercent()> V2.getPercent()){
+		ret= 1;
 	}
-}
+	return ret;
+	}
 
 /**
  * equals function to allow vehicle sorting by position
  */
 public boolean equals(Vehicle V1){
-	if (this.getPercent() == V1.getPercent()){
-		return true;
-	}else{
-		return false;
-	}
+	return this.getID()==V1.getID();
 }
 /**
  * gets the next roads on the route
  */
 Road getNextRoadOnRoute(){
 	if (this.route.size() > 1 ){
-		return this.route.get(1);
+		return this.route.get(routePos+1);
 	}else{
 		return null;
 	}
@@ -797,5 +827,17 @@ double getYpos(){
 	//i dunno if we need this
 	return 0;
 	
+}
+public List<Road> getRoute() {
+	return route;
+}
+boolean isOnSameRoad(Vehicle V){
+	return this.route.get(getRoutePos()).equals(V.getRoute().get(getRoutePos()));
+}
+public int getRoutePos() {
+	return routePos;
+}
+public Road getMyRoad() {
+	return myRoad;
 }
 }

@@ -13,5 +13,15 @@ public class Semi extends Vehicle {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	public int compareTo(Object arg) {
+		int ret=0;
+		if (this.equals((Vehicle)arg)){
+			ret= 0;
+		} else if (this.getPercent()< ((Vehicle)arg).getPercent()){
+			ret= -1;
+		}else if (this.getPercent()> ((Vehicle)arg).getPercent()){
+			ret= 1;
+		}
+		return ret;
+	}
 }
