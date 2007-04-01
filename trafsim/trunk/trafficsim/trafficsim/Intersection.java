@@ -14,5 +14,6 @@ public class Intersection extends trafficController {
 	Intersection(){
 		
 		myIntersection = new Map();
+		
 	}
 }

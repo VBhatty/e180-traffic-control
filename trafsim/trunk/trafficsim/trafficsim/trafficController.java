@@ -1,4 +1,9 @@
 package trafficsim;
+
+import java.util.Queue;
+import java.util.Stack;
+import java.util.TreeSet;
+
 /**
  * This class is meant to be the super class for traffic control objects
  * such as lights, stopsigns, yield signs etc. The idea is you create a specific type of node
@@ -7,7 +12,7 @@ package trafficsim;
  **/
 public class trafficController extends Node{
 	private double speedlimit;
-	
+	private Queue<Vehicle> vehicles;
 	boolean isTrafCont(){
 		return true;
 	}
@@ -27,5 +32,13 @@ public class trafficController extends Node{
 	void updateTrafCont(double dt){
 		
 	}
-	
+	public Queue<Vehicle> getVehicles() {
+		return vehicles;
+	}
+	public void addVehicle(Vehicle v) {	
+		vehicles.add(v);
+	}
+	boolean removeVehicle(Vehicle v){
+		return vehicles.remove(v);
+	}
 }

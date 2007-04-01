@@ -277,10 +277,8 @@ public void updatePosition(double dt)
 			fraction = fraction - 1;
 			dp = fraction*route.get(routePos).getLength();
 			//removes this vehicle
-			boolean ti;
-			if( ti = route.get(routePos).getVehicles().contains((Vehicle)this)){
 			route.get(routePos).removeVehicle((Vehicle)this);
-			}
+			
 		
 			//if route is empty, then the vehicle has reached the destination
 			if (routePos <=route.size()){
@@ -288,6 +286,13 @@ public void updatePosition(double dt)
 						// doesn't add the vehicle to a new road as the routelist is 
 			            // is empty
 				this.printStat();
+			}
+			else if (this.getRoute().get(routePos).getEndNode().isTrafCont()){
+				trafficController mine = (trafficController)this.getRoute().get(routePos).getEndNode();
+				double angle =this.getRoute().get(routePos).getRoadAngle();
+				this.setSpeedX(mine.getSpeedLimit()*Math.cos(angle));
+				this.setSpeedY(mine.getSpeedLimit()*Math.sin(angle));
+				mine.addVehicle(this);
 			}
 			//the vehicle is moving to a new road
 			else{
