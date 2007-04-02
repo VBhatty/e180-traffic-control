@@ -277,10 +277,12 @@ public void updatePosition(double dt)
 			
 		
 			//if route is empty, then the vehicle has reached the destination
-			if (routePos <=route.size()){
+			if (routePos <=route.size()&& this.getRoute().get(routePos).getEndNode().isSink()){
 				fraction = 0;//sets the fraction to zero to get out of the while loop, but
 						// doesn't add the vehicle to a new road as the routelist is 
 			            // is empty
+				Sink s = (Sink)this.getRoute().get(routePos).getEndNode();
+				s.addVehicle(this);
 				this.printStat();
 			}
 			else if (this.getRoute().get(routePos).getEndNode().isTrafCont()){

@@ -35,7 +35,7 @@ public class twoWayStop extends trafficController {
 		return super.getOutEdges();
 	}
 	void updateTrafCont(double dt){
-		generateInNodeVehList();
+		generateInRoadVehList();
 		//let one car go in each direction if it is added to the node
 		if (!this.inRoad1List.isEmpty() || !inRoad2List.isEmpty()){
 			//get the next vehicle to let through to next road on route
@@ -55,7 +55,7 @@ public class twoWayStop extends trafficController {
 			}
 		}
 	}
-	void generateInNodeVehList(){
+	void generateInRoadVehList(){
 		//should be a set of 2
 		Set InEdges = getInEdges();
 		Iterator iter= InEdges.iterator();	

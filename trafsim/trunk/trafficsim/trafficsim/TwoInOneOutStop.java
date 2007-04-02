@@ -4,9 +4,8 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.UUID;
 
-public class oneRoadStopSign extends trafficController{
-	private Queue<Vehicle> vehicles;
-	oneRoadStopSign (){
+public class TwoInOneOutStop extends trafficController{
+	TwoInOneOutStop (){
 		super();
 		id = UUID.randomUUID();
 		this.setSpeedlimit(0);
@@ -22,14 +21,5 @@ public class oneRoadStopSign extends trafficController{
 			Road newRoad = v.getRoute().get((v.getRoutePos()));
 			newRoad.addVehicle(v);
 		}
-	}
-	public Queue<Vehicle> getVehicles() {
-		return vehicles;
-	}
-	public void addVehicle(Vehicle v) {	
-		vehicles.add(v);
-	}
-	boolean removeVehicle(Vehicle v){
-		return vehicles.remove(v);
 	}
 }

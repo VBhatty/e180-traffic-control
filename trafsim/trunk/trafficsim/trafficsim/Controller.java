@@ -72,9 +72,8 @@ public class Controller {
 	 */
 	void update(double dt){
 		
-		myMap.updateNodes(dt);
-		
 		myMap.updateRoads(dt);
+		myMap.updateNodes(dt);
 
 	}
 	

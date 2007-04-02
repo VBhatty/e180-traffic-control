@@ -10,7 +10,7 @@ import java.util.TreeSet;
  * at such junctions and the car does searches for Cars and trafficControllers
  * and adjusts its acceleration accordingly
  **/
-public class trafficController extends Node{
+public class trafficController extends SuperNode{
 	private double speedlimit;
 	private Queue<Vehicle> vehicles;
 	boolean isTrafCont(){

@@ -12,6 +12,7 @@ public class TrafficLight extends trafficController{
 	public TrafficLight(int GT, int RT){
 		this.greenTime = GT;
 		this.redTime = RT;
+		
 	}
 	/*
 	 *  given the speed limit of the road feeding into this light, it calculates the minimum yellow
