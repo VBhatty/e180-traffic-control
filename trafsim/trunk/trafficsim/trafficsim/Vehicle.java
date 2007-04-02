@@ -74,7 +74,7 @@ public abstract class Vehicle implements Comparable {
 	public Vehicle(Node start,Node endNode)
 	{
 		this.id = UUID.randomUUID();
-		mass = 1500;
+		
 		car_in_front=null;
 		speedX=0;
 		speedY=0;
@@ -90,7 +90,8 @@ public abstract class Vehicle implements Comparable {
 		myRoad = route.get(0);
 		myRoad.addVehicle(this);
 		maxVisibility = 25;
-		notUpdated=true;	
+		notUpdated=true;
+		generate_mass_and_length();
 	}
 	/**
 	 * empty constructor
@@ -167,12 +168,7 @@ public abstract class Vehicle implements Comparable {
 	 */
 public void generate_mass_and_length()
 {
-	//Random U = new Random();
-	//double x =  U.nextFloat();
-	// probability function depending on subclass 
-	//mass=mass_mean = some function of x
-	// length function depending on subclass, for cars:
-	length= 5.773e-4*mass+2.834;
+	
 }
 
 
