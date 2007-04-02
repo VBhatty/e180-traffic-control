@@ -24,7 +24,12 @@ public class trafficController extends Node{
 	public double getSpeedLimit(){
 		return speedlimit;
 	}
-	
+	public void addVehicle(Vehicle v) {	
+		vehicles.add(v);
+	}
+	boolean removeVehicle(Vehicle v){
+		return vehicles.remove(v);
+	}
 	/**
 	 * updates state, speed limit and other functions
 	 * of a trafficController
@@ -34,11 +39,5 @@ public class trafficController extends Node{
 	}
 	public Queue<Vehicle> getVehicles() {
 		return vehicles;
-	}
-	public void addVehicle(Vehicle v) {	
-		vehicles.add(v);
-	}
-	boolean removeVehicle(Vehicle v){
-		return vehicles.remove(v);
 	}
 }

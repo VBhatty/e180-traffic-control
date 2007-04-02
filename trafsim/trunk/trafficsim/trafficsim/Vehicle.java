@@ -289,6 +289,7 @@ public void updatePosition(double dt)
 				this.setSpeedX(mine.getSpeedLimit()*Math.cos(angle));
 				this.setSpeedY(mine.getSpeedLimit()*Math.sin(angle));
 				mine.addVehicle(this);
+				routePos = routePos +1;
 			}
 			//the vehicle is moving to a new road
 			else{
