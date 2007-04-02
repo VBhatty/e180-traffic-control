@@ -18,8 +18,16 @@ public class TwoInOneOutStop extends trafficController{
 			
 			//add the vehicle to the next road
 			veh.remove();
-			Road newRoad = v.getRoute().get((v.getRoutePos()));
-			newRoad.addVehicle(v);
+			//find the road this vehicle came from to put it on correct internalNode
+			Road lastRoad = v.getRoute().get((v.getRoutePos()-1));
+			//find the itnernalNode which corresponds to last road
+			InternalNode interNode = getInternalNode(lastRoad);
+			interNode.addVehicle(v);
+			updateInterns(dt);
 		}
+	}
+	private void updateInterns(double dt) {
+		interMap.updateNodes( dt);
+		interMap.updateRoads( dt);
 	}
 }

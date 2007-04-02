@@ -11,11 +11,11 @@ import java.util.UUID;
  *
  */
 public class SuperNode extends Node{
-	Map interMap;
+	InternalMap interMap;
 	SuperNode (){
 		super();
 		id = UUID.randomUUID();
-		interMap = new Map();
+		interMap = new InternalMap();
 //		make a node for each outgoing edge
 		Set outEdges = this.getOutEdges();
 		Iterator outEd = outEdges.iterator();

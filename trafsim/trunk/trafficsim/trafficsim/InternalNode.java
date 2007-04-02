@@ -1,5 +1,7 @@
 package trafficsim;
 
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -17,5 +19,24 @@ public class InternalNode extends trafficController{
 	}
 	public Road getMyRef() {
 		return myRef;
+	}
+	/**
+	 * each internal has exactly one out edge.
+	 * 
+	 * @return
+	 */
+	InternalRoad getOutEgde(){
+		Set out = this.getOutEdges();
+		Iterator iter = out.iterator();
+		return (InternalRoad)iter.next();
+	}
+	Vehicle getNextVehicle(){
+		Vehicle V = new Nullvehicle();
+		Iterator iter = getVehicles().iterator();
+		if( iter.hasNext()){
+			V= (Vehicle) iter.next();
+			getVehicles().remove();
+		}
+		return V;
 	}
 }
