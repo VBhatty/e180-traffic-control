@@ -34,7 +34,7 @@ public class InternalMap extends Map{
 		// the vehicles at each road
 		Iterator ro1 = myRoads.iterator();
 		while(ro1.hasNext()){
-			Road rr = (Road)ro1.next();
+			InternalRoad rr = (InternalRoad)ro1.next();
 			//setWeight(rr);
 			rr.updateVehicles(dt);
 		}
