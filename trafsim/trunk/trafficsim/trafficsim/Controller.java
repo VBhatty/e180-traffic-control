@@ -165,4 +165,39 @@ public class Controller {
 		//follower.setSpeed(4);
 		
 	}
+	public static void create2RoadSS(){
+		myCont = new Controller(100,1);
+		myMap = new Map();
+		
+		//Node v1 = new Source(1);
+		Node v1 = new Source();
+		v1.setX(0);v1.setY(0);
+		myMap.addVertex(v1);
+		
+		Node v2 = new Node();
+		v2.setX(100); v2.setY(0);
+		myMap.addVertex(v2);
+		
+		Node v3 = new Node();
+		v3.setX(400); v3.setY(0);
+		myMap.addVertex(v3);
+		
+		
+		Road r = new Road("alcatraz",25,v1, v2);
+		Road rr = new Road("oslo",50,v2, v3);
+		
+		
+		myMap.addRoad(r);
+		myMap.addRoad(rr);
+		
+		
+		Car v = new Car(r,0.12);
+		Car follower = new Car(r,0.0);
+		
+		v.getRoute().add(rr);
+		follower.getRoute().add(rr);
+		follower.setCarInFront(v);
+		//follower.setSpeed(4);
+		
+	}
 }

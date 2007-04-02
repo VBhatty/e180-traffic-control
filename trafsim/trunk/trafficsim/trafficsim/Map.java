@@ -2,7 +2,9 @@ package trafficsim;
 
 //import edu.uci.ics.jung.graph.Edge;
 //import edu.uci.ics.jung.graph.Vertex;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 import edu.uci.ics.jung.graph.ArchetypeEdge;
@@ -93,5 +95,30 @@ public class Map extends DirectedSparseGraph{
 			Road rr = (Road)ro1.next();
 			setWeight(rr);
 		}
+	}
+	public Set getSinks() {
+		// TODO Auto-generated method stub
+		Set allNodes=  super.getVertices();
+		Set<Sink> sinks = new HashSet<Sink>();
+		Iterator nodes = allNodes.iterator();
+		while (nodes.hasNext()){
+			Node myNode = (Node)nodes.next();
+			if (myNode.isSink()){
+				sinks.add((Sink)myNode);
+			}
+		}
+		return sinks;
+	}
+	Sink getRandomSink(){
+		Sink s = new Sink();
+		Set sinks = getSinks();
+		Random U = new Random();
+		int rand = U.nextInt(sinks.size());
+		Iterator iter = sinks.iterator();
+		while (rand!=0){
+			s = (Sink)iter.next();
+			rand -=1;
+		}
+		return s;
 	}
 }

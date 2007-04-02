@@ -38,15 +38,18 @@ public class Source extends Node{
 		//return dt;
 	//}
 	
-	//return true if a car should be created
+	//return true if a car should be created and creates it
+	//assumes road weights have been set 
 	public boolean generate_new_car(){	
 		boolean carCreation;
 		//double f = get_freqency(time);
 		double f = .3;
 		double x = U.nextFloat();
+		Map myMap = (Map)this.getGraph();
+		Sink destination = myMap.getRandomSink();
 		if(x < f){
 			carCreation = true;
-		//	System.out.println("A car is created at source: " + sourceId + " at time: " + time);
+			new Car(this,destination);
 		}
 		else{
 			carCreation =false;

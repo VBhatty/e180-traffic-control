@@ -87,7 +87,8 @@ public void updateVehicles(double dt){
 		vehicle.updatePosition(dt);
 		vehicle.update_stat(dt);
 		vehicle.updateSpeed(dt);
-		vehicle.printInfo();	
+		vehicle.printSpeed();
+		//vehicle.printInfo();	
 		}
 	}
 
