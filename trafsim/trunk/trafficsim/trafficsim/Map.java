@@ -124,7 +124,7 @@ public class Map extends DirectedSparseGraph{
 		int size =sinks.size();
 		
 		Iterator iter = sinks.iterator();
-		if (size==0){
+		if (size==1){
 			s = (Sink)iter.next();
 		}else{
 			int rand = U.nextInt(size);
