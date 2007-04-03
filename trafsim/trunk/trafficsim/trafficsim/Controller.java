@@ -120,13 +120,18 @@ public class Controller {
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		Node v2 = new trafficController();
-		((trafficController)v2).setSpeedlimit(0);
+		((trafficController)v2).setSpeedlimit(25);
 		v2.setX(100); v2.setY(0);
 		myMap.addVertex(v2);
+		Node v3 = new Sink();
+		v3.setX(200);v2.setY(0);
+		myMap.addVertex(v3);
 		Road r = new Road("alcatraz",25,v1, v2);
+		Road rr = new Road("shattuck",30,v2,v3);
 		myMap.addRoad(r);
+		myMap.addRoad(rr);
 		myMap.initializeWeights();
-		new Car(v1,v2);
+		new Car(v1,v3);
 	}
 	
 	public static void create2Road(){

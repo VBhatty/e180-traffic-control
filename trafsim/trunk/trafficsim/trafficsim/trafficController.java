@@ -1,5 +1,6 @@
 package trafficsim;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -12,7 +13,7 @@ import java.util.TreeSet;
  **/
 public class trafficController extends SuperNode{
 	private double speedlimit;
-	private Queue<Vehicle> vehicles;
+	private Queue<Vehicle> vehicles = new LinkedList<Vehicle>();
 	boolean isTrafCont(){
 		return true;
 	}
@@ -24,7 +25,7 @@ public class trafficController extends SuperNode{
 	public double getSpeedLimit(){
 		return speedlimit;
 	}
-	public void addVehicle(Vehicle v) {	
+	void addVehicle(Vehicle v) {	
 		vehicles.add(v);
 	}
 	boolean removeVehicle(Vehicle v){
