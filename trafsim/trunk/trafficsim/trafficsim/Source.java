@@ -40,10 +40,10 @@ public class Source extends Node{
 	
 	//return true if a car should be created and creates it
 	//assumes road weights have been set 
-	public boolean generate_new_car(){	
+	public boolean generate_new_car(double time){	
 		boolean carCreation;
-		//double f = get_freqency(time);
-		double f = .3;
+		double f = getFreqency(time);
+		//double f = .3;
 		double x = U.nextFloat();
 		Map myMap = (Map)this.getGraph();
 		Sink destination = myMap.getRandomSink();
@@ -60,7 +60,7 @@ public class Source extends Node{
 	
 	//sourcefunction that returns high frequency in the morning
 	//and afternoon, and low during nighttime
-	public double getFrequency(double time){
+	public double getFreqency(double time){
 		
 		int day = 24*60*60;
 	
