@@ -87,8 +87,10 @@ public abstract class Vehicle implements Comparable {
 		startNode = start;
 		route = findRoute(start, endNode);
 		routePos =0;
+		this.setLoc_fraction(0);
 		myRoad = route.get(routePos);
 		myRoad.addVehicle(this);
+		
 		maxVisibility = 25;
 		notUpdated=true;
 		generate_mass_and_length();
