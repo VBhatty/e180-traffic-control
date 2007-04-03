@@ -91,7 +91,7 @@ public class Controller {
 	public static void main(String[] args) {
 		
 		System.out.println("Simulation started");
-		miniSim();
+		testRoadSearch();
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		
@@ -117,7 +117,22 @@ public class Controller {
 		myMap.addRoad(r);
 		Car v = new Car(r,0.0);
 	}
-
+	public static void testRoadSearch(){
+		myCont = new Controller(1000,1);
+		myMap = new Map();
+		//Node v1 = new Source(1);
+		Node v1 = new Source();
+		v1.setX(0);v1.setY(0);
+		myMap.addVertex(v1);
+		Node v2 = new Sink();
+		v2.setX(100); v2.setY(0);
+		myMap.addVertex(v2);
+		Road r = new Road("alcatraz",25,v1, v2);
+		myMap.addRoad(r);
+		myMap.initializeWeights();
+		new Car(v1,v2);
+		new Car(r,.20);
+	}
 	public static void readSceneVO(SceneVO scene){
 		myCont = new Controller(1000,1);
 		myMap = new Map();

@@ -138,7 +138,9 @@ public abstract class Vehicle implements Comparable {
 	public String getID() {
 		return this.id.toString();
 	}
-	
+	public UUID getUUID() {
+		return this.id;
+	}
 	public Node getSource() {
 		return this.startNode;
 	}
@@ -273,7 +275,7 @@ public void updatePosition(double dt)
 			//calculating how much longer than what is left of the road that the vehicle have
 			//travelled in current timestep
 			fraction = fraction - 1;
-			dp = fraction*route.get(routePos).getLength();
+			//dp = fraction*route.get(routePos+1).getLength();
 			//removes this vehicle
 			route.get(routePos).removeVehicle((Vehicle)this);
 			
@@ -300,7 +302,8 @@ public void updatePosition(double dt)
 				//add this vehicle to vehicles (the list of vehicles at the road) at 
 				//next road on the route
 				routePos = routePos +1;
-				fraction = dp/(route.get(routePos).getLength());
+				//fraction = dp/(route.get(routePos).getLength());
+				fraction = 0;
 				(route.get(routePos)).getVehicles().add(this);
 				// calculating fraction completed at next road on route
 				myRoad =route.get(routePos);
@@ -784,13 +787,13 @@ int compareTo(Vehicle V2){
  * equals function to allow vehicle sorting by position
  */
 public boolean equals(Vehicle V1){
-	return this.getID()==V1.getID();
+	return this.getUUID()==V1.getUUID();
 }
 /**
  * gets the next roads on the route
  */
 Road getNextRoadOnRoute(){
-	if (this.route.size() > 1 ){
+	if (this.route.size() >routePos ){
 		return this.route.get(routePos+1);
 	}else{
 		return null;

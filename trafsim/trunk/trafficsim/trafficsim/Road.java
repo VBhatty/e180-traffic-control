@@ -167,6 +167,8 @@ SortedSet<Vehicle> searchRoad(Vehicle myV,double start, double range){
 	
 	Iterator veh = vehicles.iterator();
 	//hmmm
+	int pos = myV.getRoutePos();
+	int size = myV.getRoute().size();
 	double endPerc = range/this.getLength();
 	if (start +endPerc >1){
 		//the car must search beyond current road on route
