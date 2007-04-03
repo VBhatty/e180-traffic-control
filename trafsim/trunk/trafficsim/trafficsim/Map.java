@@ -2,10 +2,13 @@ package trafficsim;
 
 //import edu.uci.ics.jung.graph.Edge;
 //import edu.uci.ics.jung.graph.Vertex;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import edu.uci.ics.jung.graph.ArchetypeEdge;
 import edu.uci.ics.jung.graph.decorators.NumberEdgeValue;
@@ -64,23 +67,23 @@ public class Map extends DirectedSparseGraph{
 	 */
 	void updateRoads(double dt, int i){
 		Set<Road> myRoads = this.getEdges();
-		
+		Object[] r = myRoads.toArray();
+
 		//updating all the vehicles is done in two step so that the acceleration is
 		//not calculated based on the position of the car in two different timesteps
 		
 		// going through all the roads and for each updating the acceleration of
 		// the vehicles at each road
 
-		Iterator ro1 = myRoads.iterator();
-		while(ro1.hasNext()){
-			Road rr = (Road)ro1.next();
+		//Iterator ro1 = myRoads.iterator();
+		for (int j = 0;j<r.length;j++){	
+			Road rr =(Road)r[j];
 			setWeight(rr);
-			rr.updateVehicles(dt);
+			rr.updateAccel(dt);
 		}
 	
-			Iterator ro2 = myRoads.iterator();
-			while(ro2.hasNext()){
-				Road rrr = (Road)ro2.next();
+		for (int j = 0;j<r.length;j++){	
+				Road rrr =(Road)r[j];;
 				setWeight(rrr);
 				rrr.updatePosition(dt);
 		}
@@ -151,5 +154,29 @@ public class Map extends DirectedSparseGraph{
 			}
 		}
 		return returner;
+	}
+	/*
+	 *  finds all cars within the inputed range
+	 */
+	SortedSet<Vehicle> searchRoad(Road r,double percent, double endPerc){
+		SortedSet<Vehicle> carsOnStrip = new TreeSet<Vehicle>();
+		Road myRoad = r;
+		double perc = percent;
+		Iterator veh = myRoad.getVehicles().iterator();
+//		if (percent +endPerc >1){
+//			//the car must search beyond current road on route
+//			double percentOver = 1- (start +endPerc);
+//			if (myV.hasNextRoadOnRoute()){
+//				Road nextRoad = myV.getNextRoadOnRoute();
+//				carsOnStrip = nextRoad.searchRoad(myV,0,percentOver*nextRoad.length);
+//			}
+//		}
+		while (veh.hasNext()){
+			Vehicle ve = (Vehicle)veh.next();
+			if (ve.getPercent()>percent && ve.getPercent()<endPerc){
+				carsOnStrip.add(ve);
+			}
+		}
+		return carsOnStrip;
 	}
 }

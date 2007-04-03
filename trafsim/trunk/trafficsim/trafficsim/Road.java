@@ -3,6 +3,7 @@ package trafficsim;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class Road extends DirectedSparseEdge {
 	 private UUID id;
 	//int id;
 	 private String name;
-	 private TreeSet<Vehicle> vehicles;	//list of current vehicles on the road
+	 private SortedSet<Vehicle> vehicles;	//list of current vehicles on the road
 	 private double coeff_of_fric;	//the current coefficient of friction of the road
 	 private double weather_coeff;	//higher weather coefficient means more rain and poorer coeff of friction
 	 private double length;	//the legth of the road
@@ -80,42 +81,94 @@ public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
-public void updateVehicles(double dt){
-		Iterator veh = vehicles.iterator();
-		while (veh.hasNext()){
-		Vehicle vehicle = (Vehicle)veh.next();
+public void updateAccel(double dt){
+	Object[] v = vehicles.toArray();
+	for (int i = 0;i<v.length;i++){	
+		Vehicle vehicle =(Vehicle) v[i];
 		vehicle.updateAcceleration();
-		//vehicle.updatePosition(dt);
-		//vehicle.update_stat(dt);
-		//vehicle.updateSpeed(dt);
-		//vehicle.printSpeed();
-		//vehicle.printInfo();	
 		}
 	}
 
 
 public void updatePosition(double dt){
-	
-	Iterator veh = vehicles.iterator();
-	while (veh.hasNext()){
-		Vehicle vehicle = (Vehicle)veh.next();
+	Object[] v = vehicles.toArray();
+	//Iterator veh = vehicles.iterator();
+	//while (veh.hasNext()){
+	for (int i = 0;i<v.length;i++){	
+		Vehicle vehicle =(Vehicle) v[i];
+		int routeP = vehicle.getRoutePos();
+		List route = vehicle.getRoute();
+		Road myRoad = (Road) route.get(routeP);
 		
-		//System.out.println("finding position");
-		vehicle.updatePosition(dt);
-		
-		//System.out.println("updating stat");
-		vehicle.update_stat(dt);
-		
-		//System.out.println("updating speed");
-		vehicle.updateSpeed(dt);
-		
-		//System.out.println("printing info");
-		vehicle.printInfo();
-		//vehicle.printMaxBreaking();
-		//vehicle.printMaxAcceleration();
-		//vehicle.printSafeBreakingDist();
-		//vehicle.printAccelerationToRoadsAhead();
-	}
+			if(vehicle.notUpdated){
+				
+				double nextspeed =vehicle.getSpeed() + vehicle.getAccel()*dt;
+
+				double dp;
+				if (nextspeed > 0){
+					dp = (vehicle.getSpeed() + nextspeed)*0.5*dt;
+				}else{
+					dp = (vehicle.getSpeed() + 0)*0.5*dt;
+				}
+			
+				//update the fraction of road travelled
+				double fraction = vehicle.getPercent() + dp/(vehicle.getRoute().get(vehicle.getRoutePos()).getLength());
+				
+				// if the distance travelled is longer than what is left of current road,
+				// the vehicle start on the next road on the route
+				if ( fraction > 1)
+				{
+					//calculating how much longer than what is left of the road that the vehicle have
+					//travelled in current timestep
+					fraction = fraction - 1;
+					//dp = fraction*route.get(routePos+1).getLength();
+					//removes this vehicle
+					myRoad.removeVehicle(vehicle);
+					
+				
+					//if route is empty, then the vehicle has reached the destination
+					if (routeP ==route.size()-1 && myRoad.getEndNode().isSink()){
+						fraction = 0;//sets the fraction to zero to get out of the while loop, but
+								// doesn't add the vehicle to a new road as the routelist is 
+					            // is empty
+						Sink s = (Sink)myRoad.getEndNode();
+						s.addVehicle(vehicle);
+						Vehicle.printStat();
+						//routePos = routePos +1;
+					}
+					else if (myRoad.getEndNode().isTrafCont()){
+						trafficController mine = (trafficController)myRoad.getEndNode();
+						double angle =myRoad.getRoadAngle();
+						vehicle.setSpeedX(mine.getSpeedLimit()*Math.cos(angle));
+						vehicle.setSpeedY(mine.getSpeedLimit()*Math.sin(angle));
+						mine.addVehicle(vehicle);
+						fraction = 0;
+						vehicle.setRoutePos(vehicle.getRoutePos()+1);
+						
+					}
+					//the vehicle is moving to a new road
+					else{
+						//add this vehicle to vehicles (the list of vehicles at the road) at 
+						//next road on the route
+						vehicle.setRoutePos(vehicle.getRoutePos()+1);
+						//fraction = dp/(route.get(routePos).getLength());
+						fraction = 0;
+						Road nextRoad = (Road) route.get(routeP+1);
+						nextRoad.getVehicles().add(vehicle);
+						// calculating fraction completed at next road on route
+						//myRoad =route.get(routePos);
+					}
+				
+				}
+			
+				// setting loc_fraction equal the fraction completed at current road
+				vehicle.setLoc_fraction(fraction);
+				vehicle.update_stat(dt);
+				vehicle.updateSpeed(dt);
+				vehicle.printInfo();
+				vehicle.notUpdated=false;
+			}
+		}
 }
 
 public int totalVehicles() {
@@ -158,35 +211,7 @@ public double getAvgSpeed(){
 }
 
 
-/*
- * searches this road and finds every car from the percent
- * to the range
- */
-SortedSet<Vehicle> searchRoad(Vehicle myV,double start, double range){
-	SortedSet<Vehicle> carsOnStrip = new TreeSet<Vehicle>();
-	
-	Iterator veh = vehicles.iterator();
-	//hmmm
-	int pos = myV.getRoutePos();
-	int size = myV.getRoute().size();
-	double endPerc = range/this.getLength();
-	if (start +endPerc >1){
-		//the car must search beyond current road on route
-		double percentOver = 1- (start +endPerc);
-		if (myV.hasNextRoadOnRoute()){
-			Road nextRoad = myV.getNextRoadOnRoute();
-			carsOnStrip = nextRoad.searchRoad(myV,0,percentOver*nextRoad.length);
-		}
-	}
-	SortedSet<Vehicle> s = Collections.synchronizedSortedSet(new TreeSet(carsOnStrip));
-	while (veh.hasNext()){
-		Vehicle ve = (Vehicle)veh.next();
-		if (ve.getPercent()>start && ve.getPercent()<range){
-			s.add(ve);
-		}
-	}
-	return s;
-}
+
 double distanceBetweenCars(Vehicle v1, Vehicle v2){
 	if (v1.isOnSameRoad(v2)){
 		return Math.abs(v1.getPercent()-v2.getPercent())*v1.getRoute().get(v1.getRoutePos()).getLength();
@@ -196,7 +221,8 @@ double distanceBetweenCars(Vehicle v1, Vehicle v2){
 	}
 }
 Vehicle findCarInFront(Vehicle myV, double start,double range){
-	SortedSet<Vehicle> carsOnStrip = searchRoad(myV,start,range);
+	
+	SortedSet<Vehicle> carsOnStrip = ((Map)this.getGraph()).searchRoad(myV.getRoute().get(myV.getRoutePos()),start,range);
 	Iterator veh = carsOnStrip.iterator();
 	Vehicle inFront;
 	if (veh.hasNext()){
@@ -287,7 +313,7 @@ public void setRoadAngle() {
 	double dY = endY - startY;
 	roadAngle = Math.atan(dY/dX);
 }
-public TreeSet<Vehicle> getVehicles() {
+public SortedSet<Vehicle> getVehicles() {
 	return vehicles;
 }
 }

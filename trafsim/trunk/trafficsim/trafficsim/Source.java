@@ -52,7 +52,7 @@ public class Source extends Node{
 		Sink destination = myMap.getRandomSink();
 		if(x < f){
 			carCreation = true;
-			new Car(this,destination);
+			//new Car(this,destination);
 		}
 		else{
 			carCreation =false;

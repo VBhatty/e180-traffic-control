@@ -36,7 +36,7 @@ public class InternalMap extends Map{
 		while(ro1.hasNext()){
 			InternalRoad rr = (InternalRoad)ro1.next();
 			//setWeight(rr);
-			rr.updateVehicles(dt);
+			//rr.updateVehicles(dt);
 		}
 	}
 	

@@ -45,9 +45,9 @@ public abstract class Vehicle implements Comparable {
 	private double loc_fraction; 	//fraction of current Route[0] that the front of the car has travelled
 	private Vehicle car_in_front;	//Nearest vehicle in front of this vehicle at current route at current time
 	// Some vehicle statistics
-	private double average_speed;	//Average speed since creation
-	private double distance_travelled;	//distance travelled since creation
-	private double time_since_creation;	// time elapsed since creation
+	private static double average_speed;	//Average speed since creation
+	private static double distance_travelled;	//distance travelled since creation
+	private static double time_since_creation;	// time elapsed since creation
 		
 	private List<Road> route;	//ArrayList containing the roads on the route from current road to
 	private int routePos;  //position on route of the car, use this instead of deleting routes								//the road that ends in the destination node in chronological ordering
@@ -61,7 +61,7 @@ public abstract class Vehicle implements Comparable {
 	
 	// notUpdated is used so that one car cannot get it's position updated twice at the
 	//same time step because it changes to a road that is not updated by the controller
-	private boolean notUpdated;
+	boolean notUpdated;
 	
 	/**
 	 * Null car object is used if a car has no car in front
@@ -88,8 +88,8 @@ public abstract class Vehicle implements Comparable {
 		route = findRoute(start, endNode);
 		routePos =0;
 		this.setLoc_fraction(0);
-		myRoad = route.get(routePos);
-		myRoad.addVehicle(this);
+		//myRoad = route.get(routePos);
+		route.get(getRoutePos()).addVehicle(this);
 		
 		maxVisibility = 25;
 		notUpdated=true;
@@ -119,7 +119,7 @@ public abstract class Vehicle implements Comparable {
 		distance_travelled=0;
 		time_since_creation=0;
 		destination=null;
-		myRoad = r;
+		//myRoad = r;
 		route = new ArrayList<Road>();
 		route.add(r);
 		r.addVehicle(this);
@@ -222,7 +222,7 @@ public void printMaxAcceleration(){		//Just for testing the function max_acceler
 
 public void update_data(double dt) {
 	this.percentageAlongRoads.add(loc_fraction);
-	this.roadIds.add(myRoad.getID());
+	this.roadIds.add(route.get(getRoutePos()).getID());
 	
 }
 
@@ -245,7 +245,7 @@ public void update_stat(double dt)
 	//updates average_speed by divide distance_travelled by time_since_creation
 	average_speed= distance_travelled/time_since_creation;
 }
-public void printStat(){
+public static void printStat(){
 	System.out.println("The car has reached it's destination");
 	System.out.println("Traveltime was: " + time_since_creation);
 	System.out.println("The distance travelled was: " + distance_travelled);
@@ -281,13 +281,14 @@ public void updatePosition(double dt)
 			
 		
 			//if route is empty, then the vehicle has reached the destination
-			if (routePos <route.size()&& this.getRoute().get(routePos).getEndNode().isSink()){
+			if (routePos ==route.size()-1 && this.getRoute().get(routePos).getEndNode().isSink()){
 				fraction = 0;//sets the fraction to zero to get out of the while loop, but
 						// doesn't add the vehicle to a new road as the routelist is 
 			            // is empty
 				Sink s = (Sink)this.getRoute().get(routePos).getEndNode();
 				s.addVehicle(this);
 				this.printStat();
+				//routePos = routePos +1;
 			}
 			else if (this.getRoute().get(routePos).getEndNode().isTrafCont()){
 				trafficController mine = (trafficController)this.getRoute().get(routePos).getEndNode();
@@ -295,6 +296,7 @@ public void updatePosition(double dt)
 				this.setSpeedX(mine.getSpeedLimit()*Math.cos(angle));
 				this.setSpeedY(mine.getSpeedLimit()*Math.sin(angle));
 				mine.addVehicle(this);
+				fraction = 0;
 				routePos = routePos +1;
 			}
 			//the vehicle is moving to a new road
@@ -306,7 +308,7 @@ public void updatePosition(double dt)
 				fraction = 0;
 				(route.get(routePos)).getVehicles().add(this);
 				// calculating fraction completed at next road on route
-				myRoad =route.get(routePos);
+				//myRoad =route.get(routePos);
 			}
 		
 		}
@@ -372,7 +374,7 @@ public void update_position1(double dt )
 				(route.get(0)).getVehicles().add(this);
 				// calculating fraction completed at next road on route
 				fraction = dp/(route.get(0).getLength());
-				myRoad =route.get(0);
+				//myRoad =route.get(0);
 			}
 		
 		}
@@ -669,13 +671,15 @@ public void setCarInFront(Vehicle carInFront){
  */
 public void updateAcceleration() {
 	//the acceleration due to the car in front
-	double carAccel = accelerationDueToCar();
-	double nodeRoadAccel = accelerationToNearestNodeOrRoad1();
 	
-	double min = Math.min(carAccel, nodeRoadAccel);
-	accelX = min*Math.cos(route.get(routePos).getRoadAngle());
-	accelY = min*Math.sin(route.get(routePos).getRoadAngle());
-	notUpdated=true;
+	if (route.size()>routePos) {
+		double carAccel = accelerationDueToCar();
+		double nodeRoadAccel = accelerationToNearestNodeOrRoad1();
+		double min = Math.min(carAccel, nodeRoadAccel);
+		accelX = min * Math.cos(route.get(routePos).getRoadAngle());
+		accelY = min * Math.sin(route.get(routePos).getRoadAngle());
+		notUpdated = true;
+	}	
 }
 
 /**
@@ -730,7 +734,13 @@ private double accelerationDueToTrafficCont() {
  */
 private double accelerationDueToCar(){
 	double accel = Double.POSITIVE_INFINITY;
-	Vehicle v = myRoad.findCarInFront(this,this.loc_fraction, this.maxVisibility);
+	Vehicle v;
+	double endFrac = this.getVisRange()/route.get(getRoutePos()).getLength();
+	if (this.loc_fraction + endFrac<1){
+		 v = route.get(getRoutePos()).findCarInFront(this,this.loc_fraction, this.loc_fraction + endFrac);
+	}else{
+		 v = route.get(getRoutePos()).findCarInFront(this,this.loc_fraction, 1);
+	}
 	if (v.isNull()){
 		return accel;
 	}
@@ -739,7 +749,7 @@ private double accelerationDueToCar(){
 		double v1 = this.getSpeed();
 		double v2 = v.getSpeed();
 		double carThresh = Math.abs(1- v1/v2);
-		double dist = myRoad.distanceBetweenCars(this, v);
+		double dist = route.get(getRoutePos()).distanceBetweenCars(this, v);
 		if (carThresh>.9){
 			accel = (Math.pow(v2, 2) - Math.pow(v1, 2))/(2*dist);
 		}
@@ -793,7 +803,7 @@ public boolean equals(Vehicle V1){
  * gets the next roads on the route
  */
 Road getNextRoadOnRoute(){
-	if (this.route.size() >routePos ){
+	if (this.route.size() >=routePos-1 ){
 		return this.route.get(routePos+1);
 	}else{
 		return null;
@@ -817,7 +827,7 @@ Node getNextNodeOnRoute(){
 }
 
 boolean isAtDestination(double percent){
-	if (myRoad.equals(destination) && destination.isSink() && percent>=1){
+	if (route.get(getRoutePos()).equals(destination) && destination.isSink() && percent>=1){
 		return true;
 	}
 	else{
@@ -847,9 +857,12 @@ public int getRoutePos() {
 	return routePos;
 }
 public Road getMyRoad() {
-	return myRoad;
+	return route.get(getRoutePos());
 }
 public void setLoc_fraction(double loc_fraction) {
 	this.loc_fraction = loc_fraction;
+}
+public void setRoutePos(int routePos) {
+	this.routePos = routePos;
 }
 }

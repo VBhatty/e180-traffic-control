@@ -91,7 +91,7 @@ public class Controller {
 	public static void main(String[] args) {
 		
 		System.out.println("Simulation started");
-		testRoadSearch();
+		miniSim();
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		
@@ -131,7 +131,7 @@ public class Controller {
 		myMap.addRoad(r);
 		myMap.initializeWeights();
 		new Car(v1,v2);
-		new Car(r,.20);
+		//new Car(r,.1);
 	}
 	public static void readSceneVO(SceneVO scene){
 		myCont = new Controller(1000,1);
