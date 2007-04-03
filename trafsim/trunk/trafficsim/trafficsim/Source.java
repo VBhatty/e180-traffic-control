@@ -16,7 +16,10 @@ public class Source extends Node{
 		super();
 		this.sourceID = UUID.randomUUID();
 	}
-
+	Source (UUID id){
+		super();
+		this.sourceID=id;
+	}
 	public String getID() {
 		return this.sourceID.toString();
 	}

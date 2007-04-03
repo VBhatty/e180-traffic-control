@@ -2,8 +2,17 @@
 
 
 //import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.e180.vo.NodeVO;
+import com.e180.vo.RoadVO;
+import com.e180.vo.SceneVO;
+import com.e180.vo.SinkVO;
+import com.e180.vo.SourceVO;
+import com.e180.vo.TrafficObjectVO;
 
 import sun.security.action.GetBooleanAction;
 
@@ -109,15 +118,136 @@ public class Controller {
 		Car v = new Car(r,0.0);
 	}
 
-	public static void readEditorMap(){
-		
+	public static void readSceneVO(SceneVO scene){
+		myCont = new Controller(1000,1);
+		myMap = new Map();
+		ArrayList<String> addedNodes = new ArrayList<String>();
+		Collection sinks = scene.getSinks();
+		Collection sources = scene.getNodes();
+		Collection roads = scene.getRoads();
+		Collection cars = scene.getCars();
+		Collection nodes = scene.getNodes();
+		//add the nodes to the map
+//		add the roads to the map	
+		Iterator roader = roads.iterator();
+		while (roader.hasNext()){
+			RoadVO n = (RoadVO)roader.next();
+			Iterator it = nodes.iterator();
+			while (it.hasNext()){
+				NodeVO r = (NodeVO)it.next();
+				String start = n.getFromNodeId();
+				String dest = n.getToNodeId();
+				Node n1 = new Node();
+				Node n2 = new Node();
+				if(r.getId()==start){
+					n1.setX(r.getX());
+					n1.setY(r.getY());
+					addedNodes.add(r.getId());
+				}
+				if(r.getId()==start){
+					n1.setX(r.getX());
+					n1.setY(r.getY());
+					addedNodes.add(r.getId());
+				}
+				//Road r = new Road();
+				//myMap.addRoad(r);
+		}
+		Iterator noder = nodes.iterator();
+		while (noder.hasNext()){
+			//NodeVO n = (NodeVO)noder.next();
+			Iterator sourcer = sources.iterator();
+			//find the node which is this source and add it
+			while (sourcer.hasNext()){
+				SourceVO s = (SourceVO)noder.next();
+				if(s.getId()==n.getId()){
+					Node nn = new Source();
+					//nn.setX(n.getX());
+					//nn.setY(n.getY());
+					myMap.addNode(nn);
+				}			
+			}
+			Iterator sinker = sinks.iterator();
+			while (sinker.hasNext()){
+				SinkVO s = (SinkVO)sinker.next();
+				if(s.getId()==n.getId()){
+					Node nn = new Sink();
+					//nn.setX(n.getX());
+					//nn.setY(n.getY());
+					myMap.addNode(nn);
+				}
+			}}}
 	}
-
+		public static void readSceneVO1(SceneVO scene){
+			myCont = new Controller(1000,1);
+			myMap = new Map();
+			Collection sinks = scene.getSinks();
+			Collection sources = scene.getNodes();
+			Collection roads = scene.getRoads();
+			//Collection cars = scene.getCars();
+			Collection nodes = scene.getNodes();
+			Collection to = scene.getTrafficObject();
+			//add all the nodes to the map
+			Iterator noder = nodes.iterator();
+			while (noder.hasNext()){
+				NodeVO n = (NodeVO)noder.next();
+				Iterator sourcer = sources.iterator();
+				//find the node which is this source and add it
+				while (sourcer.hasNext()){
+					SourceVO s = (SourceVO)noder.next();
+					if(s.getId()==n.getId()){
+						Node nn = new Source();
+						nn.setX(n.getX());
+						nn.setY(n.getY());
+						myMap.addNode(nn);
+					}			
+				}
+				Iterator sinker = sinks.iterator();
+				while (sinker.hasNext()){
+					SinkVO s = (SinkVO)sinker.next();
+					if(s.getId()==n.getId()){
+						Node nn = new Sink();
+						nn.setX(n.getX());
+						nn.setY(n.getY());
+						myMap.addNode(nn);
+					}			
+				}		
+				Iterator TOer = to.iterator();
+				while (sinker.hasNext()){
+					TrafficObjectVO s = (TrafficObjectVO)sinker.next();
+					if(s.getId()==n.getId()){
+						Node nn = new trafficController();
+						nn.setX(n.getX());
+						nn.setY(n.getY());
+						((trafficController)nn).setSpeedlimit(s.getSpeedLimit());
+						myMap.addNode(nn);
+					}			
+				}	
+			}
+			
+			//add the roads to the map
+			Iterator roader = roads.iterator();
+			while (roader.hasNext()){
+				Iterator noder1 = nodes.iterator();
+				RoadVO r = (RoadVO)roader.next();
+				Node start=new Node();
+				Node dest=new Node();
+				while (noder1.hasNext()){
+					NodeVO n = (NodeVO)noder1.next();	
+					if (r.getFromNodeId()==n.getId()){
+						start =myMap.getNode(n.getX(), n.getY());
+					}
+					if (r.getToNodeId()==n.getId()){
+						dest =myMap.getNode(n.getX(), n.getY());
+					}
+				}
+				Road road = new Road(start,dest);
+				myMap.addRoad(road);
+			}
+		}
 	public static void Roadpathfinding(){
 		myCont = new Controller(1000,1);
 		myMap = new Map();
-		Node v1 = new Source();
-		
+		Node v1 = new Source();	
 		v1.setX(0);v1.setY(0);
 		myMap.addVertex(v1);
 		Node v2 = new trafficController();

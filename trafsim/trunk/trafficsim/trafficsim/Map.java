@@ -136,4 +136,20 @@ public class Map extends DirectedSparseGraph{
 		}
 		return s;
 	}
+	/**
+	 * gets the nodes that at the position specified
+	 * @param id
+	 */
+	Node getNode(double x, double y){
+		Set verts = this.getVertices();
+		Iterator n = verts.iterator();
+		Node returner = new Node();
+		while (n.hasNext()){
+			Node node = (Node)n.next();
+			if (node.getX()==x && node.getY()==y){
+				return node;
+			}
+		}
+		return returner;
+	}
 }

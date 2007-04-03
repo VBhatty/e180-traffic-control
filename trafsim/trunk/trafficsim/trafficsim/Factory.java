@@ -53,7 +53,7 @@ public class Factory {
 		
 		newSource.setId(source.getID());
 		newSource.setNodeId(source.getSourceID());
-		newSource.setFrequency(source.getFrequency());
+		//newSource.setFrequency(source.getFrequency());
 		
 		return newSource;
 	}
