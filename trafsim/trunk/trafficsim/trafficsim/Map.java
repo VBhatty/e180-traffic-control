@@ -70,11 +70,19 @@ public class Map extends DirectedSparseGraph{
 		
 		// going through all the roads and for each updating the acceleration of
 		// the vehicles at each road
+
 		Iterator ro1 = myRoads.iterator();
 		while(ro1.hasNext()){
 			Road rr = (Road)ro1.next();
 			setWeight(rr);
 			rr.updateVehicles(dt);
+		}
+	
+			Iterator ro2 = myRoads.iterator();
+			while(ro2.hasNext()){
+				Road rrr = (Road)ro2.next();
+				setWeight(rrr);
+				rrr.updatePosition(dt);
 		}
 	}
 	public int totalVehicles() {
