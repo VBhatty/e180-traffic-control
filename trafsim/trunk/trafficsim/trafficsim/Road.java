@@ -84,16 +84,16 @@ public void updateVehicles(double dt){
 		while (veh.hasNext()){
 		Vehicle vehicle = (Vehicle)veh.next();
 		vehicle.updateAcceleration();
-		vehicle.updatePosition(dt);
-		vehicle.update_stat(dt);
-		vehicle.updateSpeed(dt);
-		vehicle.printSpeed();
+		//vehicle.updatePosition(dt);
+		//vehicle.update_stat(dt);
+		//vehicle.updateSpeed(dt);
+		//vehicle.printSpeed();
 		//vehicle.printInfo();	
 		}
 	}
 
 
-public void updateVehiclesPosition(double dt){
+public void updatePosition(double dt){
 	
 	Iterator veh = vehicles.iterator();
 	while (veh.hasNext()){
