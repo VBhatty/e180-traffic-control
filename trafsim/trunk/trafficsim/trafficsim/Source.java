@@ -57,7 +57,43 @@ public class Source extends Node{
 		return carCreation;
 	}
 	
-	public double getFrequency(){
-		return 0.03;
+	
+	//sourcefunction that returns high frequency in the morning
+	//and afternoon, and low during nighttime
+	public double getFrequency(double time){
+		
+		int day = 24*60*60;
+	
+		while (time >= 0){
+			time =time-day;
+		}
+		
+		time = time + day;
+		time = time/3600;
+		
+		System.out.println(time);
+		
+		double f=0;
+		double pi=3.1415;
+		if(time < 6){
+			f = 4+2*Math.cos(pi*time/3);
+		}
+		else if (time <9.5){
+			f = 26+20*Math.cos(2*pi*(time-8)/4);
+		}
+		else if (time <17){
+			f=12;
+		}
+		else if (time < 23){
+			f = 17+5*Math.cos(2*pi*(time-20)/6);
+		}
+		else if (time < 24.1){
+			f= 12-6*(time-23);
+		}
+		f = f/3600;
+		
+		return f;
 	}
-}
+
+	
+	}
