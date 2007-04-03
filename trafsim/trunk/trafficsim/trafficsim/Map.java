@@ -32,7 +32,7 @@ public class Map extends DirectedSparseGraph{
 		while(no.hasNext()){
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
-				//((Source)nn).generate_new_car(i);
+				((Source)nn).generate_new_car(i);
 			}
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);

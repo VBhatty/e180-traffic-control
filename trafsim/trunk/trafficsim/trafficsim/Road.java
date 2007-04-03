@@ -73,6 +73,7 @@ public SortedSet<Vehicle> getVehicleList() {
 }
 
 public void addVehicle(Vehicle vehicle) {
+	vehicle.setLoc_fraction(0);
 	this.vehicles.add(vehicle);
 }
 public void removeVehicle(Vehicle vehicle) {

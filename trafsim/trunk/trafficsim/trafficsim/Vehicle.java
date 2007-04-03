@@ -85,7 +85,6 @@ public abstract class Vehicle implements Comparable {
 		time_since_creation=0;
 		destination=endNode;
 		startNode = start;
-		route = new ArrayList<Road>();
 		route = findRoute(start, endNode);
 		routePos =0;
 		myRoad = route.get(routePos);
@@ -844,5 +843,8 @@ public int getRoutePos() {
 }
 public Road getMyRoad() {
 	return myRoad;
+}
+public void setLoc_fraction(double loc_fraction) {
+	this.loc_fraction = loc_fraction;
 }
 }
