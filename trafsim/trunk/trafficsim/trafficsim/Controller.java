@@ -82,7 +82,7 @@ public class Controller {
 	public static void main(String[] args) {
 		
 		System.out.println("Simulation started");
-		Roadpathfinding();
+		miniSim();
 		
 		for (int i =0; i<myCont.getTotalTime(); i++){
 		
@@ -204,5 +204,90 @@ public class Controller {
 		follower.setCarInFront(v);
 		//follower.setSpeed(4);
 		
+	}
+	public static void miniSim(){
+		
+		myCont = new Controller(1000,1);
+		myMap = new Map();
+		
+		//Node v1 = new Source(1);
+		Node v1 = new Source();
+		v1.setX(0);v1.setY(0);
+		myMap.addVertex(v1);
+		
+		Node v2 = new Node();
+		v2.setX(0); v2.setY(100);
+		myMap.addVertex(v2);
+		
+		Node v3 = new Node();
+		v3.setX(0); v3.setY(200);
+		myMap.addVertex(v3);
+		
+		Node v4 = new Node();
+		v4.setX(100); v4.setY(200);
+		myMap.addVertex(v4);
+		
+		Node v5 = new Node();
+		v5.setX(100); v5.setY(100);
+		myMap.addVertex(v5);
+		
+		Node v6 = new Node();
+		v6.setX(200); v6.setY(0);
+		myMap.addVertex(v6);
+		
+		Node v7 = new Node();
+		v7.setX(200); v7.setY(100);
+		myMap.addVertex(v7);
+		
+		Node v8 = new Node();
+		v8.setX(200); v8.setY(200);
+		myMap.addVertex(v8);
+		
+		Node v9 = new Node();
+		v9.setX(300); v9.setY(200);
+		myMap.addVertex(v9);
+		
+		Node v10 = new Node();
+		v10.setX(300); v3.setY(100);
+		myMap.addVertex(v10);
+		
+		Node v11 = new Node();
+		v11.setX(300); v11.setY(0);
+		myMap.addVertex(v11);
+		
+		Node v12 = new Sink();
+		v12.setX(400); v12.setY(100);
+		myMap.addVertex(v12);
+		
+		Road r1 = new Road("r1",50,v1, v2);
+		Road r2 = new Road("r2",50,v2, v3);
+		Road r3 = new Road("r3",15,v2, v5);
+		Road r4 = new Road("r4",50,v3, v4);
+		Road r5 = new Road("r5",50,v4, v5);
+		Road r6 = new Road("r6",25,v5, v7);
+		Road r7 = new Road("r7",30,v7, v6);
+		Road r8 = new Road("r8",30,v7, v8);
+		Road r9 = new Road("r9",30,v6, v11);
+		Road r10 = new Road("r10",30,v8, v9);
+		Road r11 = new Road("r11",15,v11, v10);
+		Road r12 = new Road("r12",20,v9, v10);
+		Road r13 = new Road("r13",10,v10, v12);
+		
+		myMap.addRoad(r1);
+		myMap.addRoad(r2);
+		myMap.addRoad(r3);
+		myMap.addRoad(r4);
+		myMap.addRoad(r5);
+		myMap.addRoad(r6);
+		myMap.addRoad(r7);
+		myMap.addRoad(r8);
+		myMap.addRoad(r9);
+		myMap.addRoad(r10);
+		myMap.addRoad(r11);
+		myMap.addRoad(r12);
+		myMap.addRoad(r13);
+		myMap.initializeWeights();	
+			
+		Car c = new Car(v1,v12);
 	}
 }
