@@ -11,6 +11,9 @@ public class Sink extends Node{
 		sinkID = UUID.randomUUID();
 		carCnt =0;
 	}
+	boolean isSink(){
+		return true;
+	}
 	
 	public String getID() {
 		return this.sinkID.toString();

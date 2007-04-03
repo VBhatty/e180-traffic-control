@@ -71,7 +71,7 @@ public class Source extends Node{
 		time = time + day;
 		time = time/3600;
 		
-		System.out.println(time);
+		
 		
 		double f=0;
 		double pi=3.1415;

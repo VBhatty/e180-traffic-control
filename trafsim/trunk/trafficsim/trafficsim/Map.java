@@ -32,7 +32,7 @@ public class Map extends DirectedSparseGraph{
 		while(no.hasNext()){
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
-				((Source)nn).generate_new_car(i);
+				//((Source)nn).generate_new_car(i);
 			}
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);
@@ -121,11 +121,18 @@ public class Map extends DirectedSparseGraph{
 		Sink s = new Sink();
 		Set sinks = getSinks();
 		Random U = new Random();
-		int rand = U.nextInt(sinks.size());
+		int size =sinks.size();
+		
 		Iterator iter = sinks.iterator();
+		if (size==0){
+			s = (Sink)iter.next();
+		}else{
+			int rand = U.nextInt(size);
 		while (rand!=0){
+			
 			s = (Sink)iter.next();
 			rand -=1;
+		}
 		}
 		return s;
 	}
