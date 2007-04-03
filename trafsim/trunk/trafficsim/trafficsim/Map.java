@@ -25,14 +25,14 @@ public class Map extends DirectedSparseGraph{
 		return arg0;
 	}
 	
-	void updateNodes(double dt){
+	void updateNodes(double dt, int i){
 		Set<Node> myNodes = this.getVertices();
 		Iterator no = myNodes.iterator();
 		
 		while(no.hasNext()){
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
-				((Source)nn).generate_new_car();
+				((Source)nn).generate_new_car(i);
 			}
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);
@@ -62,7 +62,7 @@ public class Map extends DirectedSparseGraph{
 	 * iterates through the roads and updates all the cars acceleration, position
 	 * and velocity on them
 	 */
-	void updateRoads(double dt){
+	void updateRoads(double dt, int i){
 		Set<Road> myRoads = this.getEdges();
 		
 		//updating all the vehicles is done in two step so that the acceleration is
