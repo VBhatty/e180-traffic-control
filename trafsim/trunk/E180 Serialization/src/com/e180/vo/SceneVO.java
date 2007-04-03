@@ -156,6 +156,12 @@ public class SceneVO implements IJsonSerializable {
 	public void setSources(Collection<SourceVO> sources) {
 		this.sources = sources;
 	}
+
+
+	public Collection getTrafficObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }
