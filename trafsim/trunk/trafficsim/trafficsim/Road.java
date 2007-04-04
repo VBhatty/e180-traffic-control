@@ -189,7 +189,7 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 						//next road on the route
 						vehicle.setRoutePos(vehicle.getRoutePos()+1);
 						//fraction = dp/(route.get(routePos).getLength());
-						//fraction = 0;
+						fraction = 0;
 						Road nextRoad = (Road) route.get(routeP+1);
 						vehicle.addRoadID(nextRoad.getID());
 						nextRoad.getVehicles().add(vehicle);
@@ -197,6 +197,8 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 						//myRoad =route.get(routePos);
 					}
 				
+				}else{
+					vehicle.addRoadID(((Road)route.get(routeP)).getID());
 				}
 			
 				// setting loc_fraction equal the fraction completed at current road

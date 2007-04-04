@@ -41,7 +41,7 @@ public class Source extends Node{
 	
 	//return true if a car should be created and creates it
 	//assumes road weights have been set 
-	public boolean generate_new_car(double time, SceneVO myVO){	
+	public boolean generate_new_car(int time, SceneVO myVO){	
 		boolean carCreation;
 		double f = getFreqency(time);
 		//double f = .3;
@@ -50,7 +50,7 @@ public class Source extends Node{
 		if(x < f){
 			Sink destination = myMap.getRandomSink();
 			carCreation = true;
-			Vehicle c = new Car(this,destination);
+			Vehicle c = new Car(this,destination,time);
 			Factory myF = new Factory();
 			myVO.addCar(myF.carToCarVO(c));
 		}

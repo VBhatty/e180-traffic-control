@@ -72,8 +72,9 @@ public abstract class Vehicle implements Comparable {
 	 * this is the most used constructor.  Since vehicles are created
 	 * at nodes.
 	 */
-	public Vehicle(Node start,Node endNode)
+	public Vehicle(Node start,Node endNode,int spawn)
 	{
+		spawnTime = spawn;
 		this.id = UUID.randomUUID();
 		guiID = id.toString();
 		car_in_front=null;
@@ -92,6 +93,7 @@ public abstract class Vehicle implements Comparable {
 		//myRoad = route.get(routePos);
 		route.get(routePos).addVehicle(this);
 		roadIds.add(route.get(getRoutePos()).getID());
+		percentageAlongRoads.add(getPercent());
 		maxVisibility = 25;
 		notUpdated=true;
 		generate_mass_and_length();
@@ -100,8 +102,9 @@ public abstract class Vehicle implements Comparable {
 	 * this is the most used constructor.  Since vehicles are created
 	 * at nodes.
 	 */
-	public Vehicle(Node start,Node endNode,String ID)
+	public Vehicle(Node start,Node endNode,String ID, int spawn)
 	{
+		spawnTime= spawn;
 		this.id = UUID.randomUUID();
 		guiID = ID;
 		car_in_front=null;

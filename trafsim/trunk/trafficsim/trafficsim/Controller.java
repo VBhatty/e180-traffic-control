@@ -149,7 +149,7 @@ public class Controller {
 		Road r = new Road("alcatraz",25,v1, v2);
 		myMap.addRoad(r);
 		myMap.initializeWeights();
-		new Car(v1,v2);
+		new Car(v1,v2,0);
 		//new Car(r,.1);
 	}
 
@@ -239,7 +239,7 @@ public class Controller {
 		myMap.addRoad(r);
 		myMap.addRoad(rr);
 		myMap.initializeWeights();
-		new Car(v1,v3);
+		new Car(v1,v3,0);
 	}
 	
 	public static void create2Road(){
@@ -395,6 +395,6 @@ public class Controller {
 		myMap.addRoad(r13);
 		myMap.initializeWeights();	
 			
-		Car c = new Car(v1,v12);
+		Car c = new Car(v1,v12,0);
 	}
 }

@@ -10,8 +10,8 @@ public class Car extends Vehicle {
 		
 		
 	}
-	public Car(Node start,Node end) {
-		super(start,end);
+	public Car(Node start,Node end,int spawn) {
+		super(start,end,spawn);
 	}
 
 	@Override
