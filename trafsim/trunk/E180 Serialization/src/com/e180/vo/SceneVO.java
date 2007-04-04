@@ -162,26 +162,24 @@ public class SceneVO implements IJsonSerializable {
 
 
 	public Collection getTrafficObjs() {
-		// TODO Auto-generated method stub
-		return null;
+		return trafficObjs;
 	}
 
 
 	public void addNode(NodeVO nodeVO) {
-		// TODO Auto-generated method stub
+		nodes.add(nodeVO);
 		
 	}
 
 
 	public void addRoad(RoadVO roadVO) {
-		// TODO Auto-generated method stub
+		roads.add(roadVO);
 		
 	}
 
 
 	public void addCar(CarVO carVO) {
-		// TODO Auto-generated method stub
-		
+		cars.add(carVO);
 	}
 	
 	
