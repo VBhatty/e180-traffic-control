@@ -90,7 +90,7 @@ public abstract class Vehicle implements Comparable {
 		routePos =0;
 		this.setLoc_fraction(0);
 		//myRoad = route.get(routePos);
-		route.get(getRoutePos()).addVehicle(this);
+		route.get(routePos).addVehicle(this);
 		roadIds.add(route.get(getRoutePos()).getID());
 		maxVisibility = 25;
 		notUpdated=true;
