@@ -9,6 +9,9 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Iterator;
 
+import com.e180.vo.CarVO;
+import com.e180.vo.SceneVO;
+
 import edu.uci.ics.jung.graph.ArchetypeEdge;
 import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.decorators.NumberEdgeValue;
@@ -41,10 +44,40 @@ public class Road extends DirectedSparseEdge {
 	 private double averageSpeed; // average speed of the current vehicles on the road
 	 private double averageWeight; //average weight of the current vehicles on the road
 	 private double roadAngle;  //the angle which the road is measured from positive x axis 
-	
+	 String guiID;
 	 Road(Node n1, Node n2){
 		super(n1,n2);
+		this.id = UUID.randomUUID();
+		guiID = id.toString();
 	}
+	 Road(Node n1, Node n2,double limit){
+		 super((Vertex)n1,(Vertex)n2);
+			this.id = UUID.randomUUID();
+			guiID = id.toString();
+			//speed limit converted to meters per second so miles/hour can be used as input
+			this.speedLimit = limit/2.237;
+			this.start_node = n1;
+			this.end_node = n2;
+			this.coeff_of_fric = 0.7;
+			this.weather_coeff = 0.0;
+			vehicles = new TreeSet<Vehicle>();
+			setRoadAngle();
+			setLength();
+		}
+	 Road(Node n1, Node n2,double limi,String ID){
+		 super((Vertex)n1,(Vertex)n2);
+			this.id = UUID.randomUUID();
+			guiID = ID;
+			//speed limit converted to meters per second so miles/hour can be used as input
+			this.speedLimit = getLimit()/2.237;
+			this.start_node = n1;
+			this.end_node = n2;
+			this.coeff_of_fric = 0.7;
+			this.weather_coeff = 0.0;
+			vehicles = new TreeSet<Vehicle>();
+			setRoadAngle();
+			setLength();
+		}
 public Road(String Name, double speed_limit, Node start, Node end ){
 	super((Vertex)start,(Vertex)end);
 	this.id = UUID.randomUUID();
@@ -90,7 +123,7 @@ public void updateAccel(double dt){
 	}
 
 
-public void updatePosition(double dt){
+public void updateSpeedAndPosition(double dt,SceneVO myVO){
 	Object[] v = vehicles.toArray();
 	//Iterator veh = vehicles.iterator();
 	//while (veh.hasNext()){
@@ -144,6 +177,10 @@ public void updatePosition(double dt){
 						mine.addVehicle(vehicle);
 						fraction = 0;
 						vehicle.setRoutePos(vehicle.getRoutePos()+1);
+						//fraction = dp/(route.get(routePos).getLength());
+						//fraction = 0;
+						Road nextRoad = (Road) route.get(routeP+1);
+						vehicle.addRoadID(nextRoad.getID());
 						
 					}
 					//the vehicle is moving to a new road
@@ -152,8 +189,9 @@ public void updatePosition(double dt){
 						//next road on the route
 						vehicle.setRoutePos(vehicle.getRoutePos()+1);
 						//fraction = dp/(route.get(routePos).getLength());
-						fraction = 0;
+						//fraction = 0;
 						Road nextRoad = (Road) route.get(routeP+1);
+						vehicle.addRoadID(nextRoad.getID());
 						nextRoad.getVehicles().add(vehicle);
 						// calculating fraction completed at next road on route
 						//myRoad =route.get(routePos);
@@ -163,6 +201,8 @@ public void updatePosition(double dt){
 			
 				// setting loc_fraction equal the fraction completed at current road
 				vehicle.setLoc_fraction(fraction);
+				vehicle.addPercent(fraction);
+				
 				vehicle.update_stat(dt);
 				vehicle.updateSpeed(dt);
 				vehicle.printInfo();
@@ -271,7 +311,7 @@ boolean isOnRoad(Vehicle v){
 }
 
 public String getID() {
-	return this.id.toString();
+	return guiID;
 }
 
 boolean equals(Road r){

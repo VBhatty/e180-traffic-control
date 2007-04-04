@@ -8,7 +8,6 @@ public class Sink extends Node{
 	int carCnt;   //# of cars that have got to this sink as dest
 	public Sink () {
 		super();
-		sinkID = UUID.randomUUID();
 		carCnt =0;
 	}
 	boolean isSink(){
@@ -16,7 +15,7 @@ public class Sink extends Node{
 	}
 	
 	public String getID() {
-		return this.sinkID.toString();
+		return super.getID();
 	}
 	
 	public String getNodeID() {

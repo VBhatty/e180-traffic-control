@@ -6,6 +6,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.ShortestPath;
 import edu.uci.ics.jung.algorithms.shortestpath.ShortestPathUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Collection;
 //import java.util.Random;
@@ -51,12 +52,12 @@ public abstract class Vehicle implements Comparable {
 		
 	private List<Road> route;	//ArrayList containing the roads on the route from current road to
 	private int routePos;  //position on route of the car, use this instead of deleting routes								//the road that ends in the destination node in chronological ordering
-	
+	private String guiID;
 
-	private Collection<Double> percentageAlongRoads;
-	private Collection<String> roadIds;
+	private Collection<Double> percentageAlongRoads = new LinkedList();
+	private Collection<String> roadIds = new LinkedList();
 	private int spawnTime;
-									
+	
 	private UUID id;
 	
 	// notUpdated is used so that one car cannot get it's position updated twice at the
@@ -74,7 +75,7 @@ public abstract class Vehicle implements Comparable {
 	public Vehicle(Node start,Node endNode)
 	{
 		this.id = UUID.randomUUID();
-		
+		guiID = id.toString();
 		car_in_front=null;
 		speedX=0;
 		speedY=0;
@@ -90,7 +91,36 @@ public abstract class Vehicle implements Comparable {
 		this.setLoc_fraction(0);
 		//myRoad = route.get(routePos);
 		route.get(getRoutePos()).addVehicle(this);
-		
+		roadIds.add(route.get(getRoutePos()).getID());
+		maxVisibility = 25;
+		notUpdated=true;
+		generate_mass_and_length();
+	}
+	/**
+	 * this is the most used constructor.  Since vehicles are created
+	 * at nodes.
+	 */
+	public Vehicle(Node start,Node endNode,String ID)
+	{
+		this.id = UUID.randomUUID();
+		guiID = ID;
+		car_in_front=null;
+		speedX=0;
+		speedY=0;
+		accelX=0;
+		accelY=0;
+		average_speed=0;
+		distance_travelled=0;
+		time_since_creation=0;
+		destination=endNode;
+		startNode = start;
+		route = findRoute(start, endNode);
+		routePos =0;
+		this.setLoc_fraction(0);
+		percentageAlongRoads.add(this.getPercent());
+		//myRoad = route.get(routePos);
+		route.get(getRoutePos()).addVehicle(this);
+		roadIds.add(route.get(getRoutePos()).getID());
 		maxVisibility = 25;
 		notUpdated=true;
 		generate_mass_and_length();
@@ -136,7 +166,7 @@ public abstract class Vehicle implements Comparable {
 	}
 	
 	public String getID() {
-		return this.id.toString();
+		return guiID;
 	}
 	public UUID getUUID() {
 		return this.id;
@@ -252,7 +282,7 @@ public static void printStat(){
 	System.out.println("Average speed: " + average_speed);
 }
 
-public void updatePosition(double dt)
+public void updateSpeedAndPosition(double dt)
 {
 	if(notUpdated){
 		
@@ -864,5 +894,11 @@ public void setLoc_fraction(double loc_fraction) {
 }
 public void setRoutePos(int routePos) {
 	this.routePos = routePos;
+}
+public void addPercent(double perc){
+	percentageAlongRoads.add(perc);
+}
+public void addRoadID(String ID){
+	roadIds.add(ID);
 }
 }

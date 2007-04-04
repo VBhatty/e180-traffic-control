@@ -1,10 +1,13 @@
 package trafficsim;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import com.e180.vo.*;
 
 public class Factory {
 	
-	public CarVO carToCarVO(Car car){
+	public CarVO carToCarVO(Vehicle car){
 		CarVO newCar = new CarVO();
 		newCar.setId(car.getID());
 		newCar.setDestNodeId(car.getDestination().getID());
@@ -52,10 +55,40 @@ public class Factory {
 		SourceVO newSource = new SourceVO();
 		
 		newSource.setId(source.getID());
-		newSource.setNodeId(source.getSourceID());
+		newSource.setNodeId(source.getID());
 		//newSource.setFrequency(source.getFrequency());
 		
 		return newSource;
+	}
+
+	public void setVehicles(Set vehicles,SceneVO myScene) {
+		Iterator veh = vehicles.iterator();
+		//iterate through and add each vehicle to the scene
+		while (veh.hasNext()){
+			Vehicle v = (Vehicle)veh.next();
+			myScene.addCar(this.carToCarVO(v));
+		}
+		
+	}
+
+	public void setNodes(Set nodes, SceneVO sceneOut) {
+		Iterator veh = nodes.iterator();
+		//iterate through and add each vehicle to the scene
+		while (veh.hasNext()){
+			Node v = (Node)veh.next();
+			sceneOut.addNode(this.nodeToNodeVO(v));
+		}
+		
+	}
+
+	public void setRoads(Set Roads, SceneVO sceneOut) {
+		Iterator veh = Roads.iterator();
+		//iterate through and add each vehicle to the scene
+		while (veh.hasNext()){
+			Road v = (Road)veh.next();
+			sceneOut.addRoad(this.roadToRoadVO(v));
+		}
+		
 	}
 	
 }

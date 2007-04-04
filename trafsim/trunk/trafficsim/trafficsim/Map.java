@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.e180.vo.SceneVO;
+
 import edu.uci.ics.jung.graph.ArchetypeEdge;
 import edu.uci.ics.jung.graph.decorators.NumberEdgeValue;
 import edu.uci.ics.jung.graph.decorators.UserDatumNumberEdgeValue;
@@ -28,14 +30,14 @@ public class Map extends DirectedSparseGraph{
 		return arg0;
 	}
 	
-	void updateNodes(double dt, int i){
+	void updateNodes(double dt, int i,SceneVO myVo){
 		Set<Node> myNodes = this.getVertices();
 		Iterator no = myNodes.iterator();
 		
 		while(no.hasNext()){
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
-				((Source)nn).generate_new_car(i);
+				((Source)nn).generate_new_car(i,myVo);
 			}
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);
@@ -65,7 +67,7 @@ public class Map extends DirectedSparseGraph{
 	 * iterates through the roads and updates all the cars acceleration, position
 	 * and velocity on them
 	 */
-	void updateRoads(double dt, int i){
+	void updateRoads(double dt, int i,SceneVO myVO){
 		Set<Road> myRoads = this.getEdges();
 		Object[] r = myRoads.toArray();
 
@@ -85,7 +87,8 @@ public class Map extends DirectedSparseGraph{
 		for (int j = 0;j<r.length;j++){	
 				Road rrr =(Road)r[j];;
 				setWeight(rrr);
-				rrr.updatePosition(dt);
+				rrr.updateSpeedAndPosition(dt,myVO);
+				
 		}
 	}
 	public int totalVehicles() {
@@ -178,5 +181,20 @@ public class Map extends DirectedSparseGraph{
 			}
 		}
 		return carsOnStrip;
+	}
+	public Set getVeh() {
+		Set<Vehicle> vehicles = new TreeSet<Vehicle>();
+		Set roads = this.getEdges();
+		Iterator iter = roads.iterator();
+		while (iter.hasNext()){
+			Road r = (Road)iter.next();
+			//vehicles.add((Vehicle)r.getVehicles());
+			Set v = r.getVehicles();
+			Iterator ve = v.iterator();
+			while (ve.hasNext()){
+				vehicles.add((Vehicle)ve.next());
+			}
+		}
+		return vehicles;
 	}
 }

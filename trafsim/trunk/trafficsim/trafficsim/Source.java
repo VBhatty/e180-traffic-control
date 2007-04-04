@@ -5,27 +5,25 @@ import java.util.UUID;
 //import java.awt.geom.Point2D;
 import java.util.Random;
 
+import com.e180.vo.SceneVO;
+
 public class Source extends Node{
 
 	//int sourceId;
 	private Random U = new Random();
 	
 	private UUID sourceID;
-	
-	Source() {
+	Source(){
 		super();
-		this.sourceID = UUID.randomUUID();
 	}
-	Source (UUID id){
-		super();
-		this.sourceID=id;
+	Source(String ID){
+		super(ID);
 	}
 	public String getID() {
-		return this.sourceID.toString();
+		return guiID;
 	}
-	
-	public String getSourceID() {
-		return super.getID();
+	public UUID getUUID(){
+		return sourceID;
 	}
 	
 	boolean isSource(){
@@ -43,16 +41,18 @@ public class Source extends Node{
 	
 	//return true if a car should be created and creates it
 	//assumes road weights have been set 
-	public boolean generate_new_car(double time){	
+	public boolean generate_new_car(double time, SceneVO myVO){	
 		boolean carCreation;
 		double f = getFreqency(time);
 		//double f = .3;
 		double x = U.nextFloat();
 		Map myMap = (Map)this.getGraph();
-		Sink destination = myMap.getRandomSink();
 		if(x < f){
+			Sink destination = myMap.getRandomSink();
 			carCreation = true;
-			//new Car(this,destination);
+			Vehicle c = new Car(this,destination);
+			Factory myF = new Factory();
+			myVO.addCar(myF.carToCarVO(c));
 		}
 		else{
 			carCreation =false;

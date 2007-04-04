@@ -13,16 +13,22 @@ public class Node extends SparseVertex{
 
 	private double x;
 	private double y;
-	
+	String guiID;
 	public UUID id;
 
 	Node (){
 		super();
 		id = UUID.randomUUID();
+		guiID = id.toString();
+	}
+	Node (String ID){
+		super();
+		id = UUID.randomUUID();
+		guiID = ID;
 	}
 	
 	public String getID() {
-		return this.id.toString();
+		return guiID;
 	}
 	void setX(double X){
 		x = X;
