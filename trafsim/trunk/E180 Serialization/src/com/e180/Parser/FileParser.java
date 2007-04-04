@@ -40,6 +40,7 @@ public class FileParser {
 		try {
 			BufferedWriter writer = new BufferedWriter( new FileWriter(fileDir) );
 			writer.write(sceneVO.Serialize());
+			writer.flush();
 		} catch( IOException eIo ) {
 			eIo.printStackTrace();
 			return;
