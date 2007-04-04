@@ -170,6 +170,15 @@ public class SceneVO implements IJsonSerializable {
 		nodes.add(nodeVO);
 		
 	}
+	public void addSource(SourceVO s){
+		sources.add(s);
+	}
+	public void addSink(SinkVO s){
+		sinks.add(s);
+	}
+	public void addTrafObj(TrafficObjectVO t){
+		trafficObjs.add(t);
+	}
 
 
 	public void addRoad(RoadVO roadVO) {
