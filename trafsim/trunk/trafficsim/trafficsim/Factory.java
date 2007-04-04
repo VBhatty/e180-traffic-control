@@ -50,7 +50,14 @@ public class Factory {
 		
 		return newSink;
 	}
-	
+	private TrafficObjectVO trafficObjToTrafficObjVO(trafficController controller) {
+		TrafficObjectVO newTO = new TrafficObjectVO();
+		
+		newTO.setId(controller.getID());
+		newTO.setNodeId(controller.getID());
+		
+		return newTO;
+	}
 	public SourceVO sourceToSouceVO(Source source) {
 		SourceVO newSource = new SourceVO();
 		
@@ -76,10 +83,24 @@ public class Factory {
 		//iterate through and add each vehicle to the scene
 		while (veh.hasNext()){
 			Node v = (Node)veh.next();
+			if (v.isSink()){
+				sceneOut.addSink(this.sinkToSinkVO((Sink)v));
+			}
+			if (v.isSource()){
+				sceneOut.addSource(this.sourceToSouceVO((Source)v));
+			}
+			if (v.isTrafCont()){
+				sceneOut.addTrafObj(this.trafficObjToTrafficObjVO((trafficController)v));
+			}
+		}
+		Iterator veh1 = nodes.iterator();
+		while (veh1.hasNext()){
+			Node v = (Node)veh1.next();
 			sceneOut.addNode(this.nodeToNodeVO(v));
 		}
-		
 	}
+
+
 
 	public void setRoads(Set Roads, SceneVO sceneOut) {
 		Iterator veh = Roads.iterator();

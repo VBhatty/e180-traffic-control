@@ -94,6 +94,7 @@ public class Controller {
 		Set edges = myMap.getEdges();
 		//if (!vehicles.isEmpty())
 		//{myFactory.setVehicles(vehicles,sceneOut);}
+		
 		myFactory.setNodes(verts,sceneOut);
 		myFactory.setRoads(edges,sceneOut);
 		return sceneOut;
@@ -113,7 +114,8 @@ public class Controller {
 		for (int i =0; i<myCont.getTotalTime(); i++){
 			myCont.update(myCont.getStep(), i,myVO);
 		}
-		
+		System.out.println( myVO.Serialize() );
+		myParser.writeSceneVOIntoFile("C:\\output.txt", myVO);
 	}
 
 	/** 
