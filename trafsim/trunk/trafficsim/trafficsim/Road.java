@@ -81,6 +81,7 @@ public class Road extends DirectedSparseEdge {
 public Road(String Name, double speed_limit, Node start, Node end ){
 	super((Vertex)start,(Vertex)end);
 	this.id = UUID.randomUUID();
+	guiID=id.toString();
 	this.name =  Name;
 	//speed limit converted to meters per second so miles/hour can be used as input
 	this.speedLimit = speed_limit/2.237;

@@ -104,9 +104,9 @@ public class Controller {
 	public static void main(String[] args) {
 		//read in the file
 		FileParser myParser = new FileParser();
-		SceneVO myVO = myParser.readFileIntoScene("C:\\Documents and Settings\\Eric Vacca\\workspace\\E180 Serialization\\src\\input.txt");
-		readSceneVO(myVO);
-		//create1Road();
+		SceneVO myVO = myParser.readFileIntoScene("C:\\input.txt");
+		//readSceneVO(myVO);
+		miniSim();
 		
 		System.out.println("Simulation started");
 		myVO = writeScene();
