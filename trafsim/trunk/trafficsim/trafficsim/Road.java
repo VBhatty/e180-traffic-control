@@ -144,25 +144,25 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 				}else{
 					dp = (vehicle.getSpeed() + 0)*0.5*dt;
 				}
-			
+				
 				//update the fraction of road travelled
-				double fraction = vehicle.getPercent() + dp/(vehicle.getRoute().get(vehicle.getRoutePos()).getLength());
+				vehicle.setLoc_fraction( vehicle.getPercent() + dp/(vehicle.getRoute().get(vehicle.getRoutePos()).getLength()));
 				
 				// if the distance travelled is longer than what is left of current road,
 				// the vehicle start on the next road on the route
-				if ( fraction > 1)
+				if ( vehicle.getPercent() >= 1)
 				{
 					//calculating how much longer than what is left of the road that the vehicle have
 					//travelled in current timestep
-					fraction = fraction - 1;
+					//vehicle.setLoc_fraction(0);
 					//dp = fraction*route.get(routePos+1).getLength();
 					//removes this vehicle
 					myRoad.removeVehicle(vehicle);
 					
 				
 					//if route is empty, then the vehicle has reached the destination
-					if (routeP ==route.size()-1 && myRoad.getEndNode().isSink()){
-						fraction = 0;//sets the fraction to zero to get out of the while loop, but
+					if (vehicle.getRoutePos() ==route.size()-1){
+						//vehicle.setLoc_fraction(0);//sets the fraction to zero to get out of the while loop, but
 								// doesn't add the vehicle to a new road as the routelist is 
 					            // is empty
 						Sink s = (Sink)myRoad.getEndNode();
@@ -170,41 +170,24 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 						Vehicle.printStat();
 						//routePos = routePos +1;
 					}
-					else if (myRoad.getEndNode().isTrafCont()){
+					else {
 						trafficController mine = (trafficController)myRoad.getEndNode();
+						vehicle.setRoutePos(routeP +1);
 						double angle =myRoad.getRoadAngle();
 						vehicle.setSpeedX(mine.getSpeedLimit()*Math.cos(angle));
 						vehicle.setSpeedY(mine.getSpeedLimit()*Math.sin(angle));
-						mine.addVehicle(vehicle);
-						fraction = 0;
-						vehicle.setRoutePos(vehicle.getRoutePos()+1);
-						//fraction = dp/(route.get(routePos).getLength());
-						//fraction = 0;
-						Road nextRoad = (Road) route.get(routeP+1);
-						vehicle.addRoadID(nextRoad.getID());
-						
-					}
-					//the vehicle is moving to a new road
-					else{
-						//add this vehicle to vehicles (the list of vehicles at the road) at 
-						//next road on the route
-						vehicle.setRoutePos(vehicle.getRoutePos()+1);
-						//fraction = dp/(route.get(routePos).getLength());
-						fraction = 0;
-						Road nextRoad = (Road) route.get(routeP+1);
-						vehicle.addRoadID(nextRoad.getID());
-						nextRoad.getVehicles().add(vehicle);
-						// calculating fraction completed at next road on route
-						//myRoad =route.get(routePos);
+						mine.addVehicle(vehicle);	
 					}
 				
 				}else{
 					vehicle.addRoadID(((Road)route.get(routeP)).getID());
+					vehicle.addPercent(vehicle.getPercent());
+					//vehicle.addPercent(vehicle.getPercent());
 				}
 			
 				// setting loc_fraction equal the fraction completed at current road
-				vehicle.setLoc_fraction(fraction);
-				vehicle.addPercent(fraction);
+				//vehicle.setLoc_fraction(fraction);
+				//vehicle.addPercent(fraction);
 				
 				vehicle.update_stat(dt);
 				vehicle.updateSpeed(dt);
@@ -260,7 +243,7 @@ double distanceBetweenCars(Vehicle v1, Vehicle v2){
 		return Math.abs(v1.getPercent()-v2.getPercent())*v1.getRoute().get(v1.getRoutePos()).getLength();
 	}
 	else{
-		throw new IllegalArgumentException("not on same road");
+		return Double.POSITIVE_INFINITY;
 	}
 }
 Vehicle findCarInFront(Vehicle myV, double start,double range){

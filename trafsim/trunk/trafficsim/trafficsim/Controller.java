@@ -81,7 +81,6 @@ public class Controller {
 	 * i dunno!  its gone!
 	 */
 	void update(double dt, int i,SceneVO myVO){
-		
 		myMap.updateRoads(dt, i, myVO);
 		myMap.updateNodes(dt, i, myVO);
 
@@ -105,15 +104,20 @@ public class Controller {
 		//read in the file
 		FileParser myParser = new FileParser();
 		SceneVO myVO = myParser.readFileIntoScene("C:\\input.txt");
-		//readSceneVO(myVO);
-		miniSim();
+		readSceneVO(myVO);
+		//miniSim();
 		
 		System.out.println("Simulation started");
 		myVO = writeScene();
 		myMap.initializeWeights();
+		double tdaf = myCont.getTotalTime();
 		for (int i =0; i<myCont.getTotalTime(); i++){
+			//myMap.initializeWeights();
 			myCont.update(myCont.getStep(), i,myVO);
+			myMap.initializeWeights();
+			
 		}
+		Map m = myMap;
 		System.out.println( myVO.Serialize() );
 		myParser.writeSceneVOIntoFile("C:\\output.txt", myVO);
 	}
@@ -154,7 +158,7 @@ public class Controller {
 	}
 
 		public static void readSceneVO(SceneVO scene){
-			myCont = new Controller(1000,1);
+			myCont = new Controller(100,1);
 			myMap = new Map();
 			Collection sinks = scene.getSinks();
 			Collection sources = scene.getSources();

@@ -8,7 +8,7 @@ import java.util.Random;
 import com.e180.vo.SceneVO;
 
 public class Source extends Node{
-
+	int carCreated=0;
 	//int sourceId;
 	private Random U = new Random();
 	
@@ -43,13 +43,15 @@ public class Source extends Node{
 	//assumes road weights have been set 
 	public boolean generate_new_car(int time, SceneVO myVO){	
 		boolean carCreation;
-		double f = getFreqency(time);
-		//double f = .3;
+		//double f = getFreqency(time);
+		double f = .05;
 		double x = U.nextFloat();
 		Map myMap = (Map)this.getGraph();
 		if(x < f){
 			Sink destination = myMap.getRandomSink();
+			carCreated+=1;
 			carCreation = true;
+			
 			Vehicle c = new Car(this,destination,time);
 			Factory myF = new Factory();
 			myVO.addCar(myF.carToCarVO(c));
@@ -76,9 +78,10 @@ public class Source extends Node{
 		
 		
 		
-		double f=0;
+		double f=.9;
 		double pi=3.1415;
-		if(time < 6){
+		return f;
+		/*if(time < 6){
 			f = 4+2*Math.cos(pi*time/3);
 		}
 		else if (time <9.5){
@@ -96,7 +99,6 @@ public class Source extends Node{
 		f = f/3600;
 		
 		return f;
-	}
-
-	
-	}
+	}*/
+}
+}

@@ -87,11 +87,13 @@ public abstract class Vehicle implements Comparable {
 		time_since_creation=0;
 		destination=endNode;
 		startNode = start;
+		//((Map)(startNode.getGraph())).initializeWeights();
 		route = findRoute(start, endNode);
 		routePos =0;
 		this.setLoc_fraction(0);
 		//myRoad = route.get(routePos);
-		route.get(routePos).addVehicle(this);
+		Road myr = route.get(routePos);
+		myr.addVehicle(this);
 		roadIds.add(route.get(getRoutePos()).getID());
 		percentageAlongRoads.add(getPercent());
 		maxVisibility = 25;
@@ -283,73 +285,6 @@ public static void printStat(){
 	System.out.println("Traveltime was: " + time_since_creation);
 	System.out.println("The distance travelled was: " + distance_travelled);
 	System.out.println("Average speed: " + average_speed);
-}
-
-public void updateSpeedAndPosition(double dt)
-{
-	if(notUpdated){
-		
-		double nextspeed =getSpeed() + getAccel()*dt;
-
-		double dp;
-		if (nextspeed > 0){
-			dp = (getSpeed() + nextspeed)*0.5*dt;
-		}else{
-			dp = (getSpeed() + 0)*0.5*dt;
-		}
-	
-		//update the fraction of road travelled
-		double fraction = getPercent() + dp/(route.get(routePos).getLength());
-		
-		// if the distance travelled is longer than what is left of current road,
-		// the vehicle start on the next road on the route
-		while ( fraction > 1)
-		{
-			//calculating how much longer than what is left of the road that the vehicle have
-			//travelled in current timestep
-			fraction = fraction - 1;
-			//dp = fraction*route.get(routePos+1).getLength();
-			//removes this vehicle
-			route.get(routePos).removeVehicle((Vehicle)this);
-			
-		
-			//if route is empty, then the vehicle has reached the destination
-			if (routePos ==route.size()-1 && this.getRoute().get(routePos).getEndNode().isSink()){
-				fraction = 0;//sets the fraction to zero to get out of the while loop, but
-						// doesn't add the vehicle to a new road as the routelist is 
-			            // is empty
-				Sink s = (Sink)this.getRoute().get(routePos).getEndNode();
-				s.addVehicle(this);
-				this.printStat();
-				//routePos = routePos +1;
-			}
-			else if (this.getRoute().get(routePos).getEndNode().isTrafCont()){
-				trafficController mine = (trafficController)this.getRoute().get(routePos).getEndNode();
-				double angle =this.getRoute().get(routePos).getRoadAngle();
-				this.setSpeedX(mine.getSpeedLimit()*Math.cos(angle));
-				this.setSpeedY(mine.getSpeedLimit()*Math.sin(angle));
-				mine.addVehicle(this);
-				fraction = 0;
-				routePos = routePos +1;
-			}
-			//the vehicle is moving to a new road
-			else{
-				//add this vehicle to vehicles (the list of vehicles at the road) at 
-				//next road on the route
-				routePos = routePos +1;
-				//fraction = dp/(route.get(routePos).getLength());
-				fraction = 0;
-				(route.get(routePos)).getVehicles().add(this);
-				// calculating fraction completed at next road on route
-				//myRoad =route.get(routePos);
-			}
-		
-		}
-	
-		// setting loc_fraction equal the fraction completed at current road
-		loc_fraction = fraction;
-		notUpdated=false;
-	}
 }
 
 
@@ -588,7 +523,7 @@ public void printSpeed()
 
 public List<Road> findRoute(Node n1, Node n2)
 {
-	ArchetypeGraph myMap = this.startNode.getGraph();
+	ArchetypeGraph myMap = n1.getGraph();
 	DijkstraShortestPath dij = new DijkstraShortestPath( myMap,((Map)myMap).getWeight());
 	return ShortestPathUtils.getPath(((ShortestPath)dij),n1,n2);
 }

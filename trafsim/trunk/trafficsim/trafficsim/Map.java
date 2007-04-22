@@ -38,9 +38,13 @@ public class Map extends DirectedSparseGraph{
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
 				((Source)nn).generate_new_car(i,myVo);
+				
 			}
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);
+			}
+			if (nn.isSink()){
+				((Sink)nn).updateSink(dt);
 			}
 		}
 	}
@@ -54,7 +58,7 @@ public class Map extends DirectedSparseGraph{
 			avgVel = speedLimit;
 		}
 		double leng = r.getLength();
-		Number w = leng/avgVel;
+		Number w = leng/speedLimit;///avgVel;
 		weight.setNumber(r,w);
 	}
 	
@@ -80,13 +84,13 @@ public class Map extends DirectedSparseGraph{
 		//Iterator ro1 = myRoads.iterator();
 		for (int j = 0;j<r.length;j++){	
 			Road rr =(Road)r[j];
-			setWeight(rr);
+			//setWeight(rr);
 			rr.updateAccel(dt);
 		}
 	
 		for (int j = 0;j<r.length;j++){	
 				Road rrr =(Road)r[j];;
-				setWeight(rrr);
+				//setWeight(rrr);
 				rrr.updateSpeedAndPosition(dt,myVO);
 				
 		}
@@ -130,16 +134,13 @@ public class Map extends DirectedSparseGraph{
 		int size =sinks.size();
 		
 		Iterator iter = sinks.iterator();
-		if (size==1){
-			s = (Sink)iter.next();
-		}else{
-			int rand = U.nextInt(size);
+		//Sink[] ses = sinks.toArray();
+		int rand = U.nextInt(size);
 		while (rand!=0){
-			
-			s = (Sink)iter.next();
 			rand -=1;
+			s = (Sink)iter.next();
 		}
-		}
+		s = (Sink)iter.next();
 		return s;
 	}
 	/**

@@ -24,4 +24,7 @@ public class Sink extends Node{
 	void addVehicle (Vehicle v){
 		carCnt+=1;
 	}
+	public void updateSink(double dt) {
+		
+	}
 }

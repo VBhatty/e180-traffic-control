@@ -1,5 +1,6 @@
 package trafficsim;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -36,7 +37,15 @@ public class trafficController extends SuperNode{
 	 * of a trafficController
 	 */
 	void updateTrafCont(double dt){
-		
+		Iterator iter = vehicles.iterator();
+		if(!vehicles.isEmpty()){
+			Vehicle v = (Vehicle)vehicles.remove();
+			v.setLoc_fraction(0);
+			Road nextRoad = (Road) v.getRoute().get(v.getRoutePos());
+			nextRoad.addVehicle(v);
+			//v.getRoute().get(v.getRoutePos()).addVehicle(v);
+			//v.addRoadID(nextRoad.getID());
+		}
 	}
 	public Queue<Vehicle> getVehicles() {
 		return vehicles;
