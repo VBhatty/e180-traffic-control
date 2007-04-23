@@ -1,5 +1,8 @@
 package com.e180.vo;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -7,7 +10,9 @@ import org.json.JSONString;
 public class SinkVO implements IJsonSerializable, JSONString{
 	private String id;
 	private String nodeId;
-
+	//array of stats
+	private Collection<Integer> carsVTime;
+	
 	public String Serialize() {
 		JSONObject currentSink = new JSONObject();
 		//attempt to serialize
@@ -52,6 +57,14 @@ public class SinkVO implements IJsonSerializable, JSONString{
 
 	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
+	}
+
+	public Collection<Integer> getCarsVTime() {
+		return carsVTime;
+	}
+
+	public void setCarsVTime(ArrayList<Integer> name) {
+		this.carsVTime = name;
 	}
 
 	

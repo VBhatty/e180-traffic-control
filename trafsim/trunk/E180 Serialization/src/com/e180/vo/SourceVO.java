@@ -1,5 +1,7 @@
 package com.e180.vo;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -8,7 +10,7 @@ public class SourceVO implements IJsonSerializable, JSONString {
 	private double frequency;
 	private String id;
 	private String nodeId;
-	
+	private ArrayList<Integer> carsCreatedvTime;
 	public SourceVO(){
 		this.frequency = 0;
 		this.id = "";
@@ -69,6 +71,14 @@ public class SourceVO implements IJsonSerializable, JSONString {
 
 	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
+	}
+
+	public ArrayList<Integer> getCarsCreatedvTime() {
+		return carsCreatedvTime;
+	}
+
+	public void setCarsCreatedvTime(ArrayList<Integer> carsCreatedvTime) {
+		this.carsCreatedvTime = carsCreatedvTime;
 	}
 
 	

@@ -1,5 +1,7 @@
 package com.e180.vo;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -10,6 +12,7 @@ public class TrafficObjectVO implements IJsonSerializable, JSONString{
 	private String type;
 	private Double speedLimit;
 	private String nodeId;
+	private ArrayList<Integer> totalCarsAtEachStep;
 	
 	public String Serialize() {
 		JSONObject currentObj = new JSONObject();
@@ -76,6 +79,14 @@ public class TrafficObjectVO implements IJsonSerializable, JSONString{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public ArrayList<Integer> getTotalCarsAtEachStep() {
+		return totalCarsAtEachStep;
+	}
+
+	public void setTotalCarsAtEachStep(ArrayList<Integer> totalCarsAtEachStep) {
+		this.totalCarsAtEachStep = totalCarsAtEachStep;
 	}
 
 	

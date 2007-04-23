@@ -1,5 +1,7 @@
 package com.e180.vo;
 
+import java.util.ArrayList;
+
 import org.json.JSONObject;
 import org.json.JSONString;
 import org.json.JSONException;
@@ -10,6 +12,8 @@ public class RoadVO implements IJsonSerializable, JSONString{
 	private String fromNodeId;
 	private String toNodeId;
 	private double speedLimit;
+	private ArrayList<Double> avgSpeedvTime;
+	private ArrayList<Double> totalCarsvTime;
 	
 	public String Serialize() {
 		JSONObject currentNode = new JSONObject();
@@ -68,6 +72,22 @@ public class RoadVO implements IJsonSerializable, JSONString{
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public ArrayList<Double> getAvgSpeedvTime() {
+		return avgSpeedvTime;
+	}
+
+	public void setAvgSpeedvTime(ArrayList<Double> avgSpeedvTime) {
+		this.avgSpeedvTime = avgSpeedvTime;
+	}
+
+	public ArrayList<Double> getTotalCarsvTime() {
+		return totalCarsvTime;
+	}
+
+	public void setTotalCarsvTime(ArrayList<Double> totalCarsvTime) {
+		this.totalCarsvTime = totalCarsvTime;
 	}
 	
 }

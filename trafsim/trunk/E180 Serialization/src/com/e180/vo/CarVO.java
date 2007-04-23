@@ -12,6 +12,8 @@ public class CarVO implements IJsonSerializable, JSONString {
 	private String id;
 	private Collection<Double> percentageAlongRoads;
 	private Collection<String> roadIds;
+	private Collection<Double> speedvTime;
+	private Collection<Double> accelvTime;
 	private String sourceNodeId;
 	private String destNodeId;
 	//time step at which the car is spawned
@@ -168,6 +170,22 @@ public class CarVO implements IJsonSerializable, JSONString {
 
 	public void setRoadIds(Collection<String> roadIds) {
 		this.roadIds = roadIds;
+	}
+
+	public Collection<Double> getSpeedvTime() {
+		return speedvTime;
+	}
+
+	public void setSpeedvTime(Collection<Double> speedvTime) {
+		this.speedvTime = speedvTime;
+	}
+
+	public Collection<Double> getAccelvTime() {
+		return accelvTime;
+	}
+
+	public void setAccelvTime(Collection<Double> accelvTime) {
+		this.accelvTime = accelvTime;
 	}
 
 	
