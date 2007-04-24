@@ -38,13 +38,16 @@ public class Map extends DirectedSparseGraph{
 			Node nn = (Node)no.next();
 			if (nn.isSource()){
 				((Source)nn).generate_new_car(i,myVo);
+				((Source)nn).addCarsCreatedvTime(((Source)nn).carCreated);
 				
 			}
 			if (nn.isTrafCont()){
 				((trafficController)nn).updateTrafCont(dt);
+				((trafficController)nn).addTotalCarsAtEachStep(((trafficController)nn).carCnt);
 			}
 			if (nn.isSink()){
 				((Sink)nn).updateSink(dt);
+				((Sink)nn).addCarsVTime(((Sink)nn).carCnt);
 			}
 		}
 	}
@@ -85,14 +88,17 @@ public class Map extends DirectedSparseGraph{
 		for (int j = 0;j<r.length;j++){	
 			Road rr =(Road)r[j];
 			//setWeight(rr);
-			rr.updateAccel(dt);
+			rr.updateAccel(dt,myVO);
+			
 		}
 	
 		for (int j = 0;j<r.length;j++){	
 				Road rrr =(Road)r[j];;
 				//setWeight(rrr);
 				rrr.updateSpeedAndPosition(dt,myVO);
-				
+				rrr.addAvgSpeedvTime((rrr.getAvgSpeed2()));
+				rrr.addTotalCarsvTime(rrr.getVehicles().size());
+				Road l = rrr;
 		}
 	}
 	public int totalVehicles() {

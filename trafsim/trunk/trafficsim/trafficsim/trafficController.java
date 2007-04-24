@@ -1,5 +1,6 @@
 package trafficsim;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -14,7 +15,10 @@ import java.util.TreeSet;
  **/
 public class trafficController extends SuperNode{
 	private double speedlimit;
+	public int carCnt=0;
+	private ArrayList<Integer> totalCarsAtEachStep = new ArrayList<Integer>();
 	private Queue<Vehicle> vehicles = new LinkedList<Vehicle>();
+
 	boolean isTrafCont(){
 		return true;
 	}
@@ -28,6 +32,7 @@ public class trafficController extends SuperNode{
 	}
 	void addVehicle(Vehicle v) {	
 		vehicles.add(v);
+		carCnt+=1;
 	}
 	boolean removeVehicle(Vehicle v){
 		return vehicles.remove(v);
@@ -49,5 +54,11 @@ public class trafficController extends SuperNode{
 	}
 	public Queue<Vehicle> getVehicles() {
 		return vehicles;
+	}
+	public ArrayList<Integer> getTotalCarsAtEachStep() {
+		return totalCarsAtEachStep;
+	}
+	public void addTotalCarsAtEachStep(Integer totalCarsAtEachStep) {
+		this.totalCarsAtEachStep.add(totalCarsAtEachStep);
 	}
 }

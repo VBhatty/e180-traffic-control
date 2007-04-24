@@ -3,6 +3,11 @@ package trafficsim;
 import java.util.Random;
 
 
+/**
+ * The car class extends vehicles with a specified weight.   
+ * @author Eric Vacca
+ *
+ */
 public class Car extends Vehicle {
 
 	public Car(Road r,double perc) {

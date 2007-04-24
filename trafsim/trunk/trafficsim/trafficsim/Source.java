@@ -1,5 +1,6 @@
 package trafficsim;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 //import java.awt.geom.Point2D;
@@ -9,7 +10,9 @@ import com.e180.vo.SceneVO;
 
 public class Source extends Node{
 	int carCreated=0;
+	 private ArrayList<Integer> carsCreatedvTime=new ArrayList<Integer>();
 	//int sourceId;
+	 
 	private Random U = new Random();
 	
 	private UUID sourceID;
@@ -50,15 +53,19 @@ public class Source extends Node{
 		if(x < f){
 			Sink destination = myMap.getRandomSink();
 			carCreated+=1;
+			
 			carCreation = true;
 			
 			Vehicle c = new Car(this,destination,time);
 			Factory myF = new Factory();
 			myVO.addCar(myF.carToCarVO(c));
+			
 		}
 		else{
 			carCreation =false;
+			
 		}
+		
 		return carCreation;
 	}
 	
@@ -101,4 +108,10 @@ public class Source extends Node{
 		return f;
 	}*/
 }
+	public ArrayList<Integer> getCarsCreatedvTime() {
+		return carsCreatedvTime;
+	}
+	public void addCarsCreatedvTime(Integer carsCreatedvTime) {
+		this.carsCreatedvTime.add(carsCreatedvTime);
+	}
 }

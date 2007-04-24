@@ -64,6 +64,10 @@ public abstract class Vehicle implements Comparable {
 	//same time step because it changes to a road that is not updated by the controller
 	boolean notUpdated;
 	
+	
+	//stats
+	 private Collection<Double> speedvTime=new ArrayList<Double>();
+	 private Collection<Double> accelvTime=new ArrayList<Double>();
 	/**
 	 * Null car object is used if a car has no car in front
 	 */
@@ -838,5 +842,17 @@ public void addPercent(double perc){
 }
 public void addRoadID(String ID){
 	roadIds.add(ID);
+}
+public Collection<Double> getSpeedvTime() {
+	return speedvTime;
+}
+public void addSpeedvTime(Double speedvTime) {
+	this.speedvTime.add(speedvTime);
+}
+public ArrayList<Double> getAccelvTime() {
+	return (ArrayList<Double>) accelvTime;
+}
+public void addAccelvTime(Double accelvTime) {
+	this.accelvTime.add(accelvTime);
 }
 }

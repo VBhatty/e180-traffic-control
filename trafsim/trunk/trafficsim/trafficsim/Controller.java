@@ -91,8 +91,8 @@ public class Controller {
 		Set vehicles = myMap.getVeh();
 		Set verts = myMap.getVertices();
 		Set edges = myMap.getEdges();
-		//if (!vehicles.isEmpty())
-		//{myFactory.setVehicles(vehicles,sceneOut);}
+		if (!vehicles.isEmpty())
+		{myFactory.setVehicles(vehicles,sceneOut);}
 		
 		myFactory.setNodes(verts,sceneOut);
 		myFactory.setRoads(edges,sceneOut);

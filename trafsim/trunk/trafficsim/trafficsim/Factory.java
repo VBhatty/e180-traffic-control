@@ -17,13 +17,14 @@ public class Factory {
 		newCar.setWeight(car.getWeight());
 		newCar.setPercentageAlongRoads(car.getPercentages());
 		newCar.setRoadIds(car.getRoads());
-		
+		newCar.setAccelvTime(car.getAccelvTime());
+		newCar.setSpeedvTime(car.getSpeedvTime());
 		return newCar;
 	}
 	
 	public NodeVO nodeToNodeVO(Node node) {
 		NodeVO newNode = new NodeVO();
-		
+
 		newNode.setId(node.getID());
 		newNode.setX(node.getX());
 		newNode.setY(node.getY());
@@ -33,7 +34,8 @@ public class Factory {
 
 	public RoadVO roadToRoadVO(Road road) {
 		RoadVO newRoad = new RoadVO();
-		
+		newRoad.setAvgSpeedvTime(road.getAvgSpeedvTime());
+		newRoad.setTotalCarsvTime(road.getTotalCarsvTime());
 		newRoad.setId(road.getID());
 		newRoad.setFromNodeId(road.getStartNode().getID());
 		newRoad.setToNodeId(road.getEndNode().getID());
@@ -44,7 +46,7 @@ public class Factory {
 	
 	public SinkVO sinkToSinkVO(Sink sink) {
 		SinkVO newSink = new SinkVO();
-		
+		newSink.setCarsVTime((sink.getCarsVTime()));
 		newSink.setId(sink.getID());
 		newSink.setNodeId(sink.getNodeID());
 		
@@ -52,7 +54,7 @@ public class Factory {
 	}
 	private TrafficObjectVO trafficObjToTrafficObjVO(trafficController controller) {
 		TrafficObjectVO newTO = new TrafficObjectVO();
-		
+		newTO.setTotalCarsAtEachStep(controller.getTotalCarsAtEachStep());
 		newTO.setId(controller.getID());
 		newTO.setNodeId(controller.getID());
 		
@@ -60,7 +62,7 @@ public class Factory {
 	}
 	public SourceVO sourceToSouceVO(Source source) {
 		SourceVO newSource = new SourceVO();
-		
+		newSource.setCarsCreatedvTime(source.getCarsCreatedvTime());
 		newSource.setId(source.getID());
 		newSource.setNodeId(source.getID());
 		//newSource.setFrequency(source.getFrequency());

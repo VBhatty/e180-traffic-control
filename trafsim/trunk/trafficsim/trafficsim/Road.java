@@ -3,6 +3,7 @@ package trafficsim;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -45,6 +46,10 @@ public class Road extends DirectedSparseEdge {
 	 private double averageWeight; //average weight of the current vehicles on the road
 	 private double roadAngle;  //the angle which the road is measured from positive x axis 
 	 String guiID;
+	 //stats
+	 private ArrayList<Double> avgSpeedvTime=new ArrayList<Double>();
+	 private ArrayList<Double> totalCarsvTime= new ArrayList<Double>();
+
 	 Road(Node n1, Node n2){
 		super(n1,n2);
 		this.id = UUID.randomUUID();
@@ -115,11 +120,12 @@ public void removeVehicle(Vehicle vehicle) {
 	vehicles.remove(vehicle);
 }
 
-public void updateAccel(double dt){
+public void updateAccel(double dt, SceneVO myVO){
 	Object[] v = vehicles.toArray();
 	for (int i = 0;i<v.length;i++){	
 		Vehicle vehicle =(Vehicle) v[i];
 		vehicle.updateAcceleration();
+		vehicle.addAccelvTime(vehicle.getAccel());
 		}
 	}
 
@@ -161,7 +167,7 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 					
 				
 					//if route is empty, then the vehicle has reached the destination
-					if (vehicle.getRoutePos() ==route.size()-1){
+					if (vehicle.getRoutePos() ==route.size()-1 && myRoad.getEndNode().isSink()){
 						//vehicle.setLoc_fraction(0);//sets the fraction to zero to get out of the while loop, but
 								// doesn't add the vehicle to a new road as the routelist is 
 					            // is empty
@@ -170,7 +176,9 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 						Vehicle.printStat();
 						//routePos = routePos +1;
 					}
-					else {
+					else if (myRoad.getEndNode().isSource()){
+					}else if(myRoad.getEndNode().isSink()){
+					}else{
 						trafficController mine = (trafficController)myRoad.getEndNode();
 						vehicle.setRoutePos(routeP +1);
 						double angle =myRoad.getRoadAngle();
@@ -188,7 +196,7 @@ public void updateSpeedAndPosition(double dt,SceneVO myVO){
 				// setting loc_fraction equal the fraction completed at current road
 				//vehicle.setLoc_fraction(fraction);
 				//vehicle.addPercent(fraction);
-				
+				vehicle.addSpeedvTime(vehicle.getSpeed());
 				vehicle.update_stat(dt);
 				vehicle.updateSpeed(dt);
 				vehicle.printInfo();
@@ -208,11 +216,14 @@ public double getLimit(){
 public double getAvgSpeed2(){
 	double sum = 0;
 	Iterator veh = vehicles.iterator();
+	if(vehicles.isEmpty()){
+		return 0;
+	}
 	while (veh.hasNext()){
 		Vehicle vehicle = (Vehicle)veh.next();
 		sum += vehicle.getSpeed();
 	}
-	return sum / totalVehicles();
+	return sum / vehicles.size();
 }
 
 public double getAvgSpeed(){
@@ -341,6 +352,18 @@ public void setRoadAngle() {
 }
 public SortedSet<Vehicle> getVehicles() {
 	return vehicles;
+}
+public ArrayList<Double> getAvgSpeedvTime() {
+	return avgSpeedvTime;
+}
+public void addAvgSpeedvTime(double avgSpeed) {
+	this.avgSpeedvTime.add(avgSpeed);
+}
+public ArrayList<Double> getTotalCarsvTime() {
+	return totalCarsvTime;
+}
+public void addTotalCarsvTime(double totalCars) {
+	totalCarsvTime.add(totalCars);
 }
 }
 
