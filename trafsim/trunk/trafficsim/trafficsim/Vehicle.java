@@ -644,7 +644,7 @@ public void setCarInFront(Vehicle carInFront){
 public void updateAcceleration() {
 	//the acceleration due to the car in front
 	
-	if (route.size()>routePos) {
+	if (routePos<route.size()-1) {
 		double carAccel = accelerationDueToCar();
 		double nodeRoadAccel = accelerationToNearestNodeOrRoad1();
 		double min = Math.min(carAccel, nodeRoadAccel);
@@ -710,7 +710,7 @@ private double accelerationDueToCar(){
 	double endFrac = this.getVisRange()/route.get(getRoutePos()).getLength();
 	if (this.loc_fraction + endFrac<1){
 		 v = route.get(getRoutePos()).findCarInFront(this,this.loc_fraction, this.loc_fraction + endFrac);
-	}else{
+	}else {
 		 v = route.get(getRoutePos()).findCarInFront(this,this.loc_fraction, 1);
 	}
 	if (v.isNull()){
