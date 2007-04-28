@@ -47,7 +47,7 @@ public class Source extends Node{
 	public boolean generate_new_car(int time, SceneVO myVO){	
 		boolean carCreation;
 		//double f = getFreqency(time);
-		double f = .2;
+		double f = .05;
 		double x = U.nextFloat();
 		Map myMap = (Map)this.getGraph();
 		if(x < f){
