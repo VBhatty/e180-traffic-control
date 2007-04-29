@@ -86,20 +86,22 @@ public class Map extends DirectedSparseGraph{
 
 		//Iterator ro1 = myRoads.iterator();
 		for (int j = 0;j<r.length;j++){	
+			Road rrr =(Road)r[j];;
+			//setWeight(rrr);
+			rrr.updateSpeedAndPosition(dt,myVO);
+			rrr.addAvgSpeedvTime((rrr.getAvgSpeed2()));
+			rrr.addTotalCarsvTime(rrr.getVehicles().size());
+			Road l = rrr;
+		}
+		
+		for (int j = 0;j<r.length;j++){	
 			Road rr =(Road)r[j];
 			//setWeight(rr);
 			rr.updateAccel(dt,myVO);
 			
 		}
 	
-		for (int j = 0;j<r.length;j++){	
-				Road rrr =(Road)r[j];;
-				//setWeight(rrr);
-				rrr.updateSpeedAndPosition(dt,myVO);
-				rrr.addAvgSpeedvTime((rrr.getAvgSpeed2()));
-				rrr.addTotalCarsvTime(rrr.getVehicles().size());
-				Road l = rrr;
-		}
+		
 	}
 	public int totalVehicles() {
 		int total = 0;
